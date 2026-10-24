@@ -1,0 +1,12 @@
+<qazinho>
+## The build
+Build an Android .apk of acme/loja-app, branch main (commit c0ffee1).
+The copy of the code is in /data/builds/work/b-1/src: work inside it, and leave the build there.
+
+## This machine
+The Android SDK is at /Users/qa/Library/Android/sdk; ANDROID_HOME points at it.
+The JDK is at /Applications/Android Studio.app/Contents/jbr/Contents/Home; JAVA_HOME points at it.
+Xcode is installed.
+</qazinho>
+
+Build it.

@@ -1,0 +1,20 @@
+<qazinho>
+## This workspace
+The workspace has no app to test yet.
+The workspace has no plan yet.
+
+## The project's variables
+The project keeps no variables yet.
+
+## The Confluence page
+Checkout: cenários · QA
+https://acme.atlassian.net/wiki/spaces/QA/pages/98304
+Its text:
+  ## CT01 · Cupom válido
+  
+  | # | Ação | Esperado |
+  | --- | --- | --- |
+  | 1 | Aplicar SAVE10 | Total com 10% off |
+</qazinho>
+
+Plan from the checkout cases.

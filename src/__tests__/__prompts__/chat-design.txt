@@ -1,0 +1,15 @@
+<qazinho>
+## This workspace
+The workspace has no app to test yet.
+The workspace has no plan yet.
+
+## The project's variables
+The project keeps no variables yet.
+
+## The Figma design
+The app is checked against the Figma design "Shop": https://www.figma.com/design/AbC123/Shop?node-id=1-23
+fileKey: AbC123
+nodeId: 1:23, the frame or page the link points at.
+</qazinho>
+
+Plan the checkout against the design.

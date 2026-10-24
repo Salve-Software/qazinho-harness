@@ -1,0 +1,21 @@
+<qazinho>
+## The issue
+SHOP-57 · Cupom expirado é aceito
+Open, status "Em revisão". https://acme.atlassian.net/browse/SHOP-57
+What it says:
+  O total cai para R$ 90,00 com o cupom EXPIRED.
+Its comments, oldest first:
+  Bia Dev, 2026-10-22: Acontece no mobile também?
+
+## The bug as QAzinho filed it
+"Cupom expirado é aceito", caught on the case "Um cupom expirado é recusado".
+Expected: A mensagem "Este cupom expirou"
+Got: O total caiu para R$ 90,00
+
+## Caught again
+- r-05, 14:02: TC-02 step 2 "Aplicar o cupom EXPIRED", on Web · Chrome 390 × 844.
+  What its agent noted: O cupom foi aceito no celular.
+  Its screen: /data/runs/w-1/r-05/step-2.jpg
+</qazinho>
+
+Does the issue need an update?

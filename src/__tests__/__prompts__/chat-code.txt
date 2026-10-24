@@ -1,0 +1,18 @@
+<qazinho>
+## This workspace
+The workspace has no app to test yet.
+The workspace has no plan yet.
+
+## The project's variables
+The project keeps no variables yet.
+
+## The code
+Repository acme/loja-web, branch feat/cupom at aaa1111.
+The code is at /data/code/w-1/acme/loja-web. Read it with your tools; it is read only, and it is deleted once the plan is written.
+Against develop at bbb2222: 2 commits, 1 file changed.
+The whole diff is at /data/code/w-1/acme-loja-web.diff.
+Changed files:
+  modified src/Coupon.tsx (+40 -3)
+</qazinho>
+
+Plan from this branch.

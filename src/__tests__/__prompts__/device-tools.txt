@@ -1,0 +1,508 @@
+[
+  {
+    "name": "look",
+    "description": "Read what the device shows right now: the visible text and the controls a person could use.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "inspect",
+    "description": "Measure one thing on the screen, to hold it to a design: where it sits and how big it is, its distance to what is around it, and in a browser its type, colours, spacing, border and corners. Name it the way look lists it or the screen reads it.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the thing says, or how look lists it."
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "network",
+    "description": "Read the API calls the app made in the browser: the latest ones, with how each ended and how long it took. Give \"id\" to read what one answered, such as a 200 whose data looks wrong on screen. Secrets read as dots.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991,
+          "description": "The number of a call as listed, to read what it answered."
+        },
+        "filter": {
+          "type": "string",
+          "description": "Words its address holds, such as \"coupon\", to list only those calls."
+        }
+      },
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "goto",
+    "description": "Open a URL in the browser, or reopen the app from the launcher on a phone.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The URL to open."
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "reopen",
+    "description": "Close the app completely and open it again, with what it saved kept, as a person does who swipes it away and taps its icon; in a browser, the page closes and its address opens in a new tab.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "click",
+    "description": "Click or tap a control, named the way a person reads it: the button label, the link text, the row text. When several read alike, look numbers them: name the one you mean, like \"Buy #2\".",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the control says."
+        },
+        "dialog": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "cancel"
+          ],
+          "description": "How to answer a browser dialog the click opens, such as \"Are you sure?\": ok unless the step says to cancel it."
+        },
+        "promptText": {
+          "type": "string",
+          "description": "What to type into a browser prompt the click opens, such as a new title, before it is answered ok."
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "fill",
+    "description": "Type into a field, named by its label, placeholder or hint. When several read alike, look numbers them: name the one you mean, like \"Email #2\".",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The field label, placeholder or hint."
+        },
+        "value": {
+          "type": "string",
+          "description": "What to type. A variable of the project goes as ${NAME}, and QAzinho types its value."
+        }
+      },
+      "required": [
+        "target",
+        "value"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "press",
+    "description": "Press a key: Enter, Tab, Escape on a browser; back, home, enter, tab, delete, escape or search on a phone.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The key."
+        },
+        "dialog": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "cancel"
+          ],
+          "description": "How to answer a browser dialog the key opens, such as \"Are you sure?\": ok unless the step says to cancel it."
+        },
+        "promptText": {
+          "type": "string",
+          "description": "What to type into a browser prompt the key opens, such as a new title, before it is answered ok."
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "scroll",
+    "description": "Scroll the screen, or the list under it, to bring into view what is not on screen yet. Give the words to stop at when you know them. Scroll before you decide something is missing.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "direction": {
+          "type": "string",
+          "enum": [
+            "down",
+            "up",
+            "left",
+            "right"
+          ],
+          "description": "Where to look: down shows what is below, right what is to the right."
+        },
+        "until": {
+          "type": "string",
+          "description": "Words to scroll until they show, as the screen will read them."
+        }
+      },
+      "required": [
+        "direction"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "long_press",
+    "description": "Hold a finger, or the mouse, on a control: a long press, for the menu, selection or edit it opens.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the control says."
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "drag",
+    "description": "Drag a control and drop it on another: a card onto a column, a row to a new place in its list.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What to drag, as the screen reads it."
+        },
+        "to": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What to drop it on, as the screen reads it."
+        }
+      },
+      "required": [
+        "target",
+        "to"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "hover",
+    "description": "Rest the mouse on a control, to show what appears on hover: a tooltip, a menu, a preview. In a browser only.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the control says."
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "upload",
+    "description": "Pick a sample file in a file field, or in the button that opens the file picker. In a browser only.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The file field or the button that opens the picker."
+        },
+        "file": {
+          "type": "string",
+          "enum": [
+            "image",
+            "pdf",
+            "csv",
+            "text"
+          ],
+          "description": "The kind of sample file to pick."
+        }
+      },
+      "required": [
+        "target",
+        "file"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "wait",
+    "description": "Wait for the device to settle, in milliseconds, before looking again.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Milliseconds, e.g. \"1000\"."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "report",
+    "description": "Report a step once you judged it, by its number. The answer says what to do next.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991,
+          "description": "The number of the step you judged."
+        },
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "failed",
+            "blocked"
+          ]
+        },
+        "why": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the verdict rests on: what you saw, held against what the QA expected. One short sentence when the step passed."
+        },
+        "got": {
+          "type": "string",
+          "description": "What the device actually showed: a few words when the step passed."
+        },
+        "title": {
+          "type": "string",
+          "description": "When it failed: the line a developer would know the bug by."
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "description": "When you worked around something: one sentence for the QA."
+        },
+        "proof": {
+          "type": "string",
+          "description": "When the step passed: a few words the screen shows now that prove it, copied exactly, which would not be there had it failed, such as \"Visits: 1\". QAzinho walks the step again without you and checks them."
+        },
+        "sameAs": {
+          "type": "string",
+          "pattern": "^BUG-\\d+$",
+          "description": "When it failed for a bug the case lists as already open: its id, such as \"BUG-01\". QAzinho counts it as seen again instead of opening another."
+        },
+        "frame": {
+          "type": "string",
+          "description": "When it failed because the screen differs from the Figma design in what the step expects: the node id of the frame it differs from, such as 12:345. Do not file that difference again with bug."
+        }
+      },
+      "required": [
+        "step",
+        "verdict",
+        "why",
+        "got"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "bug",
+    "description": "File a bug you saw, such as a wrong price, a broken link or two texts that disagree, and carry on. In a case, file only what the step does not ask about: the step keeps its own verdict.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The line a developer would know the bug by."
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "expected": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the app should show."
+        },
+        "got": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the device actually showed."
+        },
+        "sameAs": {
+          "type": "string",
+          "pattern": "^BUG-\\d+$",
+          "description": "When it is a bug the message lists as already open: its id, such as \"BUG-01\". QAzinho counts it as seen again instead of opening another."
+        },
+        "frame": {
+          "type": "string",
+          "description": "When the bug is a difference from the Figma design: the node id of the frame the screen differs from, such as 12:345."
+        }
+      },
+      "required": [
+        "title",
+        "severity",
+        "expected",
+        "got"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ask_qa",
+    "description": "Ask the QA a question and wait for the answer, when you cannot go on without them: data nothing you were given holds, such as a code sent to their phone, a choice only they can make, or something on screen only they can judge. The run holds until they answer.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What you need from the QA, short enough to answer at a glance: what you see, and what you need to go on."
+        },
+        "options": {
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "When the answer is one of a few: up to four short answers the QA picks from. They can always answer in their own words."
+        },
+        "secret": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Z][A-Z0-9_]*$",
+              "description": "The variable, in capitals with _ between words, such as OTP_CODE."
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "description": "What it holds, such as \"The code texted to the QA's phone\"."
+            }
+          },
+          "required": [
+            "name",
+            "description"
+          ],
+          "description": "Only when the answer is a secret, such as a password or a code sent to the QA: the variable QAzinho keeps it as. You type it as ${NAME} and never see it. One answer is one value: for an account, ask for the login first, then for the password as a secret."
+        }
+      },
+      "required": [
+        "question"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  }
+]

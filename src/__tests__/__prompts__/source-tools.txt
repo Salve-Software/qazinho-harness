@@ -1,0 +1,65 @@
+[
+  {
+    "name": "read_jira_story",
+    "description": "Read a Jira story through the QA's own Jira, the way /jira hands it to you: what it asks for, its acceptance criteria, the team's comments, the issues it links to, and the files attached, downloaded for you to read. Call it when the QA names a story by its key or its link.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "story": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The story, by its key such as HC-878, or the link to it."
+        }
+      },
+      "required": [
+        "story"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "search_confluence",
+    "description": "Find Confluence pages on the QA's site by words of their title, through the QA's own account. Answers with each page's id, title and space, the ones the QA worked on last first. Call it when the QA names a page without its link.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Words of the page's title, such as CT-ABA Abas do preview."
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "read_confluence_page",
+    "description": "Read a Confluence page through the QA's own account, the way /confluence hands it to you: its title, space and whole text. Call it when the QA names a page by its link, or once search_confluence found the one they mean.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The page, by the id search_confluence gave, or the link to it."
+        }
+      },
+      "required": [
+        "page"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  }
+]

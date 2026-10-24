@@ -1,0 +1,20 @@
+TC-01 · Coupon
+Goal: A valid coupon takes 10% off.
+Preconditions: One product in the cart.
+Carry out these steps in order, and report each one as soon as you judged it:
+1. Open the cart
+   The QA expects: The cart shows
+2. Apply SAVE10
+   The QA expects: 10% off
+Write what you report and note in English, whatever language these steps are in.
+
+Variables the project keeps, to type as written:
+- ${SHOP_EMAIL}: The buyer account on staging
+- ${SHOP_PASSWORD}
+
+Bugs already open in this workspace: when you see one of them again, give its id as "sameAs" instead of filing it anew.
+- BUG-01 · An expired coupon is accepted (TC-03, step 1)
+
+The device shows right now:
+Cart
+[button] Apply

@@ -1,0 +1,42 @@
+<qazinho>
+## This workspace
+The app under test is web: https://shop.test.
+Its runs drive Chrome at 1280 × 800, the size the QA picked for the device.
+A case cannot pick a size of its own: to cover another size, the QA switches the device and runs the plan again.
+The plan the workspace holds right now:
+TC-01 · Coupon · P1
+  Goal: A valid coupon takes 10% off.
+  Preconditions: One product in the cart.
+  1. Open the cart → The cart shows
+  2. Apply SAVE10 → 10% off
+
+## The project's variables
+The project keeps these. A step names one as ${NAME}, and no one reads a value back:
+- ${SHOP_EMAIL}: The buyer on staging
+
+## Runs in this workspace
+run r-02 · The whole plan · 10:02
+  started 10:02, took 84s, cost $0.041, walked the whole plan
+  cases: 1 passed, 1 failed, 0 blocked, 0 skipped
+  steps: 2 passed, 1 failed, 0 blocked, 0 skipped
+  TC-02 Checkout: failed
+    step 1 failed: Apply EXPIRED10 (The expired coupon took 10% off.)
+  note: Closed a cookie banner first.
+
+## What QAzinho saw of the app
+QAzinho opened https://shop.test in a browser before this message, and the pages its menu leads to. They read:
+URL: https://shop.test/
+TITLE: Shop
+TEXT:
+New in: summer shoes
+CONTROLS:
+a: Cart
+button: Sign in
+
+## What the QA pointed at
+bug BUG-01 · Expired coupon
+  severity high
+  got: accepted
+</qazinho>
+
+Write a test plan for this app.

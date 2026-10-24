@@ -1,0 +1,32 @@
+<qazinho>
+## The team's suite
+The suite is in /data/suites/p-1/changes/c-01/work/e2e: read and change files there, and nowhere else.
+Its config is playwright.config.ts, with the Playwright projects chromium, salva-versao.
+This copy is on the branch qazinho/fix-ct-nav-002, made from main at commit c0ffee1.
+The team's latest commit messages:
+- fix(hc-1139): wait for the menu
+- feat(hc-1201): search by name
+
+## The test that broke
+CT-NAV-002 · Abre o carrinho pelo menu, written in tests/hc-1139/ct-nav.spec.ts:13, inside "CT-NAV · Navegação".
+It runs in the Playwright project chromium.
+It failed with:
+```
+TimeoutError: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for getByRole('link', { name: 'Meu carrinho' })
+```
+What Playwright noted of the page and the test when it failed:
+````markdown
+# Page snapshot
+
+```yaml
+- banner:
+  - link "Carrinho 0":
+    - /url: /carrinho
+```
+````
+Its screenshot: /data/suites/p-1/runs/s-03/output/1/ct-nav-002/test-failed-1.png
+</qazinho>
+
+Fix this test, or show that the app is wrong.

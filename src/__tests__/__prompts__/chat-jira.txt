@@ -1,0 +1,21 @@
+<qazinho>
+## This workspace
+The workspace has no app to test yet.
+The workspace has no plan yet.
+
+## The project's variables
+The project keeps no variables yet.
+
+## The Jira story
+SHOP-12 · Aplicar cupom no checkout
+Story, To Do, priority High. https://acme.atlassian.net/browse/SHOP-12
+Description:
+  O cliente aplica um cupom de desconto no checkout.
+Acceptance criteria, from the field "Acceptance criteria":
+  - SAVE10 takes 10% off
+  - An expired coupon is refused
+Files attached to the story, downloaded for you to read with your tools; they are deleted once the plan is written:
+- checkout.png (image/png, 47 KB) at /data/jira/w-1/SHOP-12/checkout.png
+</qazinho>
+
+Plan the tests for SHOP-12.

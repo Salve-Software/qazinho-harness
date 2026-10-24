@@ -1,0 +1,894 @@
+[
+  {
+    "name": "workspace_details",
+    "description": "Read one workspace in full: its project and target, every case of its plan with its steps, its runs, its bugs, and the questions its chat waits on the QA to answer.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        }
+      },
+      "required": [
+        "workspace"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "run_details",
+    "description": "Read one run of a workspace step by step: how each case and step went and why, what it cost, and the notes its agent left. Leave \"run\" out for the latest one.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        },
+        "run": {
+          "type": "string",
+          "description": "The run, by its id, such as r-03."
+        }
+      },
+      "required": [
+        "workspace"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "bug_details",
+    "description": "Read one bug of a workspace in full: what was expected and what showed, how to reproduce it, and the run, case and step it was caught on.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        },
+        "bug": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The bug, by its id, such as BUG-02."
+        }
+      },
+      "required": [
+        "workspace",
+        "bug"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "list_repositories",
+    "description": "List the QA's GitHub repositories with their default branch, to link one to a project. It works once GitHub is connected.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "open_workspace",
+    "description": "Open a workspace on screen, on its chat, plan, runs or bugs. Name a run or a bug to open that one.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        },
+        "tab": {
+          "type": "string",
+          "enum": [
+            "chat",
+            "plan",
+            "runs",
+            "bugs"
+          ]
+        },
+        "run": {
+          "type": "string",
+          "description": "A run to open, by its id."
+        },
+        "bug": {
+          "type": "string",
+          "description": "A bug to open, by its id."
+        }
+      },
+      "required": [
+        "workspace"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "open_project",
+    "description": "Open a project's settings on screen, where its name, targets and repositories are.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The project, by its id or its name."
+        }
+      },
+      "required": [
+        "project"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "open_settings",
+    "description": "Open QAzinho's settings, on one of its sections.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "section": {
+          "type": "string",
+          "enum": [
+            "agents",
+            "devices",
+            "integrations",
+            "mcps",
+            "appearance",
+            "shortcuts",
+            "about"
+          ]
+        }
+      },
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "go_home",
+    "description": "Close the workspace on screen and go back to QAzinho's home.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "create_project",
+    "description": "Create a project: its name, and at least one target among a web address, the path of an Android .apk and the path of an iOS simulator .app. Name the GitHub repositories it is made of, as owner/name, to link them too.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the QA calls the project."
+        },
+        "web": {
+          "type": "string",
+          "description": "The web address, such as https://shop.test."
+        },
+        "android": {
+          "type": "string",
+          "description": "The path of the Android .apk on the QA's machine."
+        },
+        "ios": {
+          "type": "string",
+          "description": "The path of the iOS simulator .app on the QA's machine."
+        },
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "GitHub repositories the app is made of, as owner/name."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "update_project",
+    "description": "Change a project: rename it, or set or replace a target. An empty text removes that target, unless a workspace tests on it.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The project, by its id or its name."
+        },
+        "name": {
+          "type": "string",
+          "description": "The new name."
+        },
+        "web": {
+          "type": "string",
+          "description": "The web address, or \"\" to remove it."
+        },
+        "android": {
+          "type": "string",
+          "description": "The path of the Android .apk, or \"\" to remove it."
+        },
+        "ios": {
+          "type": "string",
+          "description": "The path of the iOS simulator .app, or \"\" to remove it."
+        }
+      },
+      "required": [
+        "project"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "link_repository",
+    "description": "Link one of the QA's GitHub repositories to a project, as owner/name. Its changes are measured against its default branch, or the base you name.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The project, by its id or its name."
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The repository, as owner/name."
+        },
+        "base": {
+          "type": "string",
+          "description": "The branch its changes are measured against."
+        }
+      },
+      "required": [
+        "project",
+        "repository"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "unlink_repository",
+    "description": "Unlink a repository from a project.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The project, by its id or its name."
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The repository, as owner/name."
+        }
+      },
+      "required": [
+        "project",
+        "repository"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "create_workspace",
+    "description": "Create a workspace in a project and open it on its chat: its name, and the target it tests on when the project has more than one.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The project, by its id or its name."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the QA will test in it."
+        },
+        "target": {
+          "type": "string",
+          "enum": [
+            "web",
+            "android",
+            "ios"
+          ]
+        }
+      },
+      "required": [
+        "project",
+        "name"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "rename_workspace",
+    "description": "Rename a workspace.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The new name."
+        }
+      },
+      "required": [
+        "workspace",
+        "name"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "link_design",
+    "description": "Check a workspace against a Figma design, as the QA does with /figma: the link to a frame or page in Figma. Its chat and its runs read the design through the QA's own Figma, and each step that lands on a designed screen is held to its frame.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        },
+        "link": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The link to a frame or page in Figma, such as https://www.figma.com/design/AbC123/Shop?node-id=12-345."
+        }
+      },
+      "required": [
+        "workspace",
+        "link"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "unlink_design",
+    "description": "Stop checking a workspace against its Figma design. Its plan keeps the frames its steps name, for a design linked again.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        }
+      },
+      "required": [
+        "workspace"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "run_plan",
+    "description": "Run a workspace's whole plan on its device, as the QA's Run button does, and open it so they watch. This answers once the run started; it goes on by itself.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        }
+      },
+      "required": [
+        "workspace"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "explore_app",
+    "description": "Explore a workspace's app with the QA's agent, with no plan, as the QA's Explore button does, and open it so they watch: for some minutes the agent goes through the app on its own, notes each screen, files what is broken, and leaves a suggested plan in the workspace's chat. This answers once it started; it goes on by itself.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        }
+      },
+      "required": [
+        "workspace"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ask_workspace_chat",
+    "description": "Send a message to a workspace's own chat in the QA's name, and open it there: its agent answers in that chat, as when the QA types there. Use it when the QA wants a test plan written or changed.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The message, as the QA would write it there, in the QA's language."
+        },
+        "story": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*-\\d+$",
+          "description": "When the QA wants the plan made from a Jira story: its key, such as SHOP-12. QAzinho reads the story, its acceptance criteria and its files for that chat."
+        },
+        "confluence": {
+          "type": "string",
+          "minLength": 1,
+          "description": "When the QA wants the plan made from a Confluence page: its title, as the QA named it, or its link. QAzinho finds the page and hands its text to that chat."
+        },
+        "figma": {
+          "type": "string",
+          "description": "When the QA wants the plan checked against a Figma design: the link to a frame or page. The workspace keeps it, and its chat reads it through the QA's own Figma."
+        }
+      },
+      "required": [
+        "workspace",
+        "text"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "send_bug",
+    "description": "Send one bug of a workspace to the QA's tracker as an issue. Jira gets its steps, what was expected and what showed, its screens, a clip of the moment and a link to the story the plan came from; GitHub gets its words. Leave the place out to send it where the project's last bug went, else to the Jira project of the story the workspace works from, else to the project's first repository. The QA confirms it on screen, and this answers with the issue it became.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        },
+        "bug": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The bug, by its id, such as BUG-02."
+        },
+        "tracker": {
+          "type": "string",
+          "enum": [
+            "jira",
+            "github"
+          ],
+          "description": "The tracker it goes to, when the QA said which."
+        },
+        "project": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "description": "The Jira project it goes to, by its key, such as SHOP."
+        },
+        "repository": {
+          "type": "string",
+          "pattern": "^[\\w.-]+\\/[\\w.-]+$",
+          "description": "The GitHub repository it goes to, as owner/name."
+        }
+      },
+      "required": [
+        "workspace",
+        "bug"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "dismiss_bug",
+    "description": "Say a bug of a workspace is no bug, as the QA does with Not a bug on its card: it leaves the open bugs, and no run hears of it again. With reopen, a bug the QA had said is none is open again. Do it only when the QA said so.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        },
+        "bug": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The bug, by its id, such as BUG-02."
+        },
+        "reopen": {
+          "type": "boolean",
+          "description": "True to open again a bug the QA had said is none."
+        }
+      },
+      "required": [
+        "workspace",
+        "bug"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "stop_run",
+    "description": "Stop the run going on in a workspace.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        }
+      },
+      "required": [
+        "workspace"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "change_settings",
+    "description": "Change how QAzinho looks and calls the QA back: the theme, the language, and how a finished run calls them.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "theme": {
+          "type": "string",
+          "enum": [
+            "night",
+            "paper"
+          ],
+          "description": "night is dark, paper is light."
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "pt"
+          ],
+          "description": "en for English, pt for Brazilian Portuguese."
+        },
+        "runAlert": {
+          "type": "string",
+          "enum": [
+            "system",
+            "app"
+          ],
+          "description": "system: a notification with sound and a count on the icon when the QA is away; app: a notice inside QAzinho only."
+        }
+      },
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "connect_integration",
+    "description": "Start connecting GitHub or Jira: QAzinho opens it in Settings. GitHub signs in through the QA's browser, and the QA types Jira's token there.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "type": "string",
+          "enum": [
+            "github",
+            "jira"
+          ]
+        }
+      },
+      "required": [
+        "integration"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "disconnect_integration",
+    "description": "Disconnect GitHub or Jira from QAzinho. The QA confirms it on screen, and this answers with what they chose.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "type": "string",
+          "enum": [
+            "github",
+            "jira"
+          ]
+        }
+      },
+      "required": [
+        "integration"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "build_app",
+    "description": "Build the app of a project from one of its GitHub repositories, with the QA's own agent: an Android .apk, or an iOS .app for the simulator. Once built, it becomes the project's target on that platform. It takes minutes and goes on by itself: this answers once it started, and build_status says how it goes.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The project, by its id or its name."
+        },
+        "platform": {
+          "type": "string",
+          "enum": [
+            "android",
+            "ios"
+          ]
+        },
+        "repository": {
+          "type": "string",
+          "description": "One of the project's repositories, as owner/name; its only one when left out."
+        },
+        "branch": {
+          "type": "string",
+          "description": "The branch to build; the repository's base branch when left out."
+        }
+      },
+      "required": [
+        "project",
+        "platform"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "build_status",
+    "description": "Read how the builds started since QAzinho opened went, or are going: what each builds, how far it got, and what it made or why it made nothing.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "description": "Only this project's builds, by its id or its name."
+        }
+      },
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ask_variables",
+    "description": "Ask the QA to type the values of a project's variables in a window QAzinho opens: an account, a password or a token a plan needs, new or with a value that changes. You never see a value: this answers with the names they kept, once they saved or closed the window.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The project, by its id or its name."
+        },
+        "variables": {
+          "minItems": 1,
+          "maxItems": 10,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "In capitals with _ between words, such as LOGIN_EMAIL."
+              },
+              "description": {
+                "type": "string",
+                "description": "What it holds, such as \"The admin's email on staging\"."
+              }
+            },
+            "required": [
+              "name",
+              "description"
+            ]
+          }
+        }
+      },
+      "required": [
+        "project",
+        "variables"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "update_variable",
+    "description": "Rename one of a project's variables or change what it says it holds. Its value stays, and the plans that name it follow a new name; to change a value, use ask_variables.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The project, by its id or its name."
+        },
+        "variable": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The variable, by its name."
+        },
+        "name": {
+          "type": "string",
+          "description": "The new name, in capitals with _."
+        },
+        "description": {
+          "type": "string",
+          "description": "What it holds now."
+        }
+      },
+      "required": [
+        "project",
+        "variable"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "delete_variable",
+    "description": "Delete one of a project's variables, with its value. The QA confirms it on screen, and this answers with what they chose.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The project, by its id or its name."
+        },
+        "variable": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The variable, by its name."
+        }
+      },
+      "required": [
+        "project",
+        "variable"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "delete_workspace",
+    "description": "Delete a workspace with its chat, plan, runs and bugs. The QA confirms it on screen, and this answers with what they chose.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The workspace, by its id or its name."
+        }
+      },
+      "required": [
+        "workspace"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "delete_project",
+    "description": "Delete a project with every workspace in it. The QA confirms it on screen, and this answers with what they chose.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The project, by its id or its name."
+        }
+      },
+      "required": [
+        "project"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  }
+]
