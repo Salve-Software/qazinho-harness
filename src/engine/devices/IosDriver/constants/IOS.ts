@@ -1,0 +1,30 @@
+export const IOS = {
+  screenTextLimit: 2_000,
+  controlLimit: 40,
+  labelLimit: 60,
+  bootTimeoutMs: 180_000,
+  commandTimeoutMs: 120_000,
+  maxBufferBytes: 64 * 1024 * 1024,
+  settleMs: 1_200,
+  openChecks: 6,
+  swipeSec: 0.35,
+  longPressSec: 1,
+  dragSec: 1.5,
+  scrollTries: 8,
+  notOnPhone: {
+    hover: 'A phone has no mouse to hover with: tap or long press instead.',
+    upload:
+      "A phone picks files in the app's own picker: tap through it instead of uploading.",
+  },
+  waitMs: 1_000,
+  recordStartMs: 10_000,
+  recordStopMs: 15_000,
+  recordStarted: 'Recording started',
+  keys: {
+    enter: '40',
+    escape: '41',
+    delete: '42',
+    tab: '43',
+    home: '227',
+  } as Record<string, string>,
+} as const;

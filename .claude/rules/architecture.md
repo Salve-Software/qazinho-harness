@@ -97,7 +97,11 @@ the CI's runner machines drive the same code. It is its own entry, `/engine`, so
 asks the agent (the API) never loads Playwright.
 
 - **`devices/`** holds each device a run drives, behind `IDeviceDriver`: `WebDriver` drives Chrome
-  over playwright-core, one profile per workspace, and notes each request the app makes.
+  over playwright-core, one profile per workspace, and notes each request the app makes;
+  `AndroidDriver` drives an AVD through `adb` and `uiautomator`; `IosDriver` a simulator through
+  `simctl` and idb. A phone records itself into the run's folder (`RUN_VIDEO_FILES`).
+- **`library/`** starts every child process the way each platform needs (`spawnCommand`,
+  `execCommand`): an npm `.cmd` shim on Windows runs as what it points at, with no console window.
 - It never imports a host either: what differs between the desktop and a CI machine (scaling a
   screenshot down, where a profile lives) arrives through its constructor.
 - `playwright-core` is an optional peer dependency: only a host that loads `/engine` needs it.

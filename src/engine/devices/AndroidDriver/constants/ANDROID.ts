@@ -1,0 +1,35 @@
+export const ANDROID = {
+  screenTextLimit: 2_000,
+  baselineDensity: 160,
+  controlLimit: 40,
+  labelLimit: 60,
+  bootTimeoutMs: 180_000,
+  shutdownTimeoutMs: 60_000,
+  swipeMs: 350,
+  longPressMs: 1_000,
+  dragMs: 1_500,
+  scrollTries: 8,
+  notOnPhone: {
+    hover: 'A phone has no mouse to hover with: tap or long press instead.',
+    upload:
+      "A phone picks files in the app's own picker: tap through it instead of uploading.",
+  },
+  noDoubleQuote:
+    'Android cannot type a double quote (") through adb, so QAzinho does not fill a field with a text that has one. Change that text, or the variable it comes from.',
+  commandTimeoutMs: 60_000,
+  maxBufferBytes: 64 * 1024 * 1024,
+  settleMs: 1_200,
+  waitMs: 1_000,
+  dumpFile: '/sdcard/qazinho-ui.xml',
+  recordLimitSec: 1_800,
+  recordSettleMs: 1_500,
+  keys: {
+    back: 'KEYCODE_BACK',
+    home: 'KEYCODE_HOME',
+    enter: 'KEYCODE_ENTER',
+    tab: 'KEYCODE_TAB',
+    delete: 'KEYCODE_DEL',
+    escape: 'KEYCODE_ESCAPE',
+    search: 'KEYCODE_SEARCH',
+  } as Record<string, string>,
+} as const;
