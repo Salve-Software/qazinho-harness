@@ -120,6 +120,9 @@ asks the agent (the API) never loads Playwright.
     it, with the job's token as its key. A 402 means the run spent all it may (`capped`).
   - The system prompt and the device tools come first and stay the same, so every call caches
     the prefix (`cache_control`); a cancelled turn aborts the call in flight.
+- `ClaudeCodeAgent` walks a case through the Claude Code of the computer it runs on, the device
+  tools served to it by `McpHost` on loopback, with none of its built-in tools and none of the
+  developer's hooks: a CI run on a developer's own computer, which never reaches the gateway.
 - It never imports a host either: what differs between the desktop and a CI machine (scaling a
   screenshot down, where a profile lives) arrives through its constructor.
 - `playwright-core` is an optional peer dependency: only a host that loads `/engine` needs it.
