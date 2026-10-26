@@ -7,4 +7,5 @@ export interface IRunnerEnv {
   androidSdk: string | null;
   avd: string | null;
   simulator: string | null;
+  idb: string | null;
 }

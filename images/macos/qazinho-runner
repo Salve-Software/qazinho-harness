@@ -1,0 +1,4 @@
+#!/bin/sh
+here="$(cd "$(dirname "$0")" && pwd)"
+export QAZINHO_WORK_DIR="${QAZINHO_WORK_DIR:-${TMPDIR:-/tmp}/qazinho}"
+exec "$here/node/bin/node" "$here/dist/runner.js"

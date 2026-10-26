@@ -23,5 +23,6 @@ export function runnerEnvOf(env: NodeJS.ProcessEnv): IRunnerEnv | string {
     androidSdk: filled(env.ANDROID_HOME) ?? filled(env.ANDROID_SDK_ROOT),
     avd: filled(env.QAZINHO_AVD),
     simulator: filled(env.QAZINHO_SIMULATOR),
+    idb: filled(env.QAZINHO_IDB),
   };
 }

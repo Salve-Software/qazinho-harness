@@ -49,7 +49,7 @@ async function deviceFor(props: {
     return new AndroidDriver({ sdkRoot: env.androidSdk, avd, apk: build });
   }
 
-  const idb = onPath('idb');
+  const idb = env.idb ?? onPath('idb');
   const udid = env.simulator ?? (await listSimulators()).at(-1);
   const app = await appOfZip({ zip: build, folder: join(workDir, 'app') });
 
