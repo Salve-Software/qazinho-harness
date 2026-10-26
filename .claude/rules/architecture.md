@@ -113,6 +113,13 @@ asks the agent (the API) never loads Playwright.
     skipped and says why. A question for the QA ends its case skipped, since no one answers.
   - It tells its host each step it starts and settles, each bug filed beside one, each note and
     what each case cost (`WalkEvent`); the host keeps them.
+- **`agents/`** holds the agents a walk can hand a case to. `GatewayAgent` is the CI's: a loop over
+  Anthropic's Messages API (`@anthropic-ai/sdk`, an optional peer) that carries out each tool call
+  on the device here, through `callDeviceTool`, and answers it with the screen.
+  - It reaches the model through QAzinho's gateway: the machine's environment points the SDK at
+    it, with the job's token as its key. A 402 means the run spent all it may (`capped`).
+  - The system prompt and the device tools come first and stay the same, so every call caches
+    the prefix (`cache_control`); a cancelled turn aborts the call in flight.
 - It never imports a host either: what differs between the desktop and a CI machine (scaling a
   screenshot down, where a profile lives) arrives through its constructor.
 - `playwright-core` is an optional peer dependency: only a host that loads `/engine` needs it.

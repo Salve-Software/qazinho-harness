@@ -9,6 +9,7 @@ const external = [
   /^yaml(\/.*)?$/,
   /^zod(\/.*)?$/,
   /^playwright-core(\/.*)?$/,
+  /^@anthropic-ai\/sdk(\/.*)?$/,
 ];
 
 export default defineConfig({
