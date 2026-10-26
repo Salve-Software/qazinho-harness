@@ -87,12 +87,13 @@ export const APP_TOOLS = [
             'integrations',
             'mcps',
             'appearance',
+            'storage',
             'shortcuts',
             'about',
           ],
           {
             error:
-              '"section" is agents, devices, integrations, mcps, appearance, shortcuts or about.',
+              '"section" is agents, devices, integrations, mcps, appearance, storage, shortcuts or about.',
           },
         )
         .optional(),

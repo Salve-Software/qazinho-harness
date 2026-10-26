@@ -29,6 +29,7 @@ export type AppToolCall =
           | 'integrations'
           | 'mcps'
           | 'appearance'
+          | 'storage'
           | 'shortcuts'
           | 'about';
       };

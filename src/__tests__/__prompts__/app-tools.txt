@@ -157,6 +157,7 @@
             "integrations",
             "mcps",
             "appearance",
+            "storage",
             "shortcuts",
             "about"
           ]
