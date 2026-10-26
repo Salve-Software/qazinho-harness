@@ -100,6 +100,9 @@ asks the agent (the API) never loads Playwright.
   over playwright-core, one profile per workspace, and notes each request the app makes;
   `AndroidDriver` drives an AVD through `adb` and `uiautomator`; `IosDriver` a simulator through
   `simctl` and idb. A phone records itself into the run's folder (`RUN_VIDEO_FILES`).
+- A browser is recorded from its live frames. The desktop encodes them in a hidden window;
+  a CI machine has none, so `FrameRecorder` hands them to the machine's ffmpeg at a steady rate,
+  each frame held until the next, and the video keeps the wall clock.
 - **`library/`** starts every child process the way each platform needs (`spawnCommand`,
   `execCommand`): an npm `.cmd` shim on Windows runs as what it points at, with no console window.
 - **`walk/`** walks a plan's cases on one device (`PlanWalker`), each on the app opened anew, by
