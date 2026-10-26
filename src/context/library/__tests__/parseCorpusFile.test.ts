@@ -26,10 +26,19 @@ describe('parseCorpusFile', () => {
     });
   });
 
-  it('puts a file with no frontmatter first in its layer', () => {
+  it('puts a file with no frontmatter first in its layer, read by every role', () => {
     expect(
-      parseCorpusFile({ path: 'corpus/universal/x.md', text: '## T\nA' }).order,
-    ).toBe(0);
+      parseCorpusFile({ path: 'corpus/universal/x.md', text: '## T\nA' }),
+    ).toMatchObject({ order: 0, except: [] });
+  });
+
+  it('reads the roles a file is never read by', () => {
+    expect(
+      parseCorpusFile({
+        path: 'corpus/universal/x.md',
+        text: '---\norder: 30\nexcept: [reader, 3]\n---\n## T\nA',
+      }).except,
+    ).toEqual(['reader']);
   });
 
   it('refuses a file outside the three layers, or a role with no folder', () => {

@@ -23,6 +23,8 @@ import type {
   IChangeAnswer,
   IChangeBrief,
   IHarnessTarget,
+  IPullAnswer,
+  IPullBrief,
   IReviewAnswer,
   IReviewBrief,
 } from '@/types';
@@ -41,6 +43,7 @@ import {
   describeKeptVariables,
   describeLook,
   describePlan,
+  describePull,
   describeReferences,
   describeReview,
   describeRuns,
@@ -56,9 +59,16 @@ import {
   readBuildAnswer,
   readChangeAnswer,
   readChatAnswer,
+  readPullAnswer,
   readReviewAnswer,
 } from '@/library';
-import { BUILD_SCHEMA, CHANGE_SCHEMA, CHAT_SCHEMA, REVIEW_SCHEMA } from '@/schemas';
+import {
+  BUILD_SCHEMA,
+  CHANGE_SCHEMA,
+  CHAT_SCHEMA,
+  PULL_SCHEMA,
+  REVIEW_SCHEMA,
+} from '@/schemas';
 import {
   BUILD_TOOLS,
   CHANGE_TOOLS,
@@ -291,6 +301,30 @@ export class Harness {
       schema: REVIEW_SCHEMA,
       readDirs: brief.readDirs,
     };
+  }
+
+  /** One read of a pull request, by an agent of its own with no tools: the PR, what it changes and the issue it closes, the plans it may change, and what QAzinho already found. */
+  public readPull(brief: IPullBrief): {
+    systemPrompt: string;
+    prompt: string;
+    schema: string;
+  } {
+    return {
+      systemPrompt: this.contextFor({
+        target: { role: 'reader' },
+        values: { language: LANGUAGE_NAMES[brief.language] },
+      }),
+      prompt: chatMessageOf({
+        sections: describePull(brief),
+        text: 'What does this pull request change in the plans?',
+      }),
+      schema: PULL_SCHEMA,
+    };
+  }
+
+  /** What the reader answered, checked against its schema and the plans it read; null when it is not an answer. */
+  public readPullAnswer(props: { text: string; brief: IPullBrief }): IPullAnswer | null {
+    return readPullAnswer(props);
   }
 
   /** The review out of what the agent printed; null when it answered something else. */

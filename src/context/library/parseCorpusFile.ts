@@ -20,11 +20,14 @@ function placeOf(path: string): Pick<ICorpusFile, 'layer' | 'scope'> {
   );
 }
 
-/** Reads a corpus `.md`: where it lives says who reads it, and its body is one `## Title` section. */
+/** Reads a corpus `.md`: where it lives says who reads it, its frontmatter which roles never do, and its body is one `## Title` section. */
 export function parseCorpusFile(props: { path: string; text: string }): ICorpusFile {
   const { path, text } = props;
   const match = FRONTMATTER.exec(text);
-  const front = (match ? parse(match[1] ?? '') : null) as { order?: unknown } | null;
+  const front = (match ? parse(match[1] ?? '') : null) as {
+    order?: unknown;
+    except?: unknown;
+  } | null;
   const [heading = '', ...body] = (match ? (match[2] ?? '') : text).trim().split('\n');
 
   if (!heading.startsWith('## '))
@@ -34,6 +37,9 @@ export function parseCorpusFile(props: { path: string; text: string }): ICorpusF
     path,
     ...placeOf(path),
     order: typeof front?.order === 'number' ? front.order : 0,
+    except: Array.isArray(front?.except)
+      ? front.except.filter((role): role is string => typeof role === 'string')
+      : [],
     section: {
       title: heading.slice(3).trim(),
       lines: body.join('\n').trim().split('\n'),

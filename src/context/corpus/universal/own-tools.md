@@ -1,5 +1,6 @@
 ---
 order: 30
+except: [reader]
 ---
 
 ## The QA's own tools

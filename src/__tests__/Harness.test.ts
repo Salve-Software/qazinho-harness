@@ -705,6 +705,95 @@ describe('Harness', () => {
     });
   });
 
+  describe('readPull', () => {
+    const PULL = {
+      pull: {
+        repository: 'loja/app',
+        number: 482,
+        title: 'Pix no checkout',
+        body: 'Troca o botão do Pix.',
+        headBranch: 'feat/checkout-pix',
+        baseBranch: 'main',
+      },
+      files: [
+        {
+          path: 'src/checkout/PixPanel.tsx',
+          status: 'modified',
+          patch: '-<Button>Copiar código</Button>\n+<Button>Copiar Pix</Button>',
+        },
+      ],
+      issue: null,
+      plans: [
+        {
+          id: 'pl-1',
+          name: 'Checkout com Pix',
+          cases: [
+            {
+              id: 'case-1',
+              title: 'Pagar com Pix',
+              goal: '',
+              steps: [
+                { action: 'Clicar em "Copiar código"', expected: 'O código é copiado' },
+              ],
+            },
+          ],
+        },
+      ],
+      found: [
+        {
+          planId: 'pl-1',
+          caseId: 'case-1',
+          step: 1,
+          text: 'Copiar código',
+          replacement: 'Copiar Pix',
+          file: 'src/checkout/PixPanel.tsx',
+        },
+      ],
+      language: 'pt' as const,
+    };
+
+    it('briefs the reader with no tools, and nothing of a chat, a run or the assistant', async () => {
+      const { systemPrompt, schema } = harness.readPull(PULL);
+
+      await expect(systemPrompt).toMatchFileSnapshot('./__prompts__/reader.txt');
+      await expect(schema).toMatchFileSnapshot('./__prompts__/pull-schema.txt');
+      expect(systemPrompt).toContain('## Reading a pull request');
+      expect(systemPrompt).toContain('in Brazilian Portuguese');
+      expect(systemPrompt).not.toContain('## Talking with the QA');
+      expect(systemPrompt).not.toContain('## Being the Estagiário');
+      expect(harness.toolsFor('reader').allowedTools).toEqual([]);
+    });
+
+    it('asks what the PR changes, with its files, the plans and what was found', async () => {
+      await expect(harness.readPull(PULL).prompt).toMatchFileSnapshot(
+        './__prompts__/pull-message.txt',
+      );
+    });
+
+    it('reads what the reader answered against the plans it read', () => {
+      expect(
+        harness.readPullAnswer({
+          brief: PULL,
+          text: JSON.stringify({
+            breaks: [
+              {
+                planId: 'pl-1',
+                caseId: 'case-1',
+                step: 1,
+                action: 'Clicar em "Copiar Pix"',
+                expected: 'O código é copiado',
+                why: 'O botão mudou de nome.',
+                file: 'src/checkout/PixPanel.tsx',
+              },
+            ],
+            reruns: [],
+            newCases: [],
+          }),
+        })?.breaks,
+      ).toHaveLength(1);
+    });
+  });
+
   describe('change', () => {
     const CHANGE = {
       dir: '/data/suites/p-1/changes/c-01/work/e2e',
