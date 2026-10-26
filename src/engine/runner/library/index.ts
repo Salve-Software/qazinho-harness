@@ -1,4 +1,5 @@
 export * from './bugBodyOf';
+export * from './bugTargetOf';
 export * from './caseVerdictOf';
 export * from './catchesOf';
 export * from './evidenceKindOf';
@@ -10,5 +11,6 @@ export * from './landingOf';
 export * from './networkJsonOf';
 export * from './recipeBookOf';
 export * from './runBodyOf';
+export * from './shotFilesOf';
 export * from './valuesOf';
 export * from './videoSecondsOf';
