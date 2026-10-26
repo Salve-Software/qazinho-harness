@@ -278,6 +278,17 @@ describe('JobRunner', () => {
       'network',
     ]);
     expect(device.happened).toEqual(['open', 'close']);
+    expect(
+      of('progress').map((beat) => {
+        const { phase, done, total } = beat as {
+          phase: string;
+          done: number;
+          total: number;
+        };
+
+        return `${phase} ${String(done)}/${String(total)}`;
+      }),
+    ).toEqual(['booting 0/2', 'cases 0/2', 'cases 1/2', 'cases 2/2', 'uploading 2/2']);
   });
 
   it('files a step that failed as a new bug, after the run that names it', async () => {

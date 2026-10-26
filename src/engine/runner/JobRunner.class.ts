@@ -33,7 +33,7 @@ import {
 } from './library';
 import { RunnerApiError } from './RunnerApiError.class';
 
-/** Walks a CI job on its machine from start to end: reads the job, opens the device on its build, walks each plan, sends each run with its screens, video, requests, bugs and recordings, beats while it goes, and says how it ended before its deadline. */
+/** Walks a CI job on its machine from start to end: reads the job, opens the device on its build, walks each plan, sends each run with its screens, video, requests, bugs and recordings, beats as each case ends and while it goes, and says how it ended before its deadline. */
 export class JobRunner {
   private readonly api: IRunnerApi;
   private readonly harness: Harness;
@@ -100,6 +100,7 @@ export class JobRunner {
       const walks: IPlanWalk[] = [];
 
       this.progress.phase = 'cases';
+      this.beat();
 
       for (const [position, plan] of job.plans.entries()) {
         if (isLate) break;
@@ -140,8 +141,10 @@ export class JobRunner {
             if (event.kind === 'step') {
               log.outcomes.push(event.outcome);
 
-              if (lastOfCase.get(event.outcome.caseId) === event.outcome.index)
+              if (lastOfCase.get(event.outcome.caseId) === event.outcome.index) {
                 this.progress.done += 1;
+                this.beat();
+              }
             }
 
             if (event.kind === 'finding') log.findings.push(event.finding);

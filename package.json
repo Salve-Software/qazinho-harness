@@ -40,7 +40,8 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepare": "husky || true"
+    "prepare": "husky || true",
+    "test:smoke": "vitest run --config tests/vitest.smoke.ts"
   },
   "lint-staged": {
     "*.{ts,js,mjs,json,md,yml,yaml}": "prettier --write"
