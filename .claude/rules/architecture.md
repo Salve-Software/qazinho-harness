@@ -102,6 +102,17 @@ asks the agent (the API) never loads Playwright.
   `simctl` and idb. A phone records itself into the run's folder (`RUN_VIDEO_FILES`).
 - **`library/`** starts every child process the way each platform needs (`spawnCommand`,
   `execCommand`): an npm `.cmd` shim on Windows runs as what it points at, with no console window.
+- **`walk/`** walks a plan's cases on one device (`PlanWalker`), each on the app opened anew, by
+  the run's mode (`WalkMode`): a case whose recording still shows each step's proof is walked again
+  with no agent (`recipeFor`, `proofHolds`); the rest go to the agent, which heals a recording that
+  broke, and a case it passed with every proof becomes a recording (`recipeOf`).
+  - The agent is a port (`ICaseAgent`): one turn per case, acting through the device tools'
+    callbacks (`IAttachDevice`), so whatever reaches the model walks the same way.
+  - A `${NAME}` is typed with its value and read back as its name (`variablePort`).
+  - With no agent, or once the run spent all it may on the model, a case no recording holds is
+    skipped and says why. A question for the QA ends its case skipped, since no one answers.
+  - It tells its host each step it starts and settles, each bug filed beside one, each note and
+    what each case cost (`WalkEvent`); the host keeps them.
 - It never imports a host either: what differs between the desktop and a CI machine (scaling a
   screenshot down, where a profile lives) arrives through its constructor.
 - `playwright-core` is an optional peer dependency: only a host that loads `/engine` needs it.
