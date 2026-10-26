@@ -16,6 +16,7 @@ src/
 ├── Harness.class.ts   ← chat, run, walk, explore, assistant, build, change, review
 ├── index.ts           ← the Node entry: Harness, McpHost, the tools, the contract
 ├── contract/          ← the pure entry: types and plain constants a host's other side shares
+├── engine/            ← the `/engine` entry: the devices a run drives, for the desktop and the CI
 ├── context/           ← corpus/ of .md, and the library that reads and renders it
 ├── tools/             ← McpHost, servers/<group>/, the grants per role
 ├── schemas/           ← one zod schema per answer
@@ -88,3 +89,15 @@ zod schemas are held to.
 - Hands the agent's CLI what a `Harness` method returns: the system prompt, the prompt, the
   schema, the allowed tools, the folders it may read, the permission tool.
 - Fills the ports, and keeps every secret on its side.
+
+## The engine
+
+`src/engine/` is what walks a run on a device, apart from what the agent is told: the desktop and
+the CI's runner machines drive the same code. It is its own entry, `/engine`, so a host that only
+asks the agent (the API) never loads Playwright.
+
+- **`devices/`** holds each device a run drives, behind `IDeviceDriver`: `WebDriver` drives Chrome
+  over playwright-core, one profile per workspace, and notes each request the app makes.
+- It never imports a host either: what differs between the desktop and a CI machine (scaling a
+  screenshot down, where a profile lives) arrives through its constructor.
+- `playwright-core` is an optional peer dependency: only a host that loads `/engine` needs it.

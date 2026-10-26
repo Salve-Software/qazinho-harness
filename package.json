@@ -2,7 +2,7 @@
   "name": "@salve-software/qazinho-harness",
   "version": "0.1.0",
   "private": true,
-  "description": "The QA harness QAzinho builds around an agent: what it is told, the tools it gets and the shapes it answers in.",
+  "description": "The QA harness QAzinho builds around an agent, and the engine that walks a run: what the agent is told, the tools it gets, the shapes it answers in, and the devices it drives.",
   "license": "UNLICENSED",
   "author": "Salve Software",
   "type": "module",
@@ -21,6 +21,10 @@
     "./contract": {
       "types": "./dist/types/contract/index.d.ts",
       "import": "./dist/contract.js"
+    },
+    "./engine": {
+      "types": "./dist/types/engine/index.d.ts",
+      "import": "./dist/engine.js"
     }
   },
   "files": [
@@ -43,6 +47,7 @@
   },
   "peerDependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
+    "playwright-core": "^1.63.0",
     "yaml": "^2.9.1",
     "zod": "^4.6.7"
   },
@@ -57,6 +62,7 @@
     "eslint-plugin-import-x": "^4.17.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.1",
+    "playwright-core": "1.63.0",
     "prettier": "^3.9.6",
     "tsc-alias": "^1.9.9",
     "typescript": "~5.9.3",
@@ -65,5 +71,10 @@
     "vitest": "^5.0.5",
     "yaml": "2.9.1",
     "zod": "4.6.7"
+  },
+  "peerDependenciesMeta": {
+    "playwright-core": {
+      "optional": true
+    }
   }
 }

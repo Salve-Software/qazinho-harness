@@ -1,0 +1,16 @@
+export const CONTROL_SELECTOR = [
+  'button',
+  'a',
+  'input',
+  'select',
+  'textarea',
+  '[role=button]',
+  '[role=link]',
+  '[role=tab]',
+  '[role=switch]',
+  '[role=checkbox]',
+  '[role=radio]',
+  '[role=menuitem]',
+  '[role=option]',
+  '[role=combobox]',
+].join(', ');

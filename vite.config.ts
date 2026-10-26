@@ -8,6 +8,7 @@ const external = [
   /^@modelcontextprotocol\/sdk(\/.*)?$/,
   /^yaml(\/.*)?$/,
   /^zod(\/.*)?$/,
+  /^playwright-core(\/.*)?$/,
 ];
 
 export default defineConfig({
@@ -24,6 +25,7 @@ export default defineConfig({
       entry: {
         index: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
         contract: fileURLToPath(new URL('./src/contract/index.ts', import.meta.url)),
+        engine: fileURLToPath(new URL('./src/engine/index.ts', import.meta.url)),
       },
       formats: ['es'],
       fileName: (_format, entry) => `${entry}.js`,

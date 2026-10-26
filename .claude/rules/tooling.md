@@ -2,19 +2,20 @@
 
 ## Commands
 
-| Command                           | What it does                                                 |
-| --------------------------------- | ------------------------------------------------------------ |
-| `npm run build`                   | `dist/index.js`, `dist/contract.js` and `dist/types/` (d.ts) |
-| `npm run typecheck`               | `tsc` over the package                                       |
-| `npm run typecheck:fast`          | the same through `tsgo`                                      |
-| `npm run lint` / `lint:fix`       | ESLint                                                       |
-| `npm run format` / `format:check` | Prettier                                                     |
-| `npm test` / `test:watch`         | Vitest                                                       |
+| Command                           | What it does                                               |
+| --------------------------------- | ---------------------------------------------------------- |
+| `npm run build`                   | `dist/index.js`, `contract.js`, `engine.js` and their d.ts |
+| `npm run typecheck`               | `tsc` over the package                                     |
+| `npm run typecheck:fast`          | the same through `tsgo`                                    |
+| `npm run lint` / `lint:fix`       | ESLint                                                     |
+| `npm run format` / `format:check` | Prettier                                                   |
+| `npm test` / `test:watch`         | Vitest                                                     |
 
 ## The build
 
-- **Vite's library mode** bundles `src/index.ts` and `src/contract/index.ts` into ES modules for
-  Node 22, and embeds the corpus. Node builtins, `zod`, `yaml` and the MCP SDK stay external.
+- **Vite's library mode** bundles `src/index.ts`, `src/contract/index.ts` and
+  `src/engine/index.ts` into ES modules for Node 22, and embeds the corpus. Node builtins, `zod`,
+  `yaml`, the MCP SDK and `playwright-core` stay external.
 - **`tsc` writes the declarations** into `dist/types/` (`tsconfig.build.json`), and `tsc-alias`
   rewrites `@/` into relative paths, so a host resolves them without this package's aliases.
 - A host bundles the built package or loads it as it is. It never compiles the source.
@@ -22,7 +23,8 @@
 ## Dependencies
 
 - `zod`, `yaml` and `@modelcontextprotocol/sdk` are **peerDependencies**: the host ships one copy,
-  and the schemas the harness hands the MCP SDK come from the zod the SDK uses.
+  and the schemas the harness hands the MCP SDK come from the zod the SDK uses. `playwright-core`
+  is an optional one, for a host that loads `/engine`.
 - The devDependencies pin the versions the desktop installs (zod 4.6.7, the MCP SDK 1.30.0,
   yaml 2.9.1), so the pinned prompts match what a host serves. Lift them together with the
   hosts.
