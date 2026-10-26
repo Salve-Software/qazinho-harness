@@ -8,6 +8,7 @@ export type * from './IPlanWalk';
 export type * from './IRunBody';
 export type * from './IRunnerApi';
 export type * from './IRunnerApiProps';
+export type * from './IRunnerEnv';
 export type * from './IRunStepBody';
 export type * from './ISightingBody';
 export type * from './IWalkLog';

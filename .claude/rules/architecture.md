@@ -126,6 +126,15 @@ asks the agent (the API) never loads Playwright.
 - `ClaudeCodeAgent` walks a case through the Claude Code of the computer it runs on, the device
   tools served to it by `McpHost` on loopback, with none of its built-in tools and none of the
   developer's hooks: a CI run on a developer's own computer, which never reaches the gateway.
+- **`runner/`** walks a CI job on the machine QAzinho's API starts for it, keeping the protocol in
+  the API's `docs/runner-protocol.md`. `src/runner.ts` is its entry, built as `dist/runner.js`:
+  it reads the machine's environment (`runnerEnvOf`), opens the device the job names on its build,
+  and hands `JobRunner` the agent the job calls for (`gateway`, `claude-code` or none).
+  - `JobRunner` reads the job, records the device, walks each plan with `PlanWalker`, and sends
+    each run with its screens, video and requests, the bugs it filed or saw again, and the
+    recordings it made (`RunnerApi`). It beats while it goes and stops before its deadline.
+  - A failure lands on the open bug it is, which takes a sighting and keeps what it says; the rest
+    are filed new under the run's id (`filedBugsOf`).
 - It never imports a host either: what differs between the desktop and a CI machine (scaling a
   screenshot down, where a profile lives) arrives through its constructor.
 - `playwright-core` is an optional peer dependency: only a host that loads `/engine` needs it.

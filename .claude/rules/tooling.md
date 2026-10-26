@@ -2,14 +2,14 @@
 
 ## Commands
 
-| Command                           | What it does                                               |
-| --------------------------------- | ---------------------------------------------------------- |
-| `npm run build`                   | `dist/index.js`, `contract.js`, `engine.js` and their d.ts |
-| `npm run typecheck`               | `tsc` over the package                                     |
-| `npm run typecheck:fast`          | the same through `tsgo`                                    |
-| `npm run lint` / `lint:fix`       | ESLint                                                     |
-| `npm run format` / `format:check` | Prettier                                                   |
-| `npm test` / `test:watch`         | Vitest                                                     |
+| Command                           | What it does                                             |
+| --------------------------------- | -------------------------------------------------------- |
+| `npm run build`                   | `dist/index.js`, `contract.js`, `engine.js`, `runner.js` |
+| `npm run typecheck`               | `tsc` over the package                                   |
+| `npm run typecheck:fast`          | the same through `tsgo`                                  |
+| `npm run lint` / `lint:fix`       | ESLint                                                   |
+| `npm run format` / `format:check` | Prettier                                                 |
+| `npm test` / `test:watch`         | Vitest                                                   |
 
 ## The build
 

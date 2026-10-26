@@ -27,6 +27,7 @@ export default defineConfig({
         index: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
         contract: fileURLToPath(new URL('./src/contract/index.ts', import.meta.url)),
         engine: fileURLToPath(new URL('./src/engine/index.ts', import.meta.url)),
+        runner: fileURLToPath(new URL('./src/runner.ts', import.meta.url)),
       },
       formats: ['es'],
       fileName: (_format, entry) => `${entry}.js`,
