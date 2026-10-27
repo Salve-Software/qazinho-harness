@@ -26,6 +26,13 @@ A class file holds the class, a library file one exported function, a constant f
 type file one type. A helper that stays private may live beside its single export. Enforced by
 `no-restricted-syntax` over `**/*.class.ts`.
 
+## A library file opens with its export
+
+The exported function comes first, after the imports and any private type or value it reads. The
+private helper functions it calls go after it, at the end of the file, so whoever opens the file
+reads what it does before how. `no-restricted-syntax` over `library/` fails a helper declared
+before the export.
+
 ## Types
 
 - An `interface` carries the `I` prefix; a `type` does not.

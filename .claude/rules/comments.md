@@ -22,7 +22,12 @@ CSS rule, or inside an interface body.
 export function isInternalNavigation(appUrl: string, url: string): boolean {}
 ```
 
-- **Two lines at most.** One is better. Small, plain, saying what the thing does.
+- **Never inside an interface or a type.** No JSDoc and no comment on a property, a method
+  signature or a field of a type literal: what a member means goes in its name, or in the type's
+  own JSDoc. `qazinho/no-comment-in-type` fails the lint on one.
+- **Two lines at most, each within 90 columns.** One is better. Say what the thing does, directly,
+  and stop: not everything it touches, not why it exists. `qazinho/short-jsdoc` fails the lint on
+  a longer one.
 - It says what **that** thing does. If it stays true pasted onto another thing of the same kind,
   it says nothing.
 - A good name needs no JSDoc: leave it out rather than repeat the name.

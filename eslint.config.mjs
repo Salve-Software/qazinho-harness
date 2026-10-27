@@ -23,6 +23,64 @@ const NO_HOST_IN_THE_HARNESS = {
     'The harness runs inside the desktop and the API alike. Declare what it needs as a port in its types, and let the host fill it.',
 };
 
+const LIBRARY_ORDER =
+  'A library file opens with its export: its helper functions go after it, at the end of the file.';
+
+const QAZINHO = {
+  rules: {
+    'no-comment-in-type': {
+      meta: {
+        type: 'problem',
+        schema: [],
+        messages: {
+          inside:
+            'No comment inside an interface or a type: say it in the JSDoc above the type, in two lines at most.',
+        },
+      },
+      create(context) {
+        const reported = new Set();
+        const check = (node) => {
+          for (const comment of context.sourceCode.getCommentsInside(node)) {
+            if (reported.has(comment.range[0])) continue;
+            reported.add(comment.range[0]);
+            context.report({ loc: comment.loc, messageId: 'inside' });
+          }
+        };
+
+        return { TSInterfaceBody: check, TSTypeLiteral: check };
+      },
+    },
+    'short-jsdoc': {
+      meta: {
+        type: 'problem',
+        schema: [],
+        messages: {
+          long: 'A JSDoc says what the thing does in two lines at most, each within 90 columns.',
+        },
+      },
+      create(context) {
+        return {
+          Program() {
+            const { lines } = context.sourceCode;
+            for (const comment of context.sourceCode.getAllComments()) {
+              if (comment.type !== 'Block' || !comment.value.startsWith('*')) continue;
+              const said = comment.value
+                .split('\n')
+                .map((line) => line.replace(/^\s*\*?\s?/, '').trim())
+                .filter(Boolean);
+              const isWide = lines
+                .slice(comment.loc.start.line - 1, comment.loc.end.line)
+                .some((line) => line.length > 90);
+              if (said.length > 2 || isWide)
+                context.report({ loc: comment.loc, messageId: 'long' });
+            }
+          },
+        };
+      },
+    },
+  },
+};
+
 export default config(
   { ignores: ['dist', 'node_modules', 'coverage'] },
 
@@ -151,6 +209,35 @@ export default config(
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/unbound-method': 'off',
       'no-console': 'off',
+    },
+  },
+
+  {
+    files: ['**/*.{ts,tsx,mts}'],
+    ignores: ['**/__tests__/**', 'tests/**', 'test/**'],
+    plugins: { qazinho: QAZINHO },
+    rules: {
+      'qazinho/no-comment-in-type': 'error',
+      'qazinho/short-jsdoc': 'error',
+    },
+  },
+
+  {
+    files: ['**/library/**/*.{ts,tsx}'],
+    ignores: ['**/__tests__/**', '**/library/index.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Program > FunctionDeclaration ~ ExportNamedDeclaration',
+          message: LIBRARY_ORDER,
+        },
+        {
+          selector:
+            'Program > VariableDeclaration[declarations.0.init.type=/^(ArrowFunctionExpression|FunctionExpression)$/] ~ ExportNamedDeclaration',
+          message: LIBRARY_ORDER,
+        },
+      ],
     },
   },
 
