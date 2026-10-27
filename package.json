@@ -2,7 +2,7 @@
   "name": "@salve-software/qazinho-harness",
   "version": "0.1.0",
   "private": true,
-  "description": "The QA harness QAzinho builds around an agent, and the engine that walks a run: what the agent is told, the tools it gets, the shapes it answers in, and the devices it drives.",
+  "description": "QAzinho's agent harness and run engine.",
   "license": "UNLICENSED",
   "author": "Salve Software",
   "type": "module",
