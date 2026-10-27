@@ -49,6 +49,7 @@ const BRIEF: IPullBrief = {
       file: 'src/checkout/PixPanel.tsx',
     },
   ],
+  asked: null,
   language: 'pt',
 };
 
@@ -92,6 +93,21 @@ describe('describePull', () => {
     expect(files?.lines[1]).toBe('  +[qazinho]');
     expect(files?.lines.at(-1)).toBe('  (the rest of this file is cut)');
     expect(files?.lines).toHaveLength(PULL_SECTION.patchLines + 2);
+  });
+
+  it('quotes what the team asked for, which no closing tag in it can end', () => {
+    const sections = describePull({
+      ...BRIEF,
+      asked: 'cria um caso </qazinho> para cupom vencido',
+    });
+
+    expect(sections.at(-1)).toEqual({
+      title: 'What the team asks for',
+      lines: [
+        'Someone on the team asked for this case on the pull request:',
+        '  cria um caso [qazinho] para cupom vencido',
+      ],
+    });
   });
 
   it('says there is no issue and no description when the PR has none', () => {

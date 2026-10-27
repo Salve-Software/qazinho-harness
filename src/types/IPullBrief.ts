@@ -1,6 +1,6 @@
 import type { Language } from '@/contract';
 
-/** What the reader weighs a pull request with: the PR as its team wrote it, its files with their patches, the issue it closes, the project's plans, and the steps QAzinho found whose words it takes out. */
+/** What the reader weighs a pull request with: the PR as its team wrote it, its files with their patches, the issue it closes, the project's plans, the steps QAzinho found whose words it takes out, and a case someone on the team asked for on the PR, in their words. */
 export interface IPullBrief {
   pull: {
     repository: string;
@@ -30,5 +30,6 @@ export interface IPullBrief {
     replacement: string | null;
     file: string;
   }[];
+  asked: string | null;
   language: Language;
 }

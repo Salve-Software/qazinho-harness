@@ -749,6 +749,7 @@ describe('Harness', () => {
           file: 'src/checkout/PixPanel.tsx',
         },
       ],
+      asked: null,
       language: 'pt' as const,
     };
 
@@ -768,6 +769,13 @@ describe('Harness', () => {
       await expect(harness.readPull(PULL).prompt).toMatchFileSnapshot(
         './__prompts__/pull-message.txt',
       );
+    });
+
+    it('hands the reader the case someone on the team asked for on the PR, quoted', async () => {
+      await expect(
+        harness.readPull({ ...PULL, asked: 'cria um caso para desconto acima de R$ 100' })
+          .prompt,
+      ).toMatchFileSnapshot('./__prompts__/pull-asked-message.txt');
     });
 
     it('reads what the reader answered against the plans it read', () => {

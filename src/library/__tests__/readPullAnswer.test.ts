@@ -48,6 +48,7 @@ const BRIEF: IPullBrief = {
       file: 'src/checkout/PixPanel.tsx',
     },
   ],
+  asked: null,
   language: 'pt',
 };
 

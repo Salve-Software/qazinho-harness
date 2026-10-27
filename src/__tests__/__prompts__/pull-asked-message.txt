@@ -1,0 +1,27 @@
+<qazinho>
+## The pull request
+loja/app #482 · feat/checkout-pix into main
+Its title:
+  Pix no checkout
+Its description:
+  Troca o botão do Pix.
+
+## What it changes
+- src/checkout/PixPanel.tsx (modified)
+  -<Button>Copiar código</Button>
+  +<Button>Copiar Pix</Button>
+
+## The plans
+Plan "Checkout com Pix" (pl-1)
+  Case case-1 "Pagar com Pix"
+    1. Clicar em "Copiar código" → O código é copiado
+
+## Found
+- plan pl-1, case case-1, step 1: "Copiar código" is gone from src/checkout/PixPanel.tsx, where "Copiar Pix" took its place
+
+## What the team asks for
+Someone on the team asked for this case on the pull request:
+  cria um caso para desconto acima de R$ 100
+</qazinho>
+
+What does this pull request change in the plans?
