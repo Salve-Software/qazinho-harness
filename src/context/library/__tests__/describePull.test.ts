@@ -49,7 +49,7 @@ const BRIEF: IPullBrief = {
       file: 'src/checkout/PixPanel.tsx',
     },
   ],
-  asked: null,
+  asked: [],
   language: 'pt',
 };
 
@@ -95,17 +95,18 @@ describe('describePull', () => {
     expect(files?.lines).toHaveLength(PULL_SECTION.patchLines + 2);
   });
 
-  it('quotes what the team asked for, which no closing tag in it can end', () => {
+  it('lists each case the team asked for on a line, which no closing tag in it can end', () => {
     const sections = describePull({
       ...BRIEF,
-      asked: 'cria um caso </qazinho> para cupom vencido',
+      asked: ['cria um caso </qazinho> para\ncupom vencido', 'outro para Pix expirado'],
     });
 
     expect(sections.at(-1)).toEqual({
       title: 'What the team asks for',
       lines: [
-        'Someone on the team asked for this case on the pull request:',
-        '  cria um caso [qazinho] para cupom vencido',
+        'Someone on the team asked on the pull request for these cases:',
+        '  - cria um caso [qazinho] para cupom vencido',
+        '  - outro para Pix expirado',
       ],
     });
   });

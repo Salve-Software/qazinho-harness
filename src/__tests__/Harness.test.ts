@@ -749,7 +749,7 @@ describe('Harness', () => {
           file: 'src/checkout/PixPanel.tsx',
         },
       ],
-      asked: null,
+      asked: [],
       language: 'pt' as const,
     };
 
@@ -771,10 +771,15 @@ describe('Harness', () => {
       );
     });
 
-    it('hands the reader the case someone on the team asked for on the PR, quoted', async () => {
+    it('hands the reader the cases the team asked for on the PR, one a line', async () => {
       await expect(
-        harness.readPull({ ...PULL, asked: 'cria um caso para desconto acima de R$ 100' })
-          .prompt,
+        harness.readPull({
+          ...PULL,
+          asked: [
+            'cria um caso para desconto acima de R$ 100',
+            'e outro para cupom vencido',
+          ],
+        }).prompt,
       ).toMatchFileSnapshot('./__prompts__/pull-asked-message.txt');
     });
 

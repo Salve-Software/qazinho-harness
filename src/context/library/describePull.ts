@@ -22,7 +22,7 @@ function patchLines(props: { patch: string | null; room: number }): string[] {
   ];
 }
 
-/** A pull request as the reader weighs it: the PR as its team wrote it and the issue it closes, quoted as data, each file's patch cut to a budget, the plans by id, what QAzinho already found, and the case the team asked for. */
+/** A pull request as the reader weighs it: the PR as its team wrote it and the issue it closes, quoted as data, each file's patch cut to a budget, the plans by id, what QAzinho already found, and the cases the team asked for, one a line. */
 export function describePull(brief: IPullBrief): IHarnessSection[] {
   const { pull } = brief;
   const body =
@@ -88,11 +88,17 @@ export function describePull(brief: IPullBrief): IHarnessSection[] {
     {
       title: 'What the team asks for',
       lines:
-        brief.asked === null
+        brief.asked.length === 0
           ? []
           : [
-              'Someone on the team asked for this case on the pull request:',
-              ...quoted(brief.asked),
+              'Someone on the team asked on the pull request for these cases:',
+              ...brief.asked.map(
+                (text) =>
+                  `  - ${text
+                    .replace(/<\/?qazinho>/gi, '[qazinho]')
+                    .replace(/\s+/g, ' ')
+                    .trim()}`,
+              ),
             ],
     },
   ];
