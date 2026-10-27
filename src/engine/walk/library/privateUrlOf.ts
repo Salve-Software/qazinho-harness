@@ -1,15 +1,10 @@
 import type { IVariableValue } from '@/engine/types';
 import { RUN_WALK, SECRET_PARAMS } from '@/engine/walk/constants';
 
-function keyOf(raw: string): string {
-  try {
-    return decodeURIComponent(raw);
-  } catch {
-    return raw;
-  }
-}
-
-/** A request's address safe to keep: a variable's value in it reads as its ${NAME}, and the password in it and the values of secret-looking keys as dots. */
+/**
+ * A request's address safe to keep: a variable's value in it reads as its ${NAME}, and
+ * the password in it and the values of secret-looking keys as dots.
+ */
 export function privateUrlOf(props: { url: string; values: IVariableValue[] }): string {
   const named = props.values
     .filter(({ value }) => value.length >= RUN_WALK.hiddenFromLength)
@@ -34,4 +29,12 @@ export function privateUrlOf(props: { url: string; values: IVariableValue[] }): 
         ? `${mark}${key}=${SECRET_PARAMS.hidden}`
         : whole;
     });
+}
+
+function keyOf(raw: string): string {
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
 }

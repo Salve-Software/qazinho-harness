@@ -3,7 +3,10 @@ import { numberDuplicates } from '@/engine/devices/library';
 import { WEB_DRIVER } from '@/engine/devices/WebDriver/constants';
 import { listControls } from './listControls';
 
-/** What the agent is allowed to look at: what a person would see, not the markup, with controls that read alike numbered. */
+/**
+ * What the agent is allowed to look at: what a person would see, not the markup, with
+ * controls that read alike numbered.
+ */
 export async function describePage(page: Page): Promise<string> {
   const text = (
     await page

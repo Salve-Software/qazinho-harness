@@ -2,6 +2,19 @@ import type { IScreenNode } from '@/engine/devices/AndroidDriver/types';
 import { ordinalOf, withoutRole } from '@/engine/devices/library';
 import { isListedControl } from './isListedControl';
 
+/**
+ * The agent names what a person would read, a control before text that reads the same,
+ * "#2" for the second look listed, and a control copied as look lists it.
+ */
+export function findNode(props: {
+  nodes: IScreenNode[];
+  target: string;
+}): IScreenNode | null {
+  const listed = withoutRole(props.target);
+
+  return find(props) ?? (listed === null ? null : find({ ...props, target: listed }));
+}
+
 function says(node: IScreenNode): string[] {
   return [node.text, node.desc, node.id].filter((one) => one.length > 0);
 }
@@ -26,14 +39,4 @@ function find(props: { nodes: IScreenNode[]; target: string }): IScreenNode | nu
     partial[nth] ??
     null
   );
-}
-
-/** The agent names what a person would read, a control before text that reads the same, "#2" for the second look listed, and a control copied as look lists it. */
-export function findNode(props: {
-  nodes: IScreenNode[];
-  target: string;
-}): IScreenNode | null {
-  const listed = withoutRole(props.target);
-
-  return find(props) ?? (listed === null ? null : find({ ...props, target: listed }));
 }

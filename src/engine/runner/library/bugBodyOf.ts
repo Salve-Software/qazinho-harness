@@ -2,7 +2,10 @@ import type { IStepOutcome } from '@/contract';
 import type { IBugBody, ICatch } from '@/engine/runner/types';
 import { videoSecondsOf } from './videoSecondsOf';
 
-/** A failure or a finding as a new bug: what broke against what was expected, the steps that reach it, its screens by key, and the run that caught it at its moment on the video. */
+/**
+ * A failure or a finding as a new bug: what broke, the steps to it, its screens and its
+ * moment on the video.
+ */
 export function bugBodyOf(props: {
   caught: ICatch;
   caseTitle: string;

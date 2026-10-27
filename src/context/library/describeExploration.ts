@@ -2,7 +2,10 @@ import type { IDesignLink, IKnownBug, IVariableBrief } from '@/contract';
 import { describeKnownBugs } from './describeKnownBugs';
 import { describeVariables } from './describeVariables';
 
-/** The message that starts an exploration: how long it goes, the Figma design its screens are held to, the variables it may type, the bugs already open, and the screen it starts on. */
+/**
+ * The message that starts an exploration: its time, the Figma design, the variables, the
+ * open bugs and the screen.
+ */
 export function describeExploration(props: {
   minutes: number;
   screen: string;

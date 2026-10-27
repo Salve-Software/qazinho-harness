@@ -2,7 +2,10 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { PERMISSION_TOOL } from '@/tools/constants';
 import { permissionOf } from './permissionOf';
 
-/** Puts on an MCP server the tool Claude Code asks for each permission its agent needs, answered at once by `permissionOf`. */
+/**
+ * Puts on an MCP server the tool Claude Code asks for each permission its agent needs,
+ * answered at once by `permissionOf`.
+ */
 export function registerPermissionTool(mcp: McpServer): void {
   mcp.registerTool(
     PERMISSION_TOOL.name,

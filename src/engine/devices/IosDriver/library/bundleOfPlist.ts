@@ -1,4 +1,6 @@
-/** `plutil -extract CFBundleIdentifier raw` answers with the identifier and nothing else. */
+/**
+ * `plutil -extract CFBundleIdentifier raw` answers with the identifier and nothing else.
+ */
 export function bundleOfPlist(printed: string): string | null {
   const name = printed.trim().split('\n')[0]?.trim() ?? '';
 

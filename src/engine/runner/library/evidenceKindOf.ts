@@ -12,7 +12,10 @@ const KINDS: Record<
   '.json': { kind: 'network', contentType: 'application/json' },
 };
 
-/** Whether a file of a run is a screen, its video or its requests, and its content type; null for one a runner never sends. */
+/**
+ * Whether a file of a run is a screen, its video or its requests, and its content type;
+ * null for one a runner never sends.
+ */
 export function evidenceKindOf(
   file: string,
 ): { kind: 'screenshot' | 'video' | 'network'; contentType: string } | null {

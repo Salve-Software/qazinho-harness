@@ -1,6 +1,9 @@
 import type { DialogAnswer } from './DialogAnswer';
 
-/** One thing to do on the device, as the agent asked for it; `locator`, `toLocator` and `option` keep how a web run found its targets, for code that does it again. A scroll keeps its direction in `value` and the words it stops at in `target`, a drag where it drops in `value`, and an upload the kind of sample file in `value`. */
+/**
+ * One action on the device as the agent asked for it, with the locators a web run used to
+ * find its targets.
+ */
 export interface IStepAction {
   kind:
     | 'goto'

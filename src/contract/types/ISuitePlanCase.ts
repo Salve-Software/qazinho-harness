@@ -1,4 +1,7 @@
-/** A case of a workspace's plan the QA hands their agent to automate: the workspace it is in, and the case as its plan writes it. */
+/**
+ * A case of a workspace's plan the QA hands their agent to automate: the workspace it is
+ * in, and the case as its plan writes it.
+ */
 export interface ISuitePlanCase {
   workspace: string;
   id: string;

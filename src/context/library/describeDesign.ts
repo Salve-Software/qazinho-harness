@@ -2,7 +2,10 @@ import type { IHarnessSection } from '@/context/types';
 import type { IDesignLink } from '@/contract';
 import { DESIGN_SECTION } from '@/constants';
 
-/** The Figma design a workspace is checked against, as the agent reads it: the file and the node its link points at. */
+/**
+ * The Figma design a workspace is checked against, as the agent reads it: the file and
+ * the node its link points at.
+ */
 export function describeDesign(props: {
   design: IDesignLink | null;
   wasTold: boolean;

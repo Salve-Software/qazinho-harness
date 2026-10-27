@@ -1,4 +1,7 @@
-/** Reads `adb devices`. A device that is not `device` yet is still booting, so it is not ready. */
+/**
+ * Reads `adb devices`. A device that is not `device` yet is still booting, so it is not
+ * ready.
+ */
 export function parseDevices(stdout: string): string[] {
   return stdout
     .split('\n')

@@ -1,4 +1,7 @@
-/** How many frames a steady clock owes the video by `now`: one at the start, then one each tick. */
+/**
+ * How many frames a steady clock owes the video by `now`: one at the start, then one each
+ * tick.
+ */
 export function framesDueOf(props: {
   startedAt: number;
   now: number;

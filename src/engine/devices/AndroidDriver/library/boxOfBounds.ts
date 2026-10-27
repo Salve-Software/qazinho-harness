@@ -1,6 +1,9 @@
 import type { IBox } from '@/engine/devices/types';
 
-/** uiautomator writes a box as `[left,top][right,bottom]`, in the screen's pixels; null for a box with no size. */
+/**
+ * uiautomator writes a box as `[left,top][right,bottom]`, in the screen's pixels; null
+ * for a box with no size.
+ */
 export function boxOfBounds(bounds: string): IBox | null {
   const read = /\[(-?\d+),(-?\d+)\]\[(-?\d+),(-?\d+)\]/.exec(bounds);
 

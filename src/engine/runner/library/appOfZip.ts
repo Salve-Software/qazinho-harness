@@ -2,7 +2,10 @@ import { mkdir, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { execCommand } from '@/engine/library';
 
-/** The simulator app a zipped build holds, unpacked into `folder` the way macOS keeps a bundle; null when it holds none. */
+/**
+ * The simulator app a zipped build holds, unpacked into `folder` the way macOS keeps a
+ * bundle; null when it holds none.
+ */
 export async function appOfZip(props: {
   zip: string;
   folder: string;

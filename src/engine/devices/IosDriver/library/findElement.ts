@@ -1,6 +1,19 @@
 import type { IScreenElement } from '@/engine/devices/IosDriver/types';
 import { ordinalOf, withoutRole } from '@/engine/devices/library';
 
+/**
+ * The agent names what a person would read, the label, "#2" for the second of several,
+ * and a control copied as look lists it.
+ */
+export function findElement(props: {
+  elements: IScreenElement[];
+  target: string;
+}): IScreenElement | null {
+  const listed = withoutRole(props.target);
+
+  return find(props) ?? (listed === null ? null : find({ ...props, target: listed }));
+}
+
 function find(props: {
   elements: IScreenElement[];
   target: string;
@@ -17,14 +30,4 @@ function find(props: {
     labelled.filter((one) => one.label.toLowerCase().includes(wanted))[nth] ??
     null
   );
-}
-
-/** The agent names what a person would read, the label, "#2" for the second of several, and a control copied as look lists it. */
-export function findElement(props: {
-  elements: IScreenElement[];
-  target: string;
-}): IScreenElement | null {
-  const listed = withoutRole(props.target);
-
-  return find(props) ?? (listed === null ? null : find({ ...props, target: listed }));
 }

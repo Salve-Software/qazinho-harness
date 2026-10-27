@@ -33,7 +33,10 @@ import {
 } from './library';
 import { RunnerApiError } from './RunnerApiError.class';
 
-/** Walks a CI job on its machine from start to end: reads the job, opens the device on its build, walks each plan, sends each run with its screens, video, requests, bugs and recordings, beats as each case ends and while it goes, and says how it ended before its deadline. */
+/**
+ * Walks a CI job on its machine: opens the device, walks each plan, sends each run, and
+ * says how it ended.
+ */
 export class JobRunner {
   private readonly api: IRunnerApi;
   private readonly harness: Harness;
@@ -223,7 +226,10 @@ export class JobRunner {
     return file;
   }
 
-  /** Records the device: a browser's frames through the machine's ffmpeg, else the phone itself. */
+  /**
+   * Records the device: a browser's frames through the machine's ffmpeg, else the phone
+   * itself.
+   */
   private async record(driver: IDeviceDriver): Promise<Recording> {
     const frames = this.frames;
     const file = join(this.workDir, RUNNER.video);
@@ -287,7 +293,10 @@ export class JobRunner {
     return file;
   }
 
-  /** Sends every run with its evidence first, then the bugs each filed or saw again, then the recordings each made. */
+  /**
+   * Sends every run with its evidence first, then the bugs each filed or saw again, then
+   * the recordings each made.
+   */
   private async send(props: {
     job: RunnerJob;
     walks: IPlanWalk[];
@@ -355,7 +364,10 @@ export class JobRunner {
     }
   }
 
-  /** Uploads each file the API takes, and answers with the key each is known by; a file it cannot read or the API refuses is left out, unless the job is over. */
+  /**
+   * Uploads each file the API takes, and answers with the key each is known by; a file it
+   * cannot read or the API refuses is left out, unless the job is over.
+   */
   private async upload(files: string[]): Promise<Record<string, string>> {
     const keys: Record<string, string> = {};
 

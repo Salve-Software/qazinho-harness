@@ -11,7 +11,10 @@ type Read = {
   style: IElementStyle;
 };
 
-/** Measures what a locator found where the page sits, scrolled or not: its box, the box it sits in, its neighbours' distance, and its computed style. */
+/**
+ * Measures what a locator found where the page sits, scrolled or not: its box, the box it
+ * sits in, its neighbours' distance, and its computed style.
+ */
 export async function measureLocator(locator: Locator): Promise<IElementMeasure> {
   const read = await locator.evaluate((node): Read => {
     type Rect = { left: number; top: number; width: number; height: number };

@@ -1,4 +1,7 @@
-/** A size scaled down, keeping its shape, until it holds at most `maxPixels`; one that already fits stays as it is. */
+/**
+ * A size scaled down, keeping its shape, until it holds at most `maxPixels`; one that
+ * already fits stays as it is.
+ */
 export function fitPixels(props: { width: number; height: number; maxPixels: number }): {
   width: number;
   height: number;

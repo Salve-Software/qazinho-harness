@@ -32,7 +32,10 @@ import {
   summarizeMotion,
 } from './library';
 
-/** Drives a real Chrome on this machine with no window of its own; the QA watches it in the device panel. */
+/**
+ * Drives a real Chrome on this machine with no window of its own; the QA watches it in
+ * the device panel.
+ */
 export class WebDriver implements IDeviceDriver {
   private readonly url: string;
   private readonly profileDir: string;
@@ -72,7 +75,10 @@ export class WebDriver implements IDeviceDriver {
     this.access = props.access ?? { headers: {}, credentials: null };
   }
 
-  /** Opens Chrome on an empty profile, so a run never starts with what an earlier one saved. */
+  /**
+   * Opens Chrome on an empty profile, so a run never starts with what an earlier one
+   * saved.
+   */
   public async open(): Promise<void> {
     await rm(this.profileDir, { recursive: true, force: true, maxRetries: 5 });
     const origin = originOf(this.url);
@@ -116,17 +122,26 @@ export class WebDriver implements IDeviceDriver {
     await this.page.goto(this.url, { timeout: WEB_DRIVER.gotoTimeoutMs });
   }
 
-  /** Starts the app over for someone who never opened it: no cookie, nothing stored, one new tab on its address. */
+  /**
+   * Starts the app over for someone who never opened it: no cookie, nothing stored, one
+   * new tab on its address.
+   */
   public async restart(): Promise<void> {
     await this.openAnew({ isCleared: true });
   }
 
-  /** The requests the app made since Chrome opened, in the order they started, each with how it ended once it did. */
+  /**
+   * The requests the app made since Chrome opened, in the order they started, each with
+   * how it ended once it did.
+   */
   public network(): INetworkEntry[] {
     return this.entries.map((entry) => ({ ...entry }));
   }
 
-  /** The API calls the app made since `since`, in epoch ms, each with how it ended and what it answered when it failed. */
+  /**
+   * The API calls the app made since `since`, in epoch ms, each with how it ended and
+   * what it answered when it failed.
+   */
   public apiCalls(since: number): INetworkEntry[] {
     return this.entries
       .filter(
@@ -136,7 +151,10 @@ export class WebDriver implements IDeviceDriver {
       .map((entry) => ({ ...entry }));
   }
 
-  /** What an API call answered, cut short, while Chrome still holds it; null once it is gone. */
+  /**
+   * What an API call answered, cut short, while Chrome still holds it; null once it is
+   * gone.
+   */
   public async responseBody(id: number): Promise<string | null> {
     const answer = this.answers.get(id);
 
@@ -147,7 +165,10 @@ export class WebDriver implements IDeviceDriver {
     return text === null ? null : text.slice(0, WEB_DRIVER.bodyChars);
   }
 
-  /** The locator the last click or fill found its target with, as Playwright writes it, and the option a dropdown took. */
+  /**
+   * The locator the last click or fill found its target with, as Playwright writes it,
+   * and the option a dropdown took.
+   */
   public resolution(): {
     locator: string;
     toLocator: string | null;
@@ -156,7 +177,10 @@ export class WebDriver implements IDeviceDriver {
     return this.resolved;
   }
 
-  /** Carries one action out, answering the dialogs it opens the way it says, and keeps how the page moved for `motion`. */
+  /**
+   * Carries one action out, answering the dialogs it opens the way it says, and keeps how
+   * the page moved for `motion`.
+   */
   public async act(action: IStepAction): Promise<void> {
     const page = this.page;
 
@@ -209,7 +233,10 @@ export class WebDriver implements IDeviceDriver {
     return motion;
   }
 
-  /** The visible part of the page, scaled down, as the agent reads it: shot whole and shrunk, since Chrome drawing it small drops 1px borders. */
+  /**
+   * The visible part of the page, scaled down, as the agent reads it: shot whole and
+   * shrunk, since Chrome drawing it small drops 1px borders.
+   */
   public async glance(): Promise<IDeviceImage | null> {
     const cdp = await this.session();
 
@@ -245,7 +272,10 @@ export class WebDriver implements IDeviceDriver {
     return { data: shrunk.toString('base64'), mimeType: 'image/jpeg' };
   }
 
-  /** What the page shows, and the dialogs it opened since the last look, with how each was answered. */
+  /**
+   * What the page shows, and the dialogs it opened since the last look, with how each was
+   * answered.
+   */
   public async describe(): Promise<string> {
     if (!this.page) return '';
 
@@ -255,7 +285,10 @@ export class WebDriver implements IDeviceDriver {
     return shown.length === 0 ? page : [page, 'DIALOGS:', ...shown].join('\n');
   }
 
-  /** One thing on the page measured to hold it to a design: its box in CSS px where the page sits, the space around it, and its computed type, colours and spacing. */
+  /**
+   * One thing on the page measured to hold it to a design: its box in CSS px where the
+   * page sits, the space around it, and its computed type, colours and spacing.
+   */
   public async inspect(target: string): Promise<string> {
     if (!this.page) throw new Error('The browser is not open.');
 
@@ -266,7 +299,10 @@ export class WebDriver implements IDeviceDriver {
     return describeMeasure(await measureLocator(locator));
   }
 
-  /** The pages the open page's header and menus lead to, on its own site, in the order they show. */
+  /**
+   * The pages the open page's header and menus lead to, on its own site, in the order
+   * they show.
+   */
   public async navigation(): Promise<string[]> {
     if (!this.page) return [];
 
@@ -295,7 +331,10 @@ export class WebDriver implements IDeviceDriver {
     return true;
   }
 
-  /** A browser is recorded from its live stream by the recorder window, so the driver records nothing itself. */
+  /**
+   * A browser is recorded from its live stream by the recorder window, so the driver
+   * records nothing itself.
+   */
   public async record(): Promise<boolean> {
     return Promise.resolve(false);
   }
@@ -304,7 +343,10 @@ export class WebDriver implements IDeviceDriver {
     return Promise.resolve(null);
   }
 
-  /** Streams at the display's full detail while the QA watches the device up close, and at 1x otherwise. */
+  /**
+   * Streams at the display's full detail while the QA watches the device up close, and at
+   * 1x otherwise.
+   */
   public async focus(isFocused: boolean): Promise<void> {
     this.isFocused = isFocused;
     await this.recast();
@@ -350,7 +392,10 @@ export class WebDriver implements IDeviceDriver {
     await this.cast();
   }
 
-  /** Turns to a tab the app opened, the way a person's eyes do, and back to the one that opened it when it closes. */
+  /**
+   * Turns to a tab the app opened, the way a person's eyes do, and back to the one that
+   * opened it when it closes.
+   */
   private async adopt(page: Page): Promise<void> {
     const opener = await page.opener().catch(() => null);
 
@@ -375,7 +420,10 @@ export class WebDriver implements IDeviceDriver {
     if (this.onFrame) await this.watch(this.onFrame);
   }
 
-  /** Notes a request the app started, up to a limit; only the web's own, never a data: or chrome: address. */
+  /**
+   * Notes a request the app started, up to a limit; only the web's own, never a data: or
+   * chrome: address.
+   */
   private noteRequest(request: Request): void {
     const url = request.url();
 
@@ -397,7 +445,10 @@ export class WebDriver implements IDeviceDriver {
     this.requests.set(request, entry);
   }
 
-  /** Writes down how a request ended: its status, how long it took, how big a page or an API call came back, and what an API call that failed answered. */
+  /**
+   * Writes down how a request ended: its status, how long it took, how big a page or an
+   * API call came back, and what an API call that failed answered.
+   */
   private async settleRequest(props: {
     request: Request;
     failure: string | null;
@@ -443,7 +494,10 @@ export class WebDriver implements IDeviceDriver {
     }
   }
 
-  /** Keeps every site a tab opened, so a fresh start clears what each one stored, and answers its dialogs, OK unless the action said cancel. */
+  /**
+   * Keeps every site a tab opened, so a fresh start clears what each one stored, and
+   * answers its dialogs, OK unless the action said cancel.
+   */
   private follow(page: Page): void {
     page.on('framenavigated', (frame) => {
       const origin = originOf(frame.url());
@@ -739,7 +793,10 @@ export class WebDriver implements IDeviceDriver {
     return this.cdp;
   }
 
-  /** Sizes the window around the viewport, so the stream frames the whole page and nothing below it. */
+  /**
+   * Sizes the window around the viewport, so the stream frames the whole page and nothing
+   * below it.
+   */
   private async fit(): Promise<void> {
     const cdp = await this.session();
 
@@ -761,7 +818,10 @@ export class WebDriver implements IDeviceDriver {
     await this.still();
   }
 
-  /** Caps a frame by its height alone: Chrome keeps a window 500 pixels wide, so a narrower page comes framed wider. */
+  /**
+   * Caps a frame by its height alone: Chrome keeps a window 500 pixels wide, so a
+   * narrower page comes framed wider.
+   */
   private async cast(): Promise<void> {
     const detail = this.isFocused ? this.pixelRatio : 1;
 
@@ -772,7 +832,10 @@ export class WebDriver implements IDeviceDriver {
     });
   }
 
-  /** Hands the stream the page as it stands: a page standing still sends no frame when the stream restarts. */
+  /**
+   * Hands the stream the page as it stands: a page standing still sends no frame when the
+   * stream restarts.
+   */
   private async still(): Promise<void> {
     const shot = await this.screencast
       ?.send('Page.captureScreenshot', {
@@ -784,7 +847,10 @@ export class WebDriver implements IDeviceDriver {
     if (shot) this.onFrame?.(Buffer.from(shot.data, 'base64'));
   }
 
-  /** Waits for what an action started to finish, so the page the agent reads next is the new one. */
+  /**
+   * Waits for what an action started to finish, so the page the agent reads next is the
+   * new one.
+   */
   private async settle(page: Page): Promise<void> {
     await page
       .waitForLoadState('networkidle', { timeout: WEB_DRIVER.settleMs })

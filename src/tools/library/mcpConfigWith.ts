@@ -1,6 +1,9 @@
 import type { IAgentServer } from '@/tools/types';
 
-/** An `--mcp-config` with the QA's own servers listed beside what it already holds; null when it holds nothing. */
+/**
+ * An `--mcp-config` with the QA's own servers listed beside what it already holds; null
+ * when it holds nothing.
+ */
 export function mcpConfigWith(props: {
   config: string | null;
   servers: IAgentServer[];

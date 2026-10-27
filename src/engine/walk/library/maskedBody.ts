@@ -1,7 +1,28 @@
 import { SECRET_PARAMS } from '@/engine/walk/constants';
 
 const JWT = /eyJ[\w-]{6,}\.[\w-]{6,}\.[\w-]{6,}/g;
+
 const PAIR = /("?)([\w-]+)\1(\s*[:=]\s*)("(?:[^"\\]|\\.)*"|[^\s,;&}]+)/g;
+
+/**
+ * What an API call answered, safe to show or keep: the values of secret-looking keys and
+ * anything shaped like a token as dots, in JSON or in plain text.
+ */
+export function maskedBody(text: string): string {
+  try {
+    return JSON.stringify(masked(JSON.parse(text), ''));
+  } catch {
+    return text
+      .replace(PAIR, (whole: string, ...parts: string[]) => {
+        const [quote = '', key = '', glue = ''] = parts;
+
+        return isSecretKey(key)
+          ? `${quote}${key}${quote}${glue}${SECRET_PARAMS.hidden}`
+          : whole;
+      })
+      .replace(JWT, SECRET_PARAMS.hidden);
+  }
+}
 
 function isSecretKey(key: string): boolean {
   return SECRET_PARAMS.anywhere.test(key) || SECRET_PARAMS.whole.test(key);
@@ -19,21 +40,4 @@ function masked(value: unknown, key: string): unknown {
     );
 
   return typeof value === 'string' ? value.replace(JWT, SECRET_PARAMS.hidden) : value;
-}
-
-/** What an API call answered, safe to show or keep: the values of secret-looking keys and anything shaped like a token as dots, in JSON or in plain text. */
-export function maskedBody(text: string): string {
-  try {
-    return JSON.stringify(masked(JSON.parse(text), ''));
-  } catch {
-    return text
-      .replace(PAIR, (whole: string, ...parts: string[]) => {
-        const [quote = '', key = '', glue = ''] = parts;
-
-        return isSecretKey(key)
-          ? `${quote}${key}${quote}${glue}${SECRET_PARAMS.hidden}`
-          : whole;
-      })
-      .replace(JWT, SECRET_PARAMS.hidden);
-  }
 }

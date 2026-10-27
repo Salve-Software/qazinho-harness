@@ -3,12 +3,6 @@ import { ANDROID } from '@/engine/devices/AndroidDriver/constants';
 import { numberDuplicates } from '@/engine/devices/library';
 import { isListedControl } from './isListedControl';
 
-function labelOf(node: IScreenNode): string {
-  const label = node.text.length > 0 ? node.text : node.desc;
-
-  return `${node.role.toLowerCase()}: ${(label.length > 0 ? label : node.id).slice(0, ANDROID.labelLimit)}`;
-}
-
 /** What the agent is allowed to look at: what a person would read on the screen. */
 export function describeScreen(props: { nodes: IScreenNode[]; app: string }): string {
   const text = props.nodes
@@ -29,4 +23,10 @@ export function describeScreen(props: { nodes: IScreenNode[]; app: string }): st
     'CONTROLS:',
     ...numberDuplicates(controls),
   ].join('\n');
+}
+
+function labelOf(node: IScreenNode): string {
+  const label = node.text.length > 0 ? node.text : node.desc;
+
+  return `${node.role.toLowerCase()}: ${(label.length > 0 ? label : node.id).slice(0, ANDROID.labelLimit)}`;
 }

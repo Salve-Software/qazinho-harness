@@ -1,6 +1,9 @@
 import type { IBox } from '@/engine/devices/types';
 
-/** One node of the screen as uiautomator saw it, with its box in pixels and the point a finger would land on. */
+/**
+ * One node of the screen as uiautomator saw it, with its box in pixels and the point a
+ * finger would land on.
+ */
 export interface IScreenNode {
   text: string;
   desc: string;

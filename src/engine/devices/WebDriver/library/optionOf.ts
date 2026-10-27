@@ -1,4 +1,7 @@
-/** The option a fill means on a dropdown: its words or its value, exact first, then regardless of case; null when none does. */
+/**
+ * The option a fill means on a dropdown: its words or its value, exact first, then
+ * regardless of case; null when none does.
+ */
 export function optionOf(props: {
   options: { label: string; value: string }[];
   wanted: string;

@@ -2,10 +2,10 @@ import type { IRunnerEnv } from '@/engine/runner/types';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const filled = (value: string | undefined) =>
-  value === undefined || value.trim().length === 0 ? null : value.trim();
-
-/** The machine's environment as a runner reads it; the words that say what is missing when it cannot walk a job. */
+/**
+ * The machine's environment as a runner reads it; the words that say what is missing when
+ * it cannot walk a job.
+ */
 export function runnerEnvOf(env: NodeJS.ProcessEnv): IRunnerEnv | string {
   const apiUrl = filled(env.QAZINHO_API_URL);
   const token = filled(env.QAZINHO_JOB_TOKEN);
@@ -26,3 +26,6 @@ export function runnerEnvOf(env: NodeJS.ProcessEnv): IRunnerEnv | string {
     idb: filled(env.QAZINHO_IDB),
   };
 }
+
+const filled = (value: string | undefined) =>
+  value === undefined || value.trim().length === 0 ? null : value.trim();

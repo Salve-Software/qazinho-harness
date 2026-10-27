@@ -1,6 +1,9 @@
 import type { IActionMotion } from '@/contract';
 
-/** What the page's probe recorded since an action began, summed into how much the page moved. */
+/**
+ * What the page's probe recorded since an action began, summed into how much the page
+ * moved.
+ */
 export function summarizeMotion(props: {
   shifts: { value: number; hadInput: boolean }[];
   frames: { ms: number }[];

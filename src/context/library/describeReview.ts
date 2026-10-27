@@ -1,14 +1,10 @@
 import type { IHarnessSection } from '@/context/types';
 import type { IReviewBrief } from '@/types';
 
-function quoted(text: string): string[] {
-  return text
-    .replace(/<\/?qazinho>/gi, '[qazinho]')
-    .split('\n')
-    .map((line) => `  ${line}`);
-}
-
-/** A bug seen again as the reviewing agent reads it: the issue as the team keeps it now, the bug as QAzinho first filed it, and each time a run caught it again. */
+/**
+ * A bug seen again as the reviewing agent reads it: the issue as the team keeps it now,
+ * the bug as QAzinho first filed it, and each time a run caught it again.
+ */
 export function describeReview(brief: IReviewBrief): IHarnessSection[] {
   const { issue, bug } = brief;
 
@@ -57,4 +53,11 @@ export function describeReview(brief: IReviewBrief): IHarnessSection[] {
       ]),
     },
   ];
+}
+
+function quoted(text: string): string[] {
+  return text
+    .replace(/<\/?qazinho>/gi, '[qazinho]')
+    .split('\n')
+    .map((line) => `  ${line}`);
 }

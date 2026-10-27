@@ -1,7 +1,10 @@
 import type { IFlatStep, IStepOutcome } from '@/contract';
 import type { IShot } from '@/engine/devices/types';
 
-/** A step walked again without the agent: passed, since its proof showed, with the proof as what the screen said. */
+/**
+ * A step walked again without the agent: passed, since its proof showed, with the proof
+ * as what the screen said.
+ */
 export function replayedOutcome(props: {
   step: IFlatStep;
   index: number;

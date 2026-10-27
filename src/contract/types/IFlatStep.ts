@@ -1,4 +1,7 @@
-/** A plan flattened for execution: every step of every case in the order the agent walks them, each carrying its case, and the Figma node its screen should match. */
+/**
+ * A plan flattened for execution: every step of every case in the order the agent walks
+ * them, each carrying its case, and the Figma node its screen should match.
+ */
 export interface IFlatStep {
   caseId: string;
   caseTitle: string;

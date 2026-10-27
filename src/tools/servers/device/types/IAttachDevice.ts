@@ -6,7 +6,10 @@ import type { IQaQuestion } from './IQaQuestion';
 import type { IStepFinding } from './IStepFinding';
 import type { IStepReport } from './IStepReport';
 
-/** A workspace's device for the length of a run or an exploration, until when it may act, and who hears what its agent reports, notes, files and asks the QA. */
+/**
+ * A workspace's device for the length of a run or an exploration, until when it may act,
+ * and who hears what its agent reports, notes, files and asks the QA.
+ */
 export interface IAttachDevice {
   workspaceId: string;
   driver: IDevicePort;

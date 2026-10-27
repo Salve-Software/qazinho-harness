@@ -1,6 +1,9 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-/** Why a turn could not go on, in words a run keeps: what the model's endpoint answered, or what broke on the way. */
+/**
+ * Why a turn could not go on, in words a run keeps: what the model's endpoint answered,
+ * or what broke on the way.
+ */
 export function turnFailureOf(reason: unknown): string {
   if (reason instanceof Anthropic.APIError)
     return reason.status === undefined

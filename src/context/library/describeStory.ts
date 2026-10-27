@@ -4,32 +4,10 @@ import { STORY_SECTION } from '@/constants';
 
 const KILOBYTE = 1_024;
 
-function sizeOf(bytes: number): string {
-  return bytes < KILOBYTE * KILOBYTE
-    ? `${String(Math.max(1, Math.round(bytes / KILOBYTE)))} KB`
-    : `${(bytes / KILOBYTE / KILOBYTE).toFixed(1)} MB`;
-}
-
-function quoted(text: string): string[] {
-  return text
-    .replace(/<\/?qazinho>/gi, '[qazinho]')
-    .split('\n')
-    .map((line) => `  ${line}`);
-}
-
-function fileLine(file: IJiraFile): string {
-  const named = `- ${file.filename} (${file.mimeType || 'unknown kind'}, ${sizeOf(file.size)})`;
-
-  if (file.path !== null) return `${named} at ${file.path}`;
-  if (file.note === 'not-readable')
-    return `${named}: not downloaded, a kind you cannot read`;
-  if (file.note === 'too-large') return `${named}: not downloaded, too large`;
-  if (file.note === 'too-many') return `${named}: not downloaded, too many files`;
-
-  return `${named}: Jira did not hand it over`;
-}
-
-/** A Jira story as the planning agent reads it: what it asks for, how it is accepted, what the team said, what it links to, and where its files were downloaded. */
+/**
+ * A Jira story as the planning agent reads it: what it asks for, how it is accepted, what
+ * the team said, what it links to, and where its files were downloaded.
+ */
 export function describeStory(props: {
   story: IJiraStoryCopy | null;
   wasTold: boolean;
@@ -100,4 +78,29 @@ export function describeStory(props: {
           ]),
     ],
   };
+}
+
+function sizeOf(bytes: number): string {
+  return bytes < KILOBYTE * KILOBYTE
+    ? `${String(Math.max(1, Math.round(bytes / KILOBYTE)))} KB`
+    : `${(bytes / KILOBYTE / KILOBYTE).toFixed(1)} MB`;
+}
+
+function quoted(text: string): string[] {
+  return text
+    .replace(/<\/?qazinho>/gi, '[qazinho]')
+    .split('\n')
+    .map((line) => `  ${line}`);
+}
+
+function fileLine(file: IJiraFile): string {
+  const named = `- ${file.filename} (${file.mimeType || 'unknown kind'}, ${sizeOf(file.size)})`;
+
+  if (file.path !== null) return `${named} at ${file.path}`;
+  if (file.note === 'not-readable')
+    return `${named}: not downloaded, a kind you cannot read`;
+  if (file.note === 'too-large') return `${named}: not downloaded, too large`;
+  if (file.note === 'too-many') return `${named}: not downloaded, too many files`;
+
+  return `${named}: Jira did not hand it over`;
 }

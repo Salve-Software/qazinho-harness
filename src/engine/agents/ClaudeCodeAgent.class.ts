@@ -8,7 +8,10 @@ import { killTree, spawnCommand } from '@/engine/library';
 import { CLAUDE_CODE_AGENT } from './constants';
 import { claudeArgsOf, turnResultOf } from './library';
 
-/** Walks a case through the Claude Code of the computer it runs on, with QAzinho's device tools served to it on loopback: a run on a developer's own computer, which never reaches the gateway. */
+/**
+ * Walks a case through the local Claude Code with QAzinho's device tools on loopback,
+ * never the gateway.
+ */
 export class ClaudeCodeAgent implements ICaseAgent {
   private readonly command: string;
   private readonly model: string | null;
@@ -24,7 +27,10 @@ export class ClaudeCodeAgent implements ICaseAgent {
     this.folder = props.folder;
   }
 
-  /** One turn on one case: Claude Code acts through the device tools until it ends its turn, and says what the turn cost. */
+  /**
+   * One turn on one case: Claude Code acts through the device tools until it ends its
+   * turn, and says what the turn cost.
+   */
   public async walk(turn: ICaseTurn): Promise<CaseTurnEnd> {
     await this.tools.start();
     await mkdir(this.folder, { recursive: true });

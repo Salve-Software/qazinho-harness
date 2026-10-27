@@ -3,24 +3,10 @@ import { parse } from 'yaml';
 
 const FRONTMATTER = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
 
-function placeOf(path: string): Pick<ICorpusFile, 'layer' | 'scope'> {
-  const parts = path.slice(path.lastIndexOf('corpus/') + 'corpus/'.length).split('/');
-  const [layer, first] = parts;
-
-  if (layer === 'universal' && parts.length === 2) return { layer, scope: null };
-
-  if (layer === 'role' && parts.length === 3 && first !== undefined)
-    return { layer, scope: first };
-
-  if (layer === 'platform' && parts.length === 2 && first !== undefined)
-    return { layer, scope: first.replace(/\.md$/, '') };
-
-  throw new Error(
-    `${path}: a corpus file lives at universal/<x>.md, role/<role>/<x>.md or platform/<platform>.md.`,
-  );
-}
-
-/** Reads a corpus `.md`: where it lives says who reads it, its frontmatter which roles never do, and its body is one `## Title` section. */
+/**
+ * Reads a corpus `.md`: where it lives says who reads it, its frontmatter which roles
+ * never do, and its body is one `## Title` section.
+ */
 export function parseCorpusFile(props: { path: string; text: string }): ICorpusFile {
   const { path, text } = props;
   const match = FRONTMATTER.exec(text);
@@ -45,4 +31,21 @@ export function parseCorpusFile(props: { path: string; text: string }): ICorpusF
       lines: body.join('\n').trim().split('\n'),
     },
   };
+}
+
+function placeOf(path: string): Pick<ICorpusFile, 'layer' | 'scope'> {
+  const parts = path.slice(path.lastIndexOf('corpus/') + 'corpus/'.length).split('/');
+  const [layer, first] = parts;
+
+  if (layer === 'universal' && parts.length === 2) return { layer, scope: null };
+
+  if (layer === 'role' && parts.length === 3 && first !== undefined)
+    return { layer, scope: first };
+
+  if (layer === 'platform' && parts.length === 2 && first !== undefined)
+    return { layer, scope: first.replace(/\.md$/, '') };
+
+  throw new Error(
+    `${path}: a corpus file lives at universal/<x>.md, role/<role>/<x>.md or platform/<platform>.md.`,
+  );
 }

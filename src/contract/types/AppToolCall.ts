@@ -4,7 +4,10 @@ import type { IssueTracker } from './IssueTracker';
 import type { Language } from './Language';
 import type { TargetKind } from './TargetKind';
 
-/** One of QAzinho's app tools as the assistant called it, read against its schema: what the page carries out. */
+/**
+ * One of QAzinho's app tools as the assistant called it, read against its schema: what
+ * the page carries out.
+ */
 export type AppToolCall =
   | { name: 'workspace_details'; args: { workspace: string } }
   | { name: 'run_details'; args: { workspace: string; run?: string } }

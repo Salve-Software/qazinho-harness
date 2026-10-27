@@ -11,36 +11,10 @@ const ENDINGS: Record<IAppRunBrief['endedBy'], string> = {
 
 const INTEGRATION_NAMES = { github: 'GitHub', jira: 'Jira' } as const;
 
-function plural(props: { count: number; one: string }): string {
-  return `${String(props.count)} ${props.one}${props.count === 1 ? '' : 's'}`;
-}
-
-function workspaceLine(workspace: IAppWorkspaceBrief): string {
-  const run = workspace.latestRun;
-  const parts = [
-    workspace.cases === 0
-      ? 'no plan yet'
-      : `${plural({ count: workspace.cases, one: 'case' })}, ${plural({ count: workspace.steps, one: 'step' })}`,
-    run === null
-      ? 'no runs'
-      : `${plural({ count: workspace.runs, one: 'run' })}, the latest ${run.id} ${run.startedOn === null ? '' : `on ${run.startedOn} `}at ${run.startedAt} ${ENDINGS[run.endedBy]}: ${String(run.passed)} passed, ${String(run.failed)} failed, ${String(run.blocked)} blocked, ${String(run.skipped)} skipped`,
-    workspace.bugs === 0 ? 'no bugs' : plural({ count: workspace.bugs, one: 'bug' }),
-    ...(workspace.design === null
-      ? []
-      : [`checked against the Figma design "${workspace.design}"`]),
-    ...(workspace.isRunning ? ['running now'] : []),
-    ...(workspace.isAnswering ? ['its chat agent is answering'] : []),
-    ...(workspace.openQuestions === 0
-      ? []
-      : [
-          `its chat waits on the QA's answers to ${plural({ count: workspace.openQuestions, one: 'question' })}`,
-        ]),
-  ];
-
-  return `- ${workspace.id} "${workspace.name}" in ${workspace.projectId}, on ${workspace.target ?? 'no target'}: ${parts.join(' · ')}`;
-}
-
-/** QAzinho as it is now: how the QA set it up, the trackers, every project with its variables by name, and every workspace by id. */
+/**
+ * QAzinho as it is now: how the QA set it up, the trackers, every project with its
+ * variables by name, and every workspace by id.
+ */
 export function describeApp(app: IAppSnapshot): IHarnessSection {
   const integrations = app.integrations.map(({ id, account }) =>
     account === null
@@ -87,4 +61,33 @@ export function describeApp(app: IAppSnapshot): IHarnessSection {
           : ['Workspaces:', ...app.workspaces.map(workspaceLine)]),
     ],
   };
+}
+
+function plural(props: { count: number; one: string }): string {
+  return `${String(props.count)} ${props.one}${props.count === 1 ? '' : 's'}`;
+}
+
+function workspaceLine(workspace: IAppWorkspaceBrief): string {
+  const run = workspace.latestRun;
+  const parts = [
+    workspace.cases === 0
+      ? 'no plan yet'
+      : `${plural({ count: workspace.cases, one: 'case' })}, ${plural({ count: workspace.steps, one: 'step' })}`,
+    run === null
+      ? 'no runs'
+      : `${plural({ count: workspace.runs, one: 'run' })}, the latest ${run.id} ${run.startedOn === null ? '' : `on ${run.startedOn} `}at ${run.startedAt} ${ENDINGS[run.endedBy]}: ${String(run.passed)} passed, ${String(run.failed)} failed, ${String(run.blocked)} blocked, ${String(run.skipped)} skipped`,
+    workspace.bugs === 0 ? 'no bugs' : plural({ count: workspace.bugs, one: 'bug' }),
+    ...(workspace.design === null
+      ? []
+      : [`checked against the Figma design "${workspace.design}"`]),
+    ...(workspace.isRunning ? ['running now'] : []),
+    ...(workspace.isAnswering ? ['its chat agent is answering'] : []),
+    ...(workspace.openQuestions === 0
+      ? []
+      : [
+          `its chat waits on the QA's answers to ${plural({ count: workspace.openQuestions, one: 'question' })}`,
+        ]),
+  ];
+
+  return `- ${workspace.id} "${workspace.name}" in ${workspace.projectId}, on ${workspace.target ?? 'no target'}: ${parts.join(' · ')}`;
 }

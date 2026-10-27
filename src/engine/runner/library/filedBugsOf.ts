@@ -5,7 +5,10 @@ import { catchesOf } from './catchesOf';
 import { landingOf } from './landingOf';
 import { videoSecondsOf } from './videoSecondsOf';
 
-/** Lands each failure and finding of a walk among the bugs: an open bug the job named is seen again once, a bug this run filed takes its repeats, and the rest are filed new under the run's id. */
+/**
+ * Lands each failure and finding of a walk on a bug: one the job named, one this run
+ * filed, or a new one.
+ */
 export function filedBugsOf(props: {
   log: IWalkLog;
   known: IKnownBug[];

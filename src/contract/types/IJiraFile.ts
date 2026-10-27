@@ -1,4 +1,7 @@
-/** A file attached to a Jira story, as the agent hears of it: where it was downloaded to, or why it was not. */
+/**
+ * A file attached to a Jira story, as the agent hears of it: where it was downloaded to,
+ * or why it was not.
+ */
 export interface IJiraFile {
   filename: string;
   mimeType: string;

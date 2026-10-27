@@ -1,4 +1,7 @@
-/** A request the app under test made during a run, and how it ended; `startedAt` is epoch ms, `durationMs` is null for one still going when the run ended, and `body` is the start of what an API call that failed answered. */
+/**
+ * A request the app made during a run and how it ended; `body` starts what a failed API
+ * call answered.
+ */
 export interface INetworkEntry {
   id: number;
   method: string;

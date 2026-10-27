@@ -3,7 +3,10 @@ import type { IHarnessTarget } from '@/types';
 
 const LAYER_ORDER: readonly CorpusLayer[] = ['universal', 'role', 'platform'];
 
-/** The corpus sections a target reads, from the most stable layer to the least, then by order; a universal file its role is excepted from is left out. */
+/**
+ * The corpus sections a target reads, from the most stable layer to the least, then by
+ * order; a universal file its role is excepted from is left out.
+ */
 export function sectionsFor(props: {
   corpus: readonly ICorpusFile[];
   target: IHarnessTarget;

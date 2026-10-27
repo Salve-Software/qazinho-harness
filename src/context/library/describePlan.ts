@@ -1,6 +1,9 @@
 import type { IFlatStep } from '@/contract';
 
-/** The plan the workspace holds, every field of every case, so the agent can talk about it or change it and keep the rest. */
+/**
+ * The plan the workspace holds, every field of every case, so the agent can talk about it
+ * or change it and keep the rest.
+ */
 export function describePlan(steps: IFlatStep[]): string[] {
   if (steps.length === 0) return ['The workspace has no plan yet.'];
 

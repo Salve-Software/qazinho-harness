@@ -8,7 +8,10 @@ import type {
   IViewport,
 } from '@/contract';
 
-/** What a run needs from a device, whether it is a browser or a phone, measuring what it shows included; a browser also says how it found its last target, the requests the app made, and what its API calls answered. */
+/**
+ * What a run needs from a device, browser or phone; a browser also tells its locators and
+ * requests.
+ */
 export interface IDeviceDriver {
   open: () => Promise<void>;
   restart: () => Promise<void>;

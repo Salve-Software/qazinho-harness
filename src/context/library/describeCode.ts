@@ -2,10 +2,10 @@ import type { IHarnessSection } from '@/context/types';
 import type { ICodeCopy } from '@/contract';
 import { CODE_SECTION } from '@/constants';
 
-const count = (props: { amount: number; one: string; many: string }) =>
-  `${String(props.amount)} ${props.amount === 1 ? props.one : props.many}`;
-
-/** A branch's code as the agent reads it: the repository at its commit, where it sits, and what it changed against the base. */
+/**
+ * A branch's code as the agent reads it: the repository at its commit, where it sits, and
+ * what it changed against the base.
+ */
 export function describeCode(props: {
   code: ICodeCopy | null;
   wasTold: boolean;
@@ -65,3 +65,6 @@ export function describeCode(props: {
     ],
   };
 }
+
+const count = (props: { amount: number; one: string; many: string }) =>
+  `${String(props.amount)} ${props.amount === 1 ? props.one : props.many}`;

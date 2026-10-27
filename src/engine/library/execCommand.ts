@@ -7,7 +7,10 @@ import { launchHere } from './launchHere';
 const run = promisify(execFile);
 const MAX_BUFFER_BYTES = 16 * 1024 * 1024;
 
-/** Runs a command to its end the way this platform needs, and answers with what it printed; rejects as execFile does, with what it printed on the error. */
+/**
+ * Runs a command to its end the way this platform needs, and answers with what it
+ * printed; rejects as execFile does, with what it printed on the error.
+ */
 export async function execCommand(props: {
   command: string;
   args: string[];

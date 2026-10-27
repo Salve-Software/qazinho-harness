@@ -1,4 +1,7 @@
-/** What QAzinho answers when Claude Code asks whether its agent may use a tool: any tool of an MCP server, the QA's own included, and nothing else, such as a file read outside the folders it was handed. */
+/**
+ * Answers Claude Code's permission asks: any MCP tool, the QA's own included, and nothing
+ * else.
+ */
 export function permissionOf(props: {
   toolName: string;
   input: unknown;

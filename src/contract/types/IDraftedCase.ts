@@ -1,4 +1,7 @@
-/** One case as the agent drafted it in a chat answer; `id` names the case of the plan it keeps or changes, and a new case has none; a step's `frame` is the Figma node its screen should match. */
+/**
+ * One case the agent drafted: `id` names the case it changes, none for a new one; a
+ * step's `frame` is its Figma node.
+ */
 export interface IDraftedCase {
   id?: string | undefined;
   title: string;

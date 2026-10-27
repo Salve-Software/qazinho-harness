@@ -1,4 +1,7 @@
-/** The flags that make ffmpeg read JPEG frames from its input at a steady rate and write an H.264 MP4 a browser plays from its first byte, its sides made even. */
+/**
+ * The flags that make ffmpeg read JPEG frames from its input at a steady rate and write
+ * an H.264 MP4 a browser plays from its first byte, its sides made even.
+ */
 export function ffmpegArgsOf(props: {
   file: string;
   fps: number;

@@ -1,4 +1,7 @@
-/** What Claude Code's closing line says of a turn: what it cost, and whether it ended in an error, with its words; null on any other line. */
+/**
+ * What Claude Code's closing line says of a turn: what it cost, and whether it ended in
+ * an error, with its words; null on any other line.
+ */
 export function turnResultOf(
   line: string,
 ): { costUsd: number | null; isError: boolean; text: string } | null {

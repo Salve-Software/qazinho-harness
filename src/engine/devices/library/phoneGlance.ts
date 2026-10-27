@@ -5,7 +5,10 @@ import { pngSizeOf } from './pngSizeOf';
 
 const BUDGET = { maxPixels: 800_000, quality: 70 } as const;
 
-/** A phone's screenshot as the agent reads it: shrunk to a budget of pixels when it can be, as it came when not. */
+/**
+ * A phone's screenshot as the agent reads it: shrunk to a budget of pixels when it can
+ * be, as it came when not.
+ */
 export function phoneGlance(props: {
   image: Buffer;
   shrink: ShrinkImage | null;

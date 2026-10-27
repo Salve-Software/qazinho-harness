@@ -15,7 +15,10 @@ import { callSourceTool, registerSourceTools } from '@/tools/servers/sources';
 import { callSuiteTool, registerSuiteTools } from '@/tools/servers/suite';
 import { registerPermissionTool, workspaceOfPath } from './library';
 
-/** Serves QAzinho's MCP tools on loopback: a workspace's device for the length of a run, the app while the assistant answers, a team's suite while an agent changes it, and the QA's Jira and Confluence while the chat answers; every server, and the permissions scope alone, answers the permissions Claude Code asks. */
+/**
+ * Serves QAzinho's MCP tools on loopback, one scope per run, assistant, suite change or
+ * chat turn.
+ */
 export class McpHost {
   private readonly token = randomUUID();
   private readonly devices = new Map<string, IAttachDevice>();
@@ -50,7 +53,10 @@ export class McpHost {
     this.queues.delete(workspaceId);
   }
 
-  /** Serves the app tools under the app's scope, each call carried out by it, until `detachApp`. */
+  /**
+   * Serves the app tools under the app's scope, each call carried out by it, until
+   * `detachApp`.
+   */
   public attachApp(app: IAttachApp): void {
     this.apps.set(app.scope, app);
   }
@@ -60,7 +66,10 @@ export class McpHost {
     this.queues.delete(scope);
   }
 
-  /** Serves the suite tools under the scope of an agent changing a suite, each run carried out by it, until `detachSuite`. */
+  /**
+   * Serves the suite tools under the scope of an agent changing a suite, each run carried
+   * out by it, until `detachSuite`.
+   */
   public attachSuite(suite: IAttachSuite): void {
     this.suites.set(suite.scope, suite);
   }
@@ -70,7 +79,10 @@ export class McpHost {
     this.queues.delete(scope);
   }
 
-  /** Serves the source tools under the scope of a chat that answers, each fetch carried out by it, until `detachSources`. */
+  /**
+   * Serves the source tools under the scope of a chat that answers, each fetch carried
+   * out by it, until `detachSources`.
+   */
   public attachSources(sources: IAttachSources): void {
     this.sources.set(sources.scope, sources);
   }
@@ -80,7 +92,10 @@ export class McpHost {
     this.queues.delete(scope);
   }
 
-  /** The `--mcp-config` an agent needs to reach the tools attached under a scope, and how long one call may take; null before start. */
+  /**
+   * The `--mcp-config` an agent needs to reach the tools attached under a scope, and how
+   * long one call may take; null before start.
+   */
   public mcpConfigFor(scope: string, toolTimeoutMs?: number): string | null {
     if (!this.server) return null;
 

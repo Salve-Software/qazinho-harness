@@ -3,15 +3,10 @@ import { hexOfColor } from './hexOfColor';
 
 const UNIT_NAMES = { px: 'CSS px', dp: 'dp', pt: 'points' } as const;
 
-function boxLine(box: IBox): string {
-  return `x ${String(Math.round(box.x))}, y ${String(Math.round(box.y))}, ${String(Math.round(box.width))} × ${String(Math.round(box.height))}`;
-}
-
-function gapLine(gap: number | null, side: string): string {
-  return gap === null ? `nothing ${side}` : `${String(gap)} ${side}`;
-}
-
-/** What `inspect` answers: the thing measured, in the screen's unit, with the box it sits in, the space around it, and in a browser its type, colours and spacing. */
+/**
+ * What `inspect` answers: the thing measured, in the screen's unit, with the box it sits
+ * in, the space around it, and in a browser its type, colours and spacing.
+ */
 export function describeMeasure(measure: IElementMeasure): string {
   const { style, gaps } = measure;
   const named =
@@ -37,4 +32,12 @@ export function describeMeasure(measure: IElementMeasure): string {
           `padding ${style.padding} · margin ${style.margin} · border ${style.border.replace(/rgba?\([^)]*\)/gi, (color) => hexOfColor(color))} · corners ${style.radius} · gap ${style.gap} · opacity ${style.opacity}`,
         ]),
   ].join('\n');
+}
+
+function boxLine(box: IBox): string {
+  return `x ${String(Math.round(box.x))}, y ${String(Math.round(box.y))}, ${String(Math.round(box.width))} × ${String(Math.round(box.height))}`;
+}
+
+function gapLine(gap: number | null, side: string): string {
+  return gap === null ? `nothing ${side}` : `${String(gap)} ${side}`;
 }

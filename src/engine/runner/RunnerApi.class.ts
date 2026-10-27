@@ -15,7 +15,10 @@ import { pipeline } from 'node:stream/promises';
 import { RUNNER_JOB_SCHEMA } from './constants';
 import { RunnerApiError } from './RunnerApiError.class';
 
-/** QAzinho's API as a CI run's machine calls it with its job's token: its job and build, the heartbeat, each file of evidence, what it walked, and how it ended. */
+/**
+ * QAzinho's API as a CI run's machine calls it with its job's token: its job and build,
+ * the heartbeat, each file of evidence, what it walked, and how it ended.
+ */
 export class RunnerApi implements IRunnerApi {
   private readonly url: string;
   private readonly token: string;
@@ -66,7 +69,10 @@ export class RunnerApi implements IRunnerApi {
     })) as IEvidenceGrant;
   }
 
-  /** Streams a file from disk to the address the API signed, with its length, so a video never sits whole in memory. */
+  /**
+   * Streams a file from disk to the address the API signed, with its length, so a video
+   * never sits whole in memory.
+   */
   public async upload(props: { grant: IEvidenceGrant; file: string }): Promise<void> {
     const { size } = await stat(props.file);
     const response = await this.fetch(props.grant.uploadUrl, {
@@ -141,7 +147,10 @@ export class RunnerApi implements IRunnerApi {
     });
   }
 
-  /** Says the job walked what it could, or broke and why; the API then destroys the machine. */
+  /**
+   * Says the job walked what it could, or broke and why; the API then destroys the
+   * machine.
+   */
   public async complete(ending: {
     ending: 'finished' | 'broke';
     reason: string | null;

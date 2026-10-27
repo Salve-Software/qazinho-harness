@@ -3,7 +3,10 @@ import type { IAppWorkspaceBrief } from './IAppWorkspaceBrief';
 import type { IntegrationId } from './IntegrationId';
 import type { Language } from './Language';
 
-/** QAzinho as the assistant reads it with a message: what is on screen, how the QA set it up, and every project and workspace. */
+/**
+ * QAzinho as the assistant reads it with a message: what is on screen, how the QA set it
+ * up, and every project and workspace.
+ */
 export interface IAppSnapshot {
   screen: 'home' | 'workspace' | 'settings';
   openWorkspaceId: string | null;

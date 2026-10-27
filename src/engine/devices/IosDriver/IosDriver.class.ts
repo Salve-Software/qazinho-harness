@@ -65,7 +65,10 @@ export class IosDriver implements IDeviceDriver {
     await this.expectOpen();
   }
 
-  /** Starts the app over on a fresh install: a simulator keeps an app's data until the app is removed. */
+  /**
+   * Starts the app over on a fresh install: a simulator keeps an app's data until the app
+   * is removed.
+   */
   public async restart(): Promise<void> {
     await this.installFresh();
     await this.expectOpen();
@@ -161,7 +164,10 @@ export class IosDriver implements IDeviceDriver {
     return describeIosScreen({ elements: await this.read(), app: this.bundle });
   }
 
-  /** One thing on the screen measured to hold it to a design: its box in points, the box around it and the space to its neighbours. */
+  /**
+   * One thing on the screen measured to hold it to a design: its box in points, the box
+   * around it and the space to its neighbours.
+   */
   public async inspect(target: string): Promise<string> {
     const elements = await this.read();
     const element = findElement({ elements, target });
@@ -180,7 +186,10 @@ export class IosDriver implements IDeviceDriver {
     );
   }
 
-  /** The simulator's screen as the agent reads it, through a file simctl writes and QAzinho removes. */
+  /**
+   * The simulator's screen as the agent reads it, through a file simctl writes and
+   * QAzinho removes.
+   */
   public async glance(): Promise<IDeviceImage | null> {
     const file = join(tmpdir(), `qazinho-glance-${randomUUID()}.png`);
 
@@ -193,12 +202,16 @@ export class IosDriver implements IDeviceDriver {
     }
   }
 
-  /** A simulator has no layout-shift timeline to read, so it says nothing about motion. */
+  /**
+   * A simulator has no layout-shift timeline to read, so it says nothing about motion.
+   */
   public async motion(): Promise<IActionMotion | null> {
     return Promise.resolve(null);
   }
 
-  /** A simulator keeps the size of the device it is, so a new window size changes nothing. */
+  /**
+   * A simulator keeps the size of the device it is, so a new window size changes nothing.
+   */
   public async resize(_viewport: IViewport): Promise<void> {
     return Promise.resolve();
   }
@@ -222,12 +235,17 @@ export class IosDriver implements IDeviceDriver {
     };
   }
 
-  /** QAzinho only shuts down what QAzinho started: a simulator the QA opened stays open. */
+  /**
+   * QAzinho only shuts down what QAzinho started: a simulator the QA opened stays open.
+   */
   public async stream(): Promise<boolean> {
     return Promise.resolve(false);
   }
 
-  /** Records the simulator's screen into the run's folder until stopped, from the moment simctl says it started. */
+  /**
+   * Records the simulator's screen into the run's folder until stopped, from the moment
+   * simctl says it started.
+   */
   public async record(folder: string): Promise<boolean> {
     const file = join(folder, RUN_VIDEO_FILES.mp4);
     const child = spawn(
@@ -266,7 +284,10 @@ export class IosDriver implements IDeviceDriver {
     return true;
   }
 
-  /** Ends the recording the way simctl writes its file whole, and reads how long and how large it came out. */
+  /**
+   * Ends the recording the way simctl writes its file whole, and reads how long and how
+   * large it came out.
+   */
   public async stopRecording(): Promise<IRunVideo | null> {
     const recording = this.recording;
 

@@ -2,7 +2,10 @@ import type { JiraFailure } from '@/contract';
 
 const SOURCES = { jira: 'Jira', confluence: 'Confluence' } as const;
 
-/** Why QAzinho could not fetch a story or a page, in words the agent passes on to the QA, with what they do about it. */
+/**
+ * Why QAzinho could not fetch a story or a page, in words the agent passes on to the QA,
+ * with what they do about it.
+ */
 export function sourceFailureOf(props: {
   source: keyof typeof SOURCES;
   failure: JiraFailure | 'off';

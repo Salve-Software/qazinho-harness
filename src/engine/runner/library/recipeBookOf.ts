@@ -2,7 +2,10 @@ import type { IRecipeBook } from '@/contract';
 import type { RunnerJob } from '@/engine/runner/types';
 import { RECORDED_STEPS_SCHEMA } from '@/engine/runner/constants';
 
-/** The recordings a job holds for one plan, as a walk reads them; one whose steps do not read as a recording's is left out. */
+/**
+ * The recordings a job holds for one plan, as a walk reads them; one whose steps do not
+ * read as a recording's is left out.
+ */
 export function recipeBookOf(props: {
   recordings: RunnerJob['recordings'];
   planId: string;

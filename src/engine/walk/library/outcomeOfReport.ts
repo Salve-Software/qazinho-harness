@@ -2,7 +2,10 @@ import type { IFlatStep, IStepOutcome } from '@/contract';
 import type { IShot } from '@/engine/devices/types';
 import type { IStepReport } from '@/tools/servers/device/types';
 
-/** A step as the run files it: the agent's report, the screenshot taken when it arrived, the time it took and when it came; a failure keeps the Figma frame it is off. */
+/**
+ * A step as the run files it: the agent's report, the screenshot taken when it arrived,
+ * the time it took and when it came; a failure keeps the Figma frame it is off.
+ */
 export function outcomeOfReport(props: {
   report: IStepReport;
   step: IFlatStep;

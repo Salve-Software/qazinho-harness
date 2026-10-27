@@ -1,14 +1,10 @@
 const RGB =
   /^rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)(?:\s*[,/]\s*([\d.]+%?))?\s*\)$/i;
 
-function hex(channel: string): string {
-  return Math.round(Math.min(255, Number(channel)))
-    .toString(16)
-    .padStart(2, '0')
-    .toUpperCase();
-}
-
-/** A colour as a design file writes it: `#1F6FEB`, with its opacity when it has one, or "transparent"; any other notation stays as the browser wrote it. */
+/**
+ * A colour as a design file writes it: `#1F6FEB`, with its opacity when it has one, or
+ * "transparent"; any other notation stays as the browser wrote it.
+ */
 export function hexOfColor(color: string): string {
   const read = RGB.exec(color.trim());
 
@@ -27,4 +23,11 @@ export function hexOfColor(color: string): string {
   const code = `#${hex(red)}${hex(green)}${hex(blue)}`;
 
   return opacity >= 1 ? code : `${code} at ${String(Math.round(opacity * 100))}%`;
+}
+
+function hex(channel: string): string {
+  return Math.round(Math.min(255, Number(channel)))
+    .toString(16)
+    .padStart(2, '0')
+    .toUpperCase();
 }

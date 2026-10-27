@@ -4,19 +4,15 @@ import { centreOf } from './centreOf';
 import { decodeXml } from './decodeXml';
 
 const NODE = /<node ([^>]*?)\/?>/g;
+
 const ATTRIBUTE = /([\w-]+)="([^"]*)"/g;
 
 const EDITABLE = ['EditText', 'AutoCompleteTextView', 'SearchView'];
 
-function readAttributes(one: string): Record<string, string> {
-  const held: Record<string, string> = {};
-
-  for (const [, name, value] of one.matchAll(ATTRIBUTE)) held[name ?? ''] = value ?? '';
-
-  return held;
-}
-
-/** Reads `uiautomator dump`. An attribute value never holds a raw quote, so this stays a scan. */
+/**
+ * Reads `uiautomator dump`. An attribute value never holds a raw quote, so this stays a
+ * scan.
+ */
 export function parseViewHierarchy(xml: string): IScreenNode[] {
   return [...xml.matchAll(NODE)].flatMap(([, one]) => {
     const held = readAttributes(one ?? '');
@@ -39,4 +35,12 @@ export function parseViewHierarchy(xml: string): IScreenNode[] {
       },
     ];
   });
+}
+
+function readAttributes(one: string): Record<string, string> {
+  const held: Record<string, string> = {};
+
+  for (const [, name, value] of one.matchAll(ATTRIBUTE)) held[name ?? ''] = value ?? '';
+
+  return held;
 }

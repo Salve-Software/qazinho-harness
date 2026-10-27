@@ -1,6 +1,9 @@
 import type { Severity } from '@/contract';
 
-/** A bug the agent saw while it walked a step, that the step itself does not ask about; `sameAs` names the bug already open it is, and `frame` the Figma frame the screen differs from. */
+/**
+ * A bug seen while walking a step that the step does not ask about; `sameAs` names an
+ * open bug.
+ */
 export interface IStepFinding {
   title: string;
   severity: Severity;

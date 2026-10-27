@@ -4,7 +4,10 @@ import { hiddenValues } from './hiddenValues';
 import { maskedBody } from './maskedBody';
 import { privateUrlOf } from './privateUrlOf';
 
-/** One API call as the agent reads it: its id, method, address, how it ended and how long it took, and the start of what it answered when it failed, secrets left out. */
+/**
+ * One API call as the agent reads it: its id, method, address, how it ended and how long
+ * it took, and the start of what it answered when it failed, secrets left out.
+ */
 export function callLineOf(props: {
   call: INetworkEntry;
   values: IVariableValue[];

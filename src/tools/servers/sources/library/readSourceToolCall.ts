@@ -3,7 +3,10 @@ import { SOURCE_TOOLS } from '@/tools/servers/sources/constants';
 import { confluencePageIdOf } from './confluencePageIdOf';
 import { jiraKeyOf } from './jiraKeyOf';
 
-/** Reads a source tool call against its schema, a story by its key and a page by its id; a call that names neither is refused with the reason. */
+/**
+ * Reads a source tool call against its schema, a story by its key and a page by its id; a
+ * call that names neither is refused with the reason.
+ */
 export function readSourceToolCall(props: {
   name: string;
   args: Record<string, unknown> | undefined;

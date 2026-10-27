@@ -1,7 +1,9 @@
 import type { RunnerJob } from '@/engine/runner/types';
 import { WEB_DRIVER } from '@/engine/devices/WebDriver/constants';
 
-/** Where a bug was caught, as its card names it: the browser and its window, or the phone. */
+/**
+ * Where a bug was caught, as its card names it: the browser and its window, or the phone.
+ */
 export function bugTargetOf(target: RunnerJob['target']): string {
   if (target.kind === 'ios') return 'iOS';
 

@@ -3,7 +3,10 @@ import { pngSizeOf } from './pngSizeOf';
 
 const QUALITY = 70;
 
-/** A phone's screenshot as a run keeps it: a JPEG at its full size, as the web keeps Chrome's; the PNG as it came when it cannot be one. */
+/**
+ * A phone's screenshot as a run keeps it: a JPEG at its full size, as the web keeps
+ * Chrome's; the PNG as it came when it cannot be one.
+ */
 export function phoneShot(props: { image: Buffer; shrink: ShrinkImage | null }): {
   bytes: Buffer;
   mimeType: 'image/jpeg' | 'image/png';

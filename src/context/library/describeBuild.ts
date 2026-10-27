@@ -1,7 +1,10 @@
 import type { IHarnessSection } from '@/context/types';
 import type { IBuildMachine } from '@/types';
 
-/** The build to make and the machine it is made on, as the sections the builder reads before it starts. */
+/**
+ * The build to make and the machine it is made on, as the sections the builder reads
+ * before it starts.
+ */
 export function describeBuild(props: {
   platform: 'android' | 'ios';
   dir: string;

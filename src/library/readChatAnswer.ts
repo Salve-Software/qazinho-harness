@@ -1,6 +1,43 @@
 import type { IChatAnswer } from '@/contract';
 import { CHAT_ANSWER } from '@/schemas';
 
+/**
+ * Checks a chat answer against its schema; prose is still a reply, and a part that breaks
+ * the schema costs only itself.
+ */
+export function readChatAnswer(text: string): IChatAnswer | null {
+  const json = jsonOf(text);
+
+  if (json === null) {
+    const prose = text.trim();
+
+    return prose.length === 0 ? null : { reply: prose, questions: [], plan: null };
+  }
+
+  const field = (key: string) => fieldOf({ value: json.value, key });
+  const reply = CHAT_ANSWER.shape.reply.safeParse(field('reply')).data;
+
+  if (reply === undefined) return null;
+
+  const questions =
+    CHAT_ANSWER.shape.questions.safeParse(withoutNullVariables(field('questions')))
+      .data ?? [];
+
+  return {
+    reply: reply.trim(),
+    questions: questions.map(({ multiSelect, options, ...question }) => ({
+      ...question,
+      options: options.map(({ variables, ...option }) =>
+        variables === undefined || variables.length === 0
+          ? option
+          : { ...option, variables },
+      ),
+      isMultiSelect: multiSelect,
+    })),
+    plan: CHAT_ANSWER.shape.plan.safeParse(withoutNullIds(field('plan'))).data ?? null,
+  };
+}
+
 function jsonOf(text: string): { value: unknown } | null {
   try {
     return { value: JSON.parse(text) };
@@ -58,39 +95,5 @@ function withoutNullIds(plan: unknown): unknown {
           : {}),
       };
     }),
-  };
-}
-
-/** Checks a chat answer against its schema; prose is still a reply, and a part that breaks the schema costs only itself. */
-export function readChatAnswer(text: string): IChatAnswer | null {
-  const json = jsonOf(text);
-
-  if (json === null) {
-    const prose = text.trim();
-
-    return prose.length === 0 ? null : { reply: prose, questions: [], plan: null };
-  }
-
-  const field = (key: string) => fieldOf({ value: json.value, key });
-  const reply = CHAT_ANSWER.shape.reply.safeParse(field('reply')).data;
-
-  if (reply === undefined) return null;
-
-  const questions =
-    CHAT_ANSWER.shape.questions.safeParse(withoutNullVariables(field('questions')))
-      .data ?? [];
-
-  return {
-    reply: reply.trim(),
-    questions: questions.map(({ multiSelect, options, ...question }) => ({
-      ...question,
-      options: options.map(({ variables, ...option }) =>
-        variables === undefined || variables.length === 0
-          ? option
-          : { ...option, variables },
-      ),
-      isMultiSelect: multiSelect,
-    })),
-    plan: CHAT_ANSWER.shape.plan.safeParse(withoutNullIds(field('plan'))).data ?? null,
   };
 }

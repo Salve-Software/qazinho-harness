@@ -2,27 +2,10 @@ import type { IHarnessSection } from '@/context/types';
 import type { IPullBrief } from '@/types';
 import { PULL_SECTION } from '@/constants';
 
-function quoted(text: string): string[] {
-  return text
-    .replace(/<\/?qazinho>/gi, '[qazinho]')
-    .split('\n')
-    .map((line) => `  ${line}`);
-}
-
-function patchLines(props: { patch: string | null; room: number }): string[] {
-  if (props.patch === null)
-    return ['  (no patch: a binary file, or one too large to show)'];
-
-  const lines = props.patch.split('\n');
-  const kept = lines.slice(0, Math.min(PULL_SECTION.patchLines, props.room));
-
-  return [
-    ...quoted(kept.join('\n')),
-    ...(kept.length < lines.length ? ['  (the rest of this file is cut)'] : []),
-  ];
-}
-
-/** A pull request as the reader weighs it: the PR as its team wrote it and the issue it closes, quoted as data, each file's patch cut to a budget, the plans by id, what QAzinho already found, and the cases the team asked for, one a line. */
+/**
+ * A pull request as the reader weighs it: the PR and its issue as data, patches cut to a
+ * budget, and the plans.
+ */
 export function describePull(brief: IPullBrief): IHarnessSection[] {
   const { pull } = brief;
   const body =
@@ -101,5 +84,25 @@ export function describePull(brief: IPullBrief): IHarnessSection[] {
               ),
             ],
     },
+  ];
+}
+
+function quoted(text: string): string[] {
+  return text
+    .replace(/<\/?qazinho>/gi, '[qazinho]')
+    .split('\n')
+    .map((line) => `  ${line}`);
+}
+
+function patchLines(props: { patch: string | null; room: number }): string[] {
+  if (props.patch === null)
+    return ['  (no patch: a binary file, or one too large to show)'];
+
+  const lines = props.patch.split('\n');
+  const kept = lines.slice(0, Math.min(PULL_SECTION.patchLines, props.room));
+
+  return [
+    ...quoted(kept.join('\n')),
+    ...(kept.length < lines.length ? ['  (the rest of this file is cut)'] : []),
   ];
 }

@@ -1,30 +1,10 @@
 import type { IBox, IElementMeasure } from '@/engine/devices/types';
 import { gapsOf } from './gapsOf';
 
-function scaled(props: { box: IBox; scale: number }): IBox {
-  const { box, scale } = props;
-
-  return {
-    x: box.x * scale,
-    y: box.y * scale,
-    width: box.width * scale,
-    height: box.height * scale,
-  };
-}
-
-function contains(props: { outer: IBox; inner: IBox }): boolean {
-  const { outer, inner } = props;
-
-  return (
-    outer.x <= inner.x &&
-    outer.y <= inner.y &&
-    outer.x + outer.width >= inner.x + inner.width &&
-    outer.y + outer.height >= inner.y + inner.height &&
-    outer.width * outer.height > inner.width * inner.height
-  );
-}
-
-/** One thing on a phone's screen measured from the screen's tree: its box in the unit a design uses, the smallest box around it, and the space to its neighbours. */
+/**
+ * One thing on a phone's screen measured from the screen's tree: its box in the unit a
+ * design uses, the smallest box around it, and the space to its neighbours.
+ */
 export function phoneMeasureOf(props: {
   role: string;
   text: string;
@@ -48,4 +28,27 @@ export function phoneMeasureOf(props: {
     gaps: gapsOf({ box, others }),
     style: null,
   };
+}
+
+function scaled(props: { box: IBox; scale: number }): IBox {
+  const { box, scale } = props;
+
+  return {
+    x: box.x * scale,
+    y: box.y * scale,
+    width: box.width * scale,
+    height: box.height * scale,
+  };
+}
+
+function contains(props: { outer: IBox; inner: IBox }): boolean {
+  const { outer, inner } = props;
+
+  return (
+    outer.x <= inner.x &&
+    outer.y <= inner.y &&
+    outer.x + outer.width >= inner.x + inner.width &&
+    outer.y + outer.height >= inner.y + inner.height &&
+    outer.width * outer.height > inner.width * inner.height
+  );
 }

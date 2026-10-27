@@ -7,7 +7,10 @@ import { spawnCommand } from '@/engine/library';
 import { FRAME_RECORDER } from './constants';
 import { ffmpegArgsOf, framesDueOf } from './library';
 
-/** Records a browser's live frames into an MP4 through the machine's ffmpeg, at a steady rate with each frame held until the next: what a CI machine records a web run with, having no window to encode in. */
+/**
+ * Records a browser's frames into an MP4 through the machine's ffmpeg, at a steady rate,
+ * for a CI machine.
+ */
 export class FrameRecorder {
   private readonly ffmpeg: string;
   private readonly fps: number;
@@ -54,7 +57,10 @@ export class FrameRecorder {
     }, 1000 / this.fps);
   }
 
-  /** Ends the file and says when its first frame showed, how long it plays and how large it is, read from the file; null when nothing was recorded. */
+  /**
+   * Ends the file and says when its first frame showed, how long it plays and how large
+   * it is, read from the file; null when nothing was recorded.
+   */
   public async stop(): Promise<IRunVideo | null> {
     const child = this.child;
 

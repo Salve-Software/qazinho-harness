@@ -1,6 +1,9 @@
 import type { Severity } from '@/contract';
 
-/** A failed step or a bug seen beside one, as a runner files it: where it was caught, what broke, its screen and when. */
+/**
+ * A failed step or a bug seen beside one, as a runner files it: where it was caught, what
+ * broke, its screen and when.
+ */
 export interface ICatch {
   index: number;
   caseId: string;

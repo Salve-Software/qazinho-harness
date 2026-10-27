@@ -2,11 +2,10 @@ import type { IAttachApp } from '@/tools/servers/app/types';
 import type { ToolAnswer } from '@/tools/types';
 import { readAppToolCall } from './readAppToolCall';
 
-function said(props: { text: string; isError: boolean }): ToolAnswer {
-  return { content: [{ type: 'text', text: props.text }], isError: props.isError };
-}
-
-/** Carries out one app tool call through whoever performs them, and answers with what was done or why it was not. */
+/**
+ * Carries out one app tool call through whoever performs them, and answers with what was
+ * done or why it was not.
+ */
 export async function callAppTool(props: {
   app: IAttachApp;
   call: { name: string; args: Record<string, unknown> | undefined };
@@ -23,4 +22,8 @@ export async function callAppTool(props: {
       isError: true,
     });
   }
+}
+
+function said(props: { text: string; isError: boolean }): ToolAnswer {
+  return { content: [{ type: 'text', text: props.text }], isError: props.isError };
 }

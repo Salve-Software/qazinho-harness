@@ -1,6 +1,9 @@
 import type { IRunStepBody } from './IRunStepBody';
 
-/** A plan's run as a runner sends it: when and how it ended, on what, how its cases went, and its video and requests by key. */
+/**
+ * A plan's run as a runner sends it: when and how it ended, on what, how its cases went,
+ * and its video and requests by key.
+ */
 export interface IRunBody {
   kind: 'run';
   startedAt: string;

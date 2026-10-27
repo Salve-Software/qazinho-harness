@@ -1,4 +1,7 @@
-/** What the agent hears once a bug it saw is in: counted on the bug already open it named, or filed anew, then what to do next. */
+/**
+ * What the agent hears once a bug it saw is in: counted on the bug already open it named,
+ * or filed anew, then what to do next.
+ */
 export function findingAnswer(props: {
   asked: string | undefined;
   kept: string | null;

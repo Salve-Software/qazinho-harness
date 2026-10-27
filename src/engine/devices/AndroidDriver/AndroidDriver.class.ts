@@ -63,7 +63,9 @@ export class AndroidDriver implements IDeviceDriver {
     await this.launchFresh();
   }
 
-  /** Starts the app over with its data cleared, the way it was the day it was installed. */
+  /**
+   * Starts the app over with its data cleared, the way it was the day it was installed.
+   */
   public async restart(): Promise<void> {
     if (this.serial.length === 0) throw new Error('The emulator is not open.');
 
@@ -163,7 +165,10 @@ export class AndroidDriver implements IDeviceDriver {
     });
   }
 
-  /** One thing on the screen measured to hold it to a design: its box in dp at the screen's density, the box around it and the space to its neighbours. */
+  /**
+   * One thing on the screen measured to hold it to a design: its box in dp at the
+   * screen's density, the box around it and the space to its neighbours.
+   */
   public async inspect(target: string): Promise<string> {
     const nodes = await this.read();
     const node = findNode({ nodes, target });
@@ -184,7 +189,10 @@ export class AndroidDriver implements IDeviceDriver {
     );
   }
 
-  /** The emulator's screen as the agent reads it, from screencap, shrunk to what the agent needs. */
+  /**
+   * The emulator's screen as the agent reads it, from screencap, shrunk to what the agent
+   * needs.
+   */
   public async glance(): Promise<IDeviceImage | null> {
     if (this.serial.length === 0) return null;
 
@@ -198,7 +206,9 @@ export class AndroidDriver implements IDeviceDriver {
     return Promise.resolve(null);
   }
 
-  /** A emulator keeps the size of the device it is, so a new window size changes nothing. */
+  /**
+   * A emulator keeps the size of the device it is, so a new window size changes nothing.
+   */
   public async resize(_viewport: IViewport): Promise<void> {
     return Promise.resolve();
   }
@@ -225,12 +235,17 @@ export class AndroidDriver implements IDeviceDriver {
     };
   }
 
-  /** QAzinho only shuts down what QAzinho started: an emulator the QA opened stays open. */
+  /**
+   * QAzinho only shuts down what QAzinho started: an emulator the QA opened stays open.
+   */
   public async stream(): Promise<boolean> {
     return Promise.resolve(false);
   }
 
-  /** Records the emulator's screen into the run's folder through its console, for as long as its console allows. */
+  /**
+   * Records the emulator's screen into the run's folder through its console, for as long
+   * as its console allows.
+   */
   public async record(folder: string): Promise<boolean> {
     const file = join(folder, RUN_VIDEO_FILES.webm);
     const said = await this.adb([
@@ -249,7 +264,10 @@ export class AndroidDriver implements IDeviceDriver {
     return true;
   }
 
-  /** Ends the recording, waits for the emulator to write its file, and says how long it ran and the screen's size. */
+  /**
+   * Ends the recording, waits for the emulator to write its file, and says how long it
+   * ran and the screen's size.
+   */
   public async stopRecording(): Promise<IRunVideo | null> {
     const recording = this.recording;
 
@@ -276,7 +294,10 @@ export class AndroidDriver implements IDeviceDriver {
     };
   }
 
-  /** Shuts down an emulator QAzinho started, and waits until it is gone, so the next run or look never finds it half shut. */
+  /**
+   * Shuts down an emulator QAzinho started, and waits until it is gone, so the next run
+   * or look never finds it half shut.
+   */
   public async close(): Promise<void> {
     if (this.isOurs && this.serial.length > 0) {
       await this.adb(['emu', 'kill']).catch(() => '');

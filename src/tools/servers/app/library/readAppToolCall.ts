@@ -10,7 +10,10 @@ type Read = AppTool extends infer Tool
     : never
   : never;
 
-/** Reads an app tool call against the tool's own schema; a call that breaks it is refused with the reason. */
+/**
+ * Reads an app tool call against the tool's own schema; a call that breaks it is refused
+ * with the reason.
+ */
 export function readAppToolCall(props: {
   name: string;
   args: Record<string, unknown> | undefined;

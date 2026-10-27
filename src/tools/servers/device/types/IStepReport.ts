@@ -1,6 +1,9 @@
 import type { Severity } from '@/contract';
 
-/** A step the agent judged, as it reported it through the `report` tool, with the words on screen that prove a pass, the bug already open that failed it, if one did, and the Figma frame it is off. */
+/**
+ * A step the agent judged through `report`, with the words that prove a pass and the bug
+ * that failed it.
+ */
 export interface IStepReport {
   step: number;
   verdict: 'passed' | 'failed' | 'blocked';

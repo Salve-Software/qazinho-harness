@@ -1,9 +1,10 @@
 import type { IKnownBug } from '@/contract';
 import type { Landing } from '@/engine/runner/types';
 
-const wordsOf = (title: string) => title.trim().toLowerCase().replace(/\s+/g, ' ');
-
-/** Where a failure or a finding lands: on the open bug its agent named, the one its plan step failed for, or one with its title; then on a bug this run filed already the same way; else as a new bug. */
+/**
+ * Where a failure lands: the bug its agent named, its step's bug, one with its title, or
+ * a new bug.
+ */
 export function landingOf(props: {
   sameAs: string | undefined;
   caseId: string;
@@ -35,3 +36,5 @@ export function landingOf(props: {
 
   return filed === undefined ? { kind: 'new' } : { kind: 'filed', bugId: filed.id };
 }
+
+const wordsOf = (title: string) => title.trim().toLowerCase().replace(/\s+/g, ' ');

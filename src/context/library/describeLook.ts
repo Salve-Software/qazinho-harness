@@ -3,7 +3,10 @@ import type { AppLook } from '@/types';
 
 const DEVICES = { android: 'an Android emulator', ios: 'an iOS simulator' } as const;
 
-/** What QAzinho saw of the app before the message, as a section the agent asks from; nothing when it did not look. */
+/**
+ * What QAzinho saw of the app before the message, as a section the agent asks from;
+ * nothing when it did not look.
+ */
 export function describeLook(look: AppLook | null): IHarnessSection {
   const title = 'What QAzinho saw of the app';
 

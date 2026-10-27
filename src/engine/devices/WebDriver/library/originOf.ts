@@ -1,4 +1,7 @@
-/** The origin whose storage a page writes to, for a web page only: about:blank, data: and the rest keep none. */
+/**
+ * The origin whose storage a page writes to, for a web page only: about:blank, data: and
+ * the rest keep none.
+ */
 export function originOf(url: string): string | null {
   try {
     const parsed = new URL(url);

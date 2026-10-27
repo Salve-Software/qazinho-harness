@@ -1,6 +1,9 @@
 import type { IViewport } from '@/contract';
 
-/** The one size a web plan runs at, so the agent never plans a case for a size the run cannot take. */
+/**
+ * The one size a web plan runs at, so the agent never plans a case for a size the run
+ * cannot take.
+ */
 export function describeSize(viewport: IViewport | null): string[] {
   if (viewport === null) return [];
 

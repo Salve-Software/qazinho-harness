@@ -9,7 +9,10 @@ import { LANGUAGE_NAMES } from '@/constants';
 import { describeKnownBugs } from './describeKnownBugs';
 import { describeVariables } from './describeVariables';
 
-/** One case to walk, as the message that starts the agent's turn: its steps in order with the Figma frame each should match, the language to report in, the variables it may type, what the QA already answered in this run, the bugs already open and filed, and the screen it starts on. */
+/**
+ * The message that starts a case: its steps and frames, the language, variables, answers
+ * given and open bugs.
+ */
 export function describeCase(props: {
   steps: IFlatStep[];
   screen: string;

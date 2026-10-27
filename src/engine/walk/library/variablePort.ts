@@ -7,7 +7,10 @@ import { hiddenValues } from './hiddenValues';
 import { maskedBody } from './maskedBody';
 import { resolvedAction } from './resolvedAction';
 
-/** The device as a run reaches it: a ${NAME} typed as its value, and every value that shows read back as its ${NAME}, in what it says, what it measures, the API calls it lists and why it failed. */
+/**
+ * The device as a run reaches it: a ${NAME} typed as its value, and every value shown
+ * read back as its name.
+ */
 export function variablePort(props: {
   device: Pick<
     IDeviceDriver,

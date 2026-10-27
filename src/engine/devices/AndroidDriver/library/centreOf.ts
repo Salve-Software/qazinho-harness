@@ -1,4 +1,7 @@
-/** uiautomator writes a box as `[left,top][right,bottom]`; a finger lands in the middle of it. */
+/**
+ * uiautomator writes a box as `[left,top][right,bottom]`; a finger lands in the middle of
+ * it.
+ */
 export function centreOf(bounds: string): { x: number; y: number } | null {
   const box = /\[(\d+),(\d+)\]\[(\d+),(\d+)\]/.exec(bounds);
 

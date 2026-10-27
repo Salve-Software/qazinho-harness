@@ -1,7 +1,10 @@
 import type { IReviewAnswer } from '@/types';
 import { REVIEW_ANSWER } from '@/schemas/REVIEW_ANSWER';
 
-/** The review out of what the agent printed, checked against its schema; null when it is not one, or news with nothing to post. A verdict of nothing new keeps no comment. */
+/**
+ * The review out of what the agent printed, checked against its schema; null when it is
+ * not one, or news with nothing to post. A verdict of nothing new keeps no comment.
+ */
 export function readReviewAnswer(text: string): IReviewAnswer | null {
   try {
     const read = REVIEW_ANSWER.safeParse(JSON.parse(text));

@@ -1,4 +1,7 @@
-/** What the reader found in a pull request: the steps it breaks as they will read, the cases it touches, and the cases it asks for; each named by the file that changes it. */
+/**
+ * What the reader found in a pull request: the steps it breaks as they will read, the
+ * cases it touches, and the cases it asks for; each named by the file that changes it.
+ */
 export interface IPullAnswer {
   breaks: {
     planId: string;

@@ -1,8 +1,6 @@
-function asNumbers(name: string): number[] {
-  return name.split('.').map((part) => Number(part) || 0);
-}
-
-/** An SDK carries several build-tools; the newest is the one that knows the newest apk. */
+/**
+ * An SDK carries several build-tools; the newest is the one that knows the newest apk.
+ */
 export function newestBuildTools(names: string[]): string | null {
   const versions = names.filter((name) => /^\d+(\.\d+)*$/.test(name));
 
@@ -17,4 +15,8 @@ export function newestBuildTools(names: string[]): string | null {
       );
     })[0] ?? null
   );
+}
+
+function asNumbers(name: string): number[] {
+  return name.split('.').map((part) => Number(part) || 0);
 }

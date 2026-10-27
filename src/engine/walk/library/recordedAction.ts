@@ -2,7 +2,10 @@ import type { IStepAction } from '@/contract';
 import type { IVariableValue } from '@/engine/types';
 import { hiddenValues } from './hiddenValues';
 
-/** The action a recipe keeps, its ${NAME} as the agent wrote it, with how a web run found its targets unless that would keep a variable's value. */
+/**
+ * The action a recipe keeps, its ${NAME} as the agent wrote it, with how a web run found
+ * its targets unless that would keep a variable's value.
+ */
 export function recordedAction(props: {
   action: IStepAction;
   found: { locator: string; toLocator: string | null; option: string | null } | null;

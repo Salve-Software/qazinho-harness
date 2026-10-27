@@ -1,2 +1,5 @@
-/** A set of MCP tools QAzinho serves together: the device a run walks, the app the assistant works in, the team's suite an agent changes, or the Jira and Confluence the chat reads. */
+/**
+ * A set of MCP tools served together: a run's device, the assistant's app, a suite, or
+ * Jira and Confluence.
+ */
 export type ToolGroup = 'device' | 'app' | 'suite' | 'sources';

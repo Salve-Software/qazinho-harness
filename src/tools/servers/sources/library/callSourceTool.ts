@@ -2,11 +2,10 @@ import type { IAttachSources } from '@/tools/servers/sources/types';
 import type { ToolAnswer } from '@/tools/types';
 import { readSourceToolCall } from './readSourceToolCall';
 
-function said(props: { text: string; isError: boolean }): ToolAnswer {
-  return { content: [{ type: 'text', text: props.text }], isError: props.isError };
-}
-
-/** Carries out one source tool call through whoever fetches it, and answers with what it read or why it could not. */
+/**
+ * Carries out one source tool call through whoever fetches it, and answers with what it
+ * read or why it could not.
+ */
 export async function callSourceTool(props: {
   sources: IAttachSources;
   call: { name: string; args: Record<string, unknown> | undefined };
@@ -23,4 +22,8 @@ export async function callSourceTool(props: {
       isError: true,
     });
   }
+}
+
+function said(props: { text: string; isError: boolean }): ToolAnswer {
+  return { content: [{ type: 'text', text: props.text }], isError: props.isError };
 }

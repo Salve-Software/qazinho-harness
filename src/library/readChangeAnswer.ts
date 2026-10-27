@@ -1,7 +1,10 @@
 import type { IChangeAnswer } from '@/types';
 import { CHANGE_ANSWER } from '@/schemas/CHANGE_ANSWER';
 
-/** The change answer out of what the agent printed, checked against its schema; prose reads as giving up, with the prose as why. */
+/**
+ * The change answer out of what the agent printed, checked against its schema; prose
+ * reads as giving up, with the prose as why.
+ */
 export function readChangeAnswer(text: string): IChangeAnswer {
   const gaveUp: IChangeAnswer = {
     outcome: 'gave-up',

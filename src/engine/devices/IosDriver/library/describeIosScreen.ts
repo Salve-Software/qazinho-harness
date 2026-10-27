@@ -2,7 +2,10 @@ import type { IScreenElement } from '@/engine/devices/IosDriver/types';
 import { IOS } from '@/engine/devices/IosDriver/constants';
 import { numberDuplicates } from '@/engine/devices/library';
 
-/** What the agent is allowed to look at: what a person would read on the screen, and the home screen said as such when the app is not open. */
+/**
+ * What the agent is allowed to look at: what a person would read on the screen, and the
+ * home screen said as such when the app is not open.
+ */
 export function describeIosScreen(props: {
   elements: IScreenElement[];
   app: string;

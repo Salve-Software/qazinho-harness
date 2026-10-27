@@ -1,7 +1,10 @@
 import type { Page } from 'playwright-core';
 import { CONTROL_SELECTOR } from '@/engine/devices/WebDriver/constants';
 
-/** The controls a person can see, in page order: the role, the words each goes by, and its place among every control. */
+/**
+ * The controls a person can see, in page order: the role, the words each goes by, and its
+ * place among every control.
+ */
 export async function listControls(
   page: Page,
 ): Promise<{ role: string; label: string; at: number }[]> {

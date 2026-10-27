@@ -1,10 +1,7 @@
-function wordsOf(line: string): string {
-  const at = line.indexOf(': ');
-
-  return (at === -1 ? line : line.slice(at + 2)).toLowerCase();
-}
-
-/** Numbers the controls that read alike, #1, #2… in page order whatever their role, so the agent can name the one it means. */
+/**
+ * Numbers the controls that read alike, #1, #2… in page order whatever their role, so the
+ * agent can name the one it means.
+ */
 export function numberDuplicates(lines: string[]): string[] {
   const totals = new Map<string, number>();
   const seen = new Map<string, number>();
@@ -23,4 +20,10 @@ export function numberDuplicates(lines: string[]): string[] {
 
     return `${line} #${String(number)}`;
   });
+}
+
+function wordsOf(line: string): string {
+  const at = line.indexOf(': ');
+
+  return (at === -1 ? line : line.slice(at + 2)).toLowerCase();
 }

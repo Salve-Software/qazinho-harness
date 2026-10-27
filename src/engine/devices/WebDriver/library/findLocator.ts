@@ -3,6 +3,21 @@ import { ordinalOf, withoutRole } from '@/engine/devices/library';
 import { CONTROL_SELECTOR } from '@/engine/devices/WebDriver/constants';
 import { listControls } from './listControls';
 
+/**
+ * Finds what the agent named the way a person would: a field to type in or a control to
+ * click, by name.
+ */
+export async function findLocator(props: {
+  page: Page;
+  target: string;
+  kind: 'click' | 'fill';
+}): Promise<Locator | null> {
+  const found = await locate(props);
+  const listed = withoutRole(props.target);
+
+  return found ?? (listed === null ? null : locate({ ...props, target: listed }));
+}
+
 async function listed(props: {
   page: Page;
   name: string;
@@ -66,16 +81,4 @@ async function locate(props: {
   }
 
   return null;
-}
-
-/** Finds what the agent named the way a person would: a field to type in, a control to click, the exact name first, "#2" for the second of several, and a control copied as look lists it. */
-export async function findLocator(props: {
-  page: Page;
-  target: string;
-  kind: 'click' | 'fill';
-}): Promise<Locator | null> {
-  const found = await locate(props);
-  const listed = withoutRole(props.target);
-
-  return found ?? (listed === null ? null : locate({ ...props, target: listed }));
 }

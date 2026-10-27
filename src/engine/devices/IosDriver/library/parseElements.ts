@@ -8,6 +8,23 @@ type Described = {
   frame?: { x?: unknown; y?: unknown; width?: unknown; height?: unknown };
 };
 
+/**
+ * `idb ui describe-all` has answered with both a JSON array and one object per line; take
+ * either.
+ */
+export function parseElements(described: string): IScreenElement[] {
+  const trimmed = described.trim();
+  const whole = readJson(trimmed);
+
+  if (Array.isArray(whole)) return (whole as Described[]).flatMap(toElement);
+
+  return trimmed
+    .split('\n')
+    .map(readJson)
+    .filter((one) => one !== null)
+    .flatMap((one) => toElement(one as Described));
+}
+
 function read(value: unknown): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : Number.NaN;
 }
@@ -42,18 +59,4 @@ function toElement(one: Described): IScreenElement[] {
       isLaunchIcon: Array.isArray(one.traits) && one.traits.includes('LaunchIcon'),
     },
   ];
-}
-
-/** `idb ui describe-all` has answered with both a JSON array and one object per line; take either. */
-export function parseElements(described: string): IScreenElement[] {
-  const trimmed = described.trim();
-  const whole = readJson(trimmed);
-
-  if (Array.isArray(whole)) return (whole as Described[]).flatMap(toElement);
-
-  return trimmed
-    .split('\n')
-    .map(readJson)
-    .filter((one) => one !== null)
-    .flatMap((one) => toElement(one as Described));
 }

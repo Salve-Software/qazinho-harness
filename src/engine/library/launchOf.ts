@@ -2,15 +2,13 @@ import type { ILaunch } from '@/engine/types';
 import { win32 } from 'node:path';
 
 const SHIM_TARGET = /"%~?dp0%?\\([^"]+)"\s*%\*/i;
+
 const CMD_SPECIAL = /([()\][%!^"`<>&|;, *?])/g;
 
-function quotedForCmd(arg: string): string {
-  const quoted = `"${arg.replace(/(\\*)"/g, '$1$1\\"').replace(/(\\*)$/, '$1$1')}"`;
-
-  return quoted.replace(CMD_SPECIAL, '^$1');
-}
-
-/** How to start a command on this platform: as it is, or on Windows an npm .cmd shim as the script or .exe it points at, run by node, and any other .cmd through cmd.exe with every argument escaped. */
+/**
+ * How to start a command on this platform; on Windows an npm .cmd shim runs as what it
+ * points at.
+ */
 export function launchOf(props: {
   command: string;
   args: string[];
@@ -36,4 +34,10 @@ export function launchOf(props: {
   const line = [command.replace(CMD_SPECIAL, '^$1'), ...args.map(quotedForCmd)].join(' ');
 
   return { file: 'cmd.exe', args: ['/d', '/s', '/c', `"${line}"`], isVerbatim: true };
+}
+
+function quotedForCmd(arg: string): string {
+  const quoted = `"${arg.replace(/(\\*)"/g, '$1$1\\"').replace(/(\\*)$/, '$1$1')}"`;
+
+  return quoted.replace(CMD_SPECIAL, '^$1');
 }

@@ -4,14 +4,10 @@ import { RUNNER } from '@/engine/runner/constants';
 import { caseVerdictOf } from './caseVerdictOf';
 import { videoSecondsOf } from './videoSecondsOf';
 
-const verdictOf = (outcome: IStepOutcome): IRunStepBody['verdict'] =>
-  outcome.verdict === 'passed' ||
-  outcome.verdict === 'failed' ||
-  outcome.verdict === 'blocked'
-    ? outcome.verdict
-    : 'skipped';
-
-/** A plan's walk as the run the API keeps: each case with each step's verdict, why, bug, screen and place on the video; a step the walk never reached is skipped. */
+/**
+ * A plan's walk as the run the API keeps: each case with each step's verdict, why, bug,
+ * screen and place on the video; a step the walk never reached is skipped.
+ */
 export function runBodyOf(props: {
   plan: RunnerJob['plans'][number];
   steps: IFlatStep[];
@@ -95,3 +91,10 @@ export function runBodyOf(props: {
     costUsd: null,
   };
 }
+
+const verdictOf = (outcome: IStepOutcome): IRunStepBody['verdict'] =>
+  outcome.verdict === 'passed' ||
+  outcome.verdict === 'failed' ||
+  outcome.verdict === 'blocked'
+    ? outcome.verdict
+    : 'skipped';

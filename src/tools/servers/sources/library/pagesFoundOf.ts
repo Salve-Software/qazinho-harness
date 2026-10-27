@@ -1,6 +1,9 @@
 import type { IConfluencePageRef } from '@/contract';
 
-/** The pages a search of Confluence found, each with the id to read it by; none found says so, and what to do. */
+/**
+ * The pages a search of Confluence found, each with the id to read it by; none found says
+ * so, and what to do.
+ */
 export function pagesFoundOf(props: {
   query: string;
   pages: IConfluencePageRef[];

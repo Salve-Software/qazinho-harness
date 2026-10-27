@@ -1,4 +1,7 @@
-/** Where a finger starts and ends to bring into view what lies in a direction: it moves the other way, across the middle of the screen. */
+/**
+ * Where a finger starts and ends to bring into view what lies in a direction: it moves
+ * the other way, across the middle of the screen.
+ */
 export function swipeOf(props: {
   size: { width: number; height: number };
   direction: string;

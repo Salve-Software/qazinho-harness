@@ -5,7 +5,10 @@ import type { IStepFinding } from './IStepFinding';
 import type { IStepReport } from './IStepReport';
 import type { IStepAction } from '@/contract';
 
-/** A tool call read against its schema: what to do with it, or what to say back to the agent. */
+/**
+ * A tool call read against its schema: what to do with it, or what to say back to the
+ * agent.
+ */
 export type DeviceToolCall =
   | { kind: 'look' }
   | { kind: 'inspect'; target: string }

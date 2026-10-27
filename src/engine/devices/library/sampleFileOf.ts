@@ -15,7 +15,10 @@ const PDF = Buffer.from(
   ].join('\n'),
 );
 
-/** A small sample file of a kind, for an upload a test needs: its name and its bytes; text for a kind it does not know. */
+/**
+ * A small sample file of a kind, for an upload a test needs: its name and its bytes; text
+ * for a kind it does not know.
+ */
 export function sampleFileOf(kind: string): { name: string; bytes: Buffer } {
   switch (kind) {
     case 'image':

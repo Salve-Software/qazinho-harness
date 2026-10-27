@@ -1,6 +1,9 @@
 import type { IFlatStep, IStepOutcome } from '@/contract';
 
-/** A step with no verdict of the agent's own: skipped after a step that failed, or never reported. */
+/**
+ * A step with no verdict of the agent's own: skipped after a step that failed, or never
+ * reported.
+ */
 export function unwalkedOutcome(props: {
   step: IFlatStep;
   index: number;

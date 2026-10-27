@@ -1,12 +1,10 @@
 import type { IActionMotion } from '@/contract';
 import { MOTION_LIMITS } from '@/tools/servers/device/constants/MOTION_LIMITS';
 
-const round = (value: number) => value.toFixed(2);
-
-const count = (props: { n: number; one: string; many: string }) =>
-  `${String(props.n)} ${props.n === 1 ? props.one : props.many}`;
-
-/** How the page moved during an action, in a sentence the agent can weigh; null when there is no reading. */
+/**
+ * How the page moved during an action, in a sentence the agent can weigh; null when there
+ * is no reading.
+ */
 export function describeMotion(motion: IActionMotion | null): string | null {
   if (motion === null) return null;
 
@@ -28,3 +26,8 @@ export function describeMotion(motion: IActionMotion | null): string | null {
     ? 'The page held still while it acted.'
     : `While it acted, ${moved.join(', and ')}.`;
 }
+
+const round = (value: number) => value.toFixed(2);
+
+const count = (props: { n: number; one: string; many: string }) =>
+  `${String(props.n)} ${props.n === 1 ? props.one : props.many}`;

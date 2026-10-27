@@ -3,38 +3,10 @@ interface IBox {
   body: Buffer;
 }
 
-function boxesIn(bytes: Buffer): IBox[] {
-  const found: IBox[] = [];
-  let at = 0;
-
-  while (at + 8 <= bytes.length) {
-    let size = bytes.readUInt32BE(at);
-    let head = 8;
-
-    if (size === 1 && at + 16 <= bytes.length) {
-      size = Number(bytes.readBigUInt64BE(at + 8));
-      head = 16;
-    } else if (size === 0) size = bytes.length - at;
-
-    if (size < head || at + size > bytes.length) break;
-
-    found.push({
-      kind: bytes.toString('latin1', at + 4, at + 8),
-      body: bytes.subarray(at + head, at + size),
-    });
-    at += size;
-  }
-
-  return found;
-}
-
-function inside(box: IBox | undefined, kind: string): IBox | undefined {
-  return box === undefined
-    ? undefined
-    : boxesIn(box.body).find((one) => one.kind === kind);
-}
-
-/** How long an MP4's video plays and how large it is, read from its video track, the way a <video> reads it; null when it has none. */
+/**
+ * How long an MP4's video plays and how large it is, read from its video track, the way a
+ * <video> reads it; null when it has none.
+ */
 export function mp4FactsOf(
   bytes: Buffer | null,
 ): { durationMs: number; width: number; height: number } | null {
@@ -69,4 +41,35 @@ export function mp4FactsOf(
   }
 
   return null;
+}
+
+function boxesIn(bytes: Buffer): IBox[] {
+  const found: IBox[] = [];
+  let at = 0;
+
+  while (at + 8 <= bytes.length) {
+    let size = bytes.readUInt32BE(at);
+    let head = 8;
+
+    if (size === 1 && at + 16 <= bytes.length) {
+      size = Number(bytes.readBigUInt64BE(at + 8));
+      head = 16;
+    } else if (size === 0) size = bytes.length - at;
+
+    if (size < head || at + size > bytes.length) break;
+
+    found.push({
+      kind: bytes.toString('latin1', at + 4, at + 8),
+      body: bytes.subarray(at + head, at + size),
+    });
+    at += size;
+  }
+
+  return found;
+}
+
+function inside(box: IBox | undefined, kind: string): IBox | undefined {
+  return box === undefined
+    ? undefined
+    : boxesIn(box.body).find((one) => one.kind === kind);
 }

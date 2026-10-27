@@ -1,22 +1,9 @@
 import type { IBox, IGaps } from '@/engine/devices/types';
 
-function overlaps(props: {
-  from: number;
-  size: number;
-  otherFrom: number;
-  otherSize: number;
-}): boolean {
-  return (
-    props.otherFrom < props.from + props.size &&
-    props.otherFrom + props.otherSize > props.from
-  );
-}
-
-function nearest(gaps: number[]): number | null {
-  return gaps.length === 0 ? null : Math.round(Math.min(...gaps));
-}
-
-/** The space between a box and the nearest box on each side of it, counting only boxes that sit beside it, not around or inside it. */
+/**
+ * The space between a box and the nearest box on each side of it, counting only boxes
+ * that sit beside it, not around or inside it.
+ */
 export function gapsOf(props: { box: IBox; others: IBox[] }): IGaps {
   const { box } = props;
   const across = props.others.filter((other) =>
@@ -58,4 +45,20 @@ export function gapsOf(props: { box: IBox; others: IBox[] }): IGaps {
         .map((other) => other.x - (box.x + box.width)),
     ),
   };
+}
+
+function overlaps(props: {
+  from: number;
+  size: number;
+  otherFrom: number;
+  otherSize: number;
+}): boolean {
+  return (
+    props.otherFrom < props.from + props.size &&
+    props.otherFrom + props.otherSize > props.from
+  );
+}
+
+function nearest(gaps: number[]): number | null {
+  return gaps.length === 0 ? null : Math.round(Math.min(...gaps));
 }

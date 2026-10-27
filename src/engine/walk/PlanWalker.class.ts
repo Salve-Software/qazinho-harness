@@ -43,7 +43,10 @@ import {
   variablePort,
 } from './library';
 
-/** Walks a plan's cases on one device, each on the app opened anew: from its recording with no agent where one holds, by the agent where not. */
+/**
+ * Walks a plan's cases on one device, each on the app opened anew: from its recording
+ * with no agent where one holds, by the agent where not.
+ */
 export class PlanWalker {
   private readonly scope: string;
   private readonly runId: string;
@@ -75,7 +78,10 @@ export class PlanWalker {
     this.onEvent = props.onEvent;
   }
 
-  /** Walks every case in order the way `mode` says, and answers with the recordings the agent made and why the walk broke off, if it did. */
+  /**
+   * Walks every case in order the way `mode` says, and answers with the recordings the
+   * agent made and why the walk broke off, if it did.
+   */
   public async walk(props: {
     steps: IFlatStep[];
     mode: WalkMode;
@@ -134,13 +140,19 @@ export class PlanWalker {
     return { recorded, failure: null };
   }
 
-  /** Stops the walk: the case under way ends with its agent's turn, and no other case starts. */
+  /**
+   * Stops the walk: the case under way ends with its agent's turn, and no other case
+   * starts.
+   */
   public stop(): void {
     this.isStopped = true;
     this.agent?.cancel(this.scope);
   }
 
-  /** One agent turn on one case, kept as a recording once every step passed with its proof; a question for the QA ends the case, since no one answers. */
+  /**
+   * One agent turn on one case, kept as a recording once every step passed with its
+   * proof; a question for the QA ends the case, since no one answers.
+   */
   private async walkCase(props: {
     agent: ICaseAgent;
     steps: IIndexedStep[];
@@ -384,7 +396,10 @@ export class PlanWalker {
     return { kind: 'walked' };
   }
 
-  /** Walks a case again without the agent, the way its recording says, checking each step's proof; its steps are told only once the whole case held. */
+  /**
+   * Walks a case again without the agent, the way its recording says, checking each
+   * step's proof; its steps are told only once the whole case held.
+   */
   private async replayCase(props: {
     steps: IIndexedStep[];
     recipe: ICaseRecipe;
@@ -451,7 +466,10 @@ export class PlanWalker {
     return false;
   }
 
-  /** Settles the steps a case never reached: the first as `verdict` says and why, the rest skipped after it. */
+  /**
+   * Settles the steps a case never reached: the first as `verdict` says and why, the rest
+   * skipped after it.
+   */
   private unwalked(props: {
     pending: IIndexedStep[];
     verdict: 'skipped' | 'blocked';

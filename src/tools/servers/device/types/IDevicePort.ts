@@ -1,6 +1,9 @@
 import type { IActionMotion, IDeviceImage, IStepAction } from '@/contract';
 
-/** What the device tools need from a device: read, see and measure the screen, act on it, say how it moved and which API calls failed, and list the calls the app made or what one answered. */
+/**
+ * What the device tools need: read, see and measure the screen, act on it, and list the
+ * app's API calls.
+ */
 export interface IDevicePort {
   describe: () => Promise<string>;
   inspect: (target: string) => Promise<string>;

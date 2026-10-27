@@ -3,18 +3,10 @@ import { extname, join } from 'node:path';
 
 const WINDOWS_EXTENSIONS = ['.exe', '.cmd', '.bat', '.com'];
 
-function isRunnable(props: { path: string; platform: NodeJS.Platform }): boolean {
-  try {
-    if (!statSync(props.path).isFile()) return false;
-    if (props.platform !== 'win32') accessSync(props.path, constants.X_OK);
-
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/** Looks for the binary itself, the way the platform's shell would: on Windows only a name with a runnable extension, an .exe before an npm .cmd shim. Spawning `which` would cost a process per check. */
+/**
+ * Finds a binary the way the platform's shell would, with no process per check; on
+ * Windows, by extension.
+ */
 export function findOnPath(props: {
   command: string;
   directories: string[];
@@ -37,4 +29,15 @@ export function findOnPath(props: {
     }
 
   return null;
+}
+
+function isRunnable(props: { path: string; platform: NodeJS.Platform }): boolean {
+  try {
+    if (!statSync(props.path).isFile()) return false;
+    if (props.platform !== 'win32') accessSync(props.path, constants.X_OK);
+
+    return true;
+  } catch {
+    return false;
+  }
 }

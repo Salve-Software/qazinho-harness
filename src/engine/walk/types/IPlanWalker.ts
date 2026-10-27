@@ -5,7 +5,10 @@ import type { IDeviceDriver } from '@/engine/devices/types';
 import type { IVariableValue } from '@/engine/types';
 import type { Harness } from '@/Harness.class';
 
-/** A walk's run: the scope its tools answer under, the device opened for it, the agent that walks what no recording holds, if any, the app and the QA's language, the variables it types, the bugs already open, where its screens go, and who hears how it goes. */
+/**
+ * A walk's run: its tools' scope, the device, the agent, the app, the variables, open
+ * bugs and its listeners.
+ */
 export interface IPlanWalker {
   scope: string;
   runId: string;

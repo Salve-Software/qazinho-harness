@@ -5,30 +5,10 @@ import { describeMotion } from './describeMotion';
 import { readToolCall } from './readToolCall';
 import { timeLeftOf } from './timeLeftOf';
 
-function said(text: string, isError = false): ToolAnswer {
-  return { content: [{ type: 'text', text }], isError };
-}
-
-async function shown(props: {
-  device: IAttachDevice;
-  lead: string;
-}): Promise<ToolAnswer> {
-  const { driver } = props.device;
-  const [text, image] = await Promise.all([
-    driver.describe(),
-    driver.glance().catch(() => null),
-  ]);
-
-  return {
-    content: [
-      { type: 'text', text: `${props.lead}${text}` },
-      ...(image === null ? [] : [{ type: 'image' as const, ...image }]),
-    ],
-    isError: false,
-  };
-}
-
-/** Carries out one device tool call and answers with the screen as text and as a picture, or why it could not. */
+/**
+ * Carries out one device tool call and answers with the screen as text and as a picture,
+ * or why it could not.
+ */
 export async function callDeviceTool(props: {
   device: IAttachDevice;
   call: { name: string; args: Record<string, unknown> | undefined };
@@ -112,4 +92,27 @@ export async function callDeviceTool(props: {
 
     return said(`That did not work: ${stripAnsi(message)}`, true);
   }
+}
+
+function said(text: string, isError = false): ToolAnswer {
+  return { content: [{ type: 'text', text }], isError };
+}
+
+async function shown(props: {
+  device: IAttachDevice;
+  lead: string;
+}): Promise<ToolAnswer> {
+  const { driver } = props.device;
+  const [text, image] = await Promise.all([
+    driver.describe(),
+    driver.glance().catch(() => null),
+  ]);
+
+  return {
+    content: [
+      { type: 'text', text: `${props.lead}${text}` },
+      ...(image === null ? [] : [{ type: 'image' as const, ...image }]),
+    ],
+    isError: false,
+  };
 }
