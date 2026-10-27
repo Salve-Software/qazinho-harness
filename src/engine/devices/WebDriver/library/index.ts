@@ -6,3 +6,4 @@ export * from './optionOf';
 export * from './originOf';
 export * from './pagesOf';
 export * from './summarizeMotion';
+export * from './webAccessOf';

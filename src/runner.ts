@@ -4,7 +4,13 @@ import type { ICaseAgent } from '@/engine/walk/types';
 import { delimiter, join } from 'node:path';
 import Anthropic from '@anthropic-ai/sdk';
 import { ClaudeCodeAgent, GatewayAgent, modelClientOf } from '@/engine/agents';
-import { AndroidDriver, FrameRecorder, IosDriver, WebDriver } from '@/engine/devices';
+import {
+  AndroidDriver,
+  FrameRecorder,
+  IosDriver,
+  WebDriver,
+  webAccessOf,
+} from '@/engine/devices';
 import { listAvds } from '@/engine/devices/AndroidDriver/library';
 import { listSimulators } from '@/engine/devices/IosDriver/library';
 import { findOnPath } from '@/engine/library';
@@ -32,6 +38,7 @@ async function deviceFor(props: {
     return new WebDriver({
       url: job.target.value,
       profileDir: join(workDir, RUNNER.profile),
+      access: webAccessOf(job.variables),
     });
 
   if (build === null)

@@ -1,4 +1,4 @@
-import type { IWebDriver } from './types';
+import type { IWebAccess, IWebDriver } from './types';
 import type {
   DialogAnswer,
   IActionMotion,
@@ -38,6 +38,7 @@ export class WebDriver implements IDeviceDriver {
   private readonly profileDir: string;
   private readonly pixelRatio: number;
   private readonly shrink: ShrinkImage | null;
+  private readonly access: IWebAccess;
   private readonly origins = new Set<string>();
   private readonly dialogs: string[] = [];
   private readonly requests = new Map<Request, INetworkEntry>();
@@ -68,18 +69,28 @@ export class WebDriver implements IDeviceDriver {
       WEB_DRIVER.maxPixelRatio,
     );
     this.shrink = props.shrink ?? null;
+    this.access = props.access ?? { headers: {}, credentials: null };
   }
 
   /** Opens Chrome on an empty profile, so a run never starts with what an earlier one saved. */
   public async open(): Promise<void> {
     await rm(this.profileDir, { recursive: true, force: true, maxRetries: 5 });
+    const origin = originOf(this.url);
+    const { headers, credentials } = this.access;
     this.context = await chromium.launchPersistentContext(this.profileDir, {
       channel: 'chrome',
       headless: true,
       viewport: { ...this.viewport },
       deviceScaleFactor: this.pixelRatio,
       args: [`--force-device-scale-factor=${String(this.pixelRatio)}`],
+      ...(credentials === null || origin === null
+        ? {}
+        : { httpCredentials: { ...credentials, origin } }),
     });
+    if (origin !== null && Object.keys(headers).length > 0)
+      await this.context.route(`${origin}/**`, (route) =>
+        route.continue({ headers: { ...route.request().headers(), ...headers } }),
+      );
     await this.context.addInitScript(MOTION_PROBE);
     this.context.on('request', (request) => {
       this.noteRequest(request);
