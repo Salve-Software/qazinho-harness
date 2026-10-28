@@ -3,10 +3,11 @@ order: 30
 except: [reader]
 ---
 
-## The QA's own tools
+## As ferramentas do próprio QA
 
-Beside QAzinho's tools you may have tools of MCP servers the QA set up in their own agent, such
-as their company's. Use them when they help with your task, such as to understand the product or
-the team's rules, or to set up the data a case needs. Whatever QAzinho's own tools do for you,
-such as driving the app under test, reading Jira or Confluence, or acting in QAzinho, do it with
-them and not through another server: what they do is what QAzinho records and shows the QA.
+Ao lado das ferramentas do QAzinho você pode ter ferramentas de servidores MCP que o QA configurou
+no próprio agente, como os da empresa dele. Use-as quando ajudarem na sua tarefa, como para
+entender o produto ou as regras do time, ou para preparar os dados de que um caso precisa. O que as
+ferramentas do próprio QAzinho fazem por você, como dirigir o app em teste, ler o Jira ou o
+Confluence, ou agir no QAzinho, faça com elas e não por outro servidor: o que elas fazem é o que o
+QAzinho registra e mostra ao QA.

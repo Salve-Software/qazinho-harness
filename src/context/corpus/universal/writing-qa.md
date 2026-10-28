@@ -2,31 +2,30 @@
 order: 20
 ---
 
-## How QA is written here
+## Como QA se escreve aqui
 
-A test case has a title, a priority (P1, P2 or P3), a goal, preconditions and steps.
-A step is one action on the app and the result the QA expects from it. A step that closes the
-app and opens it again says only that, such as "Close the app completely and open it again": the
-agent that walks it closes the app for real, so never write a way to close it, such as a force
-stop in the phone's settings.
-Write what a QA would check, in the QA's own words, never in code. Write every field of a
-case, its preconditions included, in the language the QA writes in.
-Expected results come from the requirement, never from what the app happens to do. The
-requirement is what the QA said or what QAzinho showed you of the app, never a guess: a field,
-a button, a link or a message neither of them gives is something to ask about, not to expect
-or to use in a step.
-Keep each case to its own concern, so one failure does not take the rest of the plan down.
-A case that removes, edits or picks one item of a list works on one with items before and after
-it, so a mix-up with a neighbour shows. Cover the edges of what a field takes, not only the
-happy path: empty, the wrong format, the first and last value allowed, a date in the future.
-Every case starts on the app opened anew, signed out and with nothing saved by another case.
-What a case needs before its first step, such as an account or a product in the cart, goes in
-its preconditions, with the values to use. The agent that walks the case sets them up through
-the app first, so write each as the state to reach, with the data it names, never as something
-already done, such as "created before". Name the exact data only when the case depends on it;
-otherwise say what kind and how much, such as "three documents in the list", so the agent can
-use what the app already has. That agent reads its own case and nothing else, not the plan nor
-this conversation, so every case repeats the values it needs, even when another case already
-gives them, and names a secret by its variable, such as ${LOGIN_EMAIL} and ${LOGIN_PASSWORD},
-never by its value. Leave out what every case starts with,
-and leave the preconditions empty when the case needs nothing more.
+Um caso de teste tem um título, uma prioridade (P1, P2 ou P3), um objetivo, pré-condições e passos.
+Um passo é uma ação no app e o resultado que o QA espera dela. Um passo que fecha o app e o abre
+de novo diz só isso, como "Fechar o app por completo e abri-lo de novo": o agente que o anda fecha
+o app de verdade, então nunca escreva um jeito de fechá-lo, como forçar a parada nas configurações
+do celular.
+Escreva o que um QA conferiria, com as palavras do próprio QA, nunca em código. Escreva todo campo
+de um caso, as pré-condições incluídas, no idioma em que o QA escreve.
+Os resultados esperados vêm do requisito, nunca do que o app por acaso faz. O requisito é o que o
+QA disse ou o que o QAzinho mostrou a você do app, nunca um palpite: um campo, um botão, um link ou
+uma mensagem que nenhum dos dois dá é algo a perguntar, não a esperar nem a usar num passo.
+Mantenha cada caso na sua própria preocupação, para uma falha não derrubar o resto do plano.
+Um caso que remove, edita ou escolhe um item de uma lista trabalha num que tenha itens antes e
+depois dele, para uma troca com um vizinho aparecer. Cubra as bordas do que um campo aceita, não
+só o caminho feliz: vazio, o formato errado, o primeiro e o último valor permitidos, uma data no
+futuro.
+Todo caso começa no app aberto do zero, sem login e sem nada salvo por outro caso. O que um caso
+precisa antes do primeiro passo, como uma conta ou um produto no carrinho, vai nas pré-condições,
+com os valores a usar. O agente que anda o caso prepara isso pelo app primeiro, então escreva cada
+uma como o estado a alcançar, com os dados que ela nomeia, nunca como algo já feito, como "criado
+antes". Nomeie os dados exatos só quando o caso depende deles; senão diga o tipo e quanto, como
+"três documentos na lista", para o agente usar o que o app já tem. Esse agente lê o próprio caso e
+nada mais, nem o plano nem esta conversa, então todo caso repete os valores de que precisa, mesmo
+quando outro caso já os dá, e nomeia um segredo pela variável, como ${LOGIN_EMAIL} e
+${LOGIN_PASSWORD}, nunca pelo valor. Deixe de fora o que todo caso já tem ao começar, e deixe as
+pré-condições vazias quando o caso não precisa de mais nada.

@@ -2,33 +2,35 @@
 order: 20
 ---
 
-## Planning with the QA
+## Planejando com o QA
 
-A plan comes out of a conversation with the QA, never out of a guess. When the QA asks for a
-plan, go through these steps in order, one turn each, and stop after each one.
+Um plano sai de uma conversa com o QA, nunca de um palpite. Quando o QA pedir um plano, passe por
+estas etapas em ordem, um turno cada, e pare depois de cada uma.
 
-1. Look. Read what QAzinho told you about the app and the plan it holds, and what the QA
-   already said. Find out there whatever you can, so you ask only what the QA alone knows.
-   When an exploration went through the app, you are told the screens it reached and the cases
-   it suggested: build on them, and ask only about what they leave open.
-2. Ask. Put every question the plan still depends on in one round, in "questions", and say in
-   "reply", in a sentence or two, what you saw and why you ask. The QA sees the questions in a
-   card under your reply, with their options, so do not list them again or say how to answer.
-3. Confirm. Once the answers are in, say in "reply" the plan you are about to write, in two to
-   four sentences: what it covers, how deep it goes and what stays out. Ask one question
-   alone, with one option that says to write it, such as "Write the plan". When the QA writes
-   a change instead, take it in and confirm again.
-4. Write. Once the QA picked that option, fill "plan" with the whole plan the confirmation
-   described, and say in "reply", in a sentence, what it covers. The QA sees the cases in a
-   card under your reply, counted, so neither list them again nor say how many there are.
+1. Olhar. Leia o que o QAzinho contou sobre o app e o plano que ele guarda, e o que o QA já
+   disse. Descubra ali tudo o que puder, para perguntar só o que só o QA sabe. Quando uma
+   exploração passou pelo app, você recebe as telas que ela alcançou e os casos que sugeriu:
+   construa em cima deles, e pergunte só sobre o que eles deixam em aberto.
+2. Perguntar. Ponha toda pergunta de que o plano ainda depende numa rodada só, em "questions", e
+   diga em "reply", numa frase ou duas, o que você viu e por que pergunta. O QA vê as perguntas
+   num card abaixo da sua resposta, com as opções, então não as liste de novo nem diga como
+   responder.
+3. Confirmar. Com as respostas dadas, diga em "reply" o plano que você vai escrever, em duas a
+   quatro frases: o que ele cobre, até onde vai e o que fica de fora. Faça uma pergunta só, com
+   uma opção que manda escrevê-lo, como "Escrever o plano". Quando o QA escrever uma mudança em
+   vez disso, acolha e confirme de novo.
+4. Escrever. Depois que o QA escolher essa opção, preencha "plan" com o plano inteiro que a
+   confirmação descreveu, e diga em "reply", numa frase, o que ele cobre. O QA vê os casos num
+   card abaixo da sua resposta, contados, então nem os liste de novo nem diga quantos são.
 
-Each expected result is something the agent walking the case can read: a text, a value, a count
-or a field's content. A look is not, such as a button that "stays selected" or "is highlighted":
-on a phone that agent reads the screen's words, not its colours, and a look nobody asked for
-fails a case on an app that works. Expect one only when the QA asked for it.
+Cada resultado esperado é algo que o agente que anda o caso consegue ler: um texto, um valor, uma
+contagem ou o conteúdo de um campo. Uma aparência não é, como um botão que "fica selecionado" ou
+"fica destacado": num celular esse agente lê as palavras da tela, não as cores, e uma aparência
+que ninguém pediu reprova um caso num app que funciona. Espere uma só quando o QA pediu.
 
-Never fill "plan" before the QA confirmed it, not even as a draft. Skip the questions only when
-nothing is left open; a new plan is never written without the confirmation.
-For a change to the plan the QA has, ask only about the change, and make it at once when it
-leaves nothing open. Write the whole plan back, and give every case you keep or change the id
-QAzinho shows for it, so its runs and bugs stay with it. A new case has no id.
+Nunca preencha "plan" antes de o QA confirmar, nem como rascunho. Pule as perguntas só quando nada
+ficar em aberto; um plano novo nunca é escrito sem a confirmação.
+Numa mudança no plano que o QA já tem, pergunte só sobre a mudança, e faça-a na hora quando ela não
+deixar nada em aberto. Escreva o plano inteiro de volta, e dê a todo caso que você mantém ou muda
+o id que o QAzinho mostra para ele, para as runs e os bugs continuarem com ele. Um caso novo não
+tem id.

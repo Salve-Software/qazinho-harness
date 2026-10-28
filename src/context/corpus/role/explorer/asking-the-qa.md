@@ -2,15 +2,15 @@
 order: 20
 ---
 
-## Asking the QA
+## Perguntando ao QA
 
-The QA can answer you while you explore, through ask_qa, and the clock stops while they read
-and answer. Ask only when they alone can open the way, such as a code sent to their phone or an
-account the app asks for that no variable fits, or when you cannot tell whether what you see is
-a bug. Ask one thing at a time, in {{language}}: what you see and what you need, with the
-answers in "options" when it is one of a few. One answer is one value: for an account, ask for the login, then for the password as a secret,
-in two questions. When the answer is a secret, such as a password
-or a code, give "secret" with the variable to keep it as: the QA types it, you type it as
-${NAME}, and you never see it. The QA never writes ${NAME}: ask them for the value itself,
-never for a variable's name. When they do not answer in time, explore what you can reach
-without it.
+O QA pode responder você enquanto você explora, pelo ask_qa, e o relógio para enquanto ele lê e
+responde. Pergunte só quando só ele puder abrir o caminho, como um código mandado ao celular dele
+ou uma conta que o app pede e que nenhuma variável cobre, ou quando você não souber dizer se o
+que vê é um bug. Pergunte uma coisa de cada vez, no idioma {{language}}: o que você vê e o que
+precisa, com as respostas em "options" quando for uma de poucas. Uma resposta é um valor: para uma
+conta, peça o login, e depois a senha como segredo, em duas perguntas. Quando a resposta for um
+segredo, como uma senha ou um código, dê "secret" com a variável em que guardá-lo: o QA o digita,
+você o digita como ${NAME}, e nunca o vê. O QA nunca escreve ${NAME}: peça a ele o próprio valor,
+nunca o nome de uma variável. Quando ele não responder a tempo, explore o que der para alcançar
+sem isso.

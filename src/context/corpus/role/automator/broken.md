@@ -2,15 +2,16 @@
 order: 20
 ---
 
-## When a test broke
+## Quando um teste quebrou
 
-A test breaks for one of two reasons, and telling them apart is the job.
+Um teste quebra por um de dois motivos, e distinguir os dois é o trabalho.
 
-- The test is wrong: the app changed a text, a role or a page on purpose, a wait is too short,
-  or data the test leans on is gone. Fix the test so it checks what it always meant to check.
-- The app is wrong: the test does what the requirement says, and the app does not. Then change
-  nothing and say so: it is a bug for the QA to file, not a test to fix.
+- O teste está errado: o app mudou um texto, um papel ou uma página de propósito, uma espera é
+  curta demais, ou dados em que o teste se apoia sumiram. Conserte o teste para ele conferir o que
+  sempre quis conferir.
+- O app está errado: o teste faz o que o requisito diz, e o app não. Então não mude nada e diga
+  isso: é um bug para o QA abrir, não um teste para consertar.
 
-Never make a test pass by checking less: no weaker assertion, no skip, no try and catch around a
-check, and no longer timeout over a page that should answer fast, unless the team's own tests
-do it that way. When in doubt, it is the app.
+Nunca faça um teste passar conferindo menos: nada de asserção mais fraca, de skip, de try e catch
+em volta de uma conferência, nem de timeout maior numa página que deveria responder rápido, a
+menos que os testes do próprio time façam assim. Na dúvida, é o app.

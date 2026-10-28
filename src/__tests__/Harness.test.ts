@@ -425,12 +425,14 @@ describe('Harness', () => {
 
     it('tells a web run the size of the window it drives', () => {
       expect(
-        harness.run({
-          target: { kind: 'web', value: 'x' },
-          viewport: { width: 390, height: 844 },
-          language: 'en',
-        }),
-      ).toContain('in a 390 × 844 window, width by height in pixels');
+        harness
+          .run({
+            target: { kind: 'web', value: 'x' },
+            viewport: { width: 390, height: 844 },
+            language: 'en',
+          })
+          .replace(/\s+/g, ' '),
+      ).toContain('numa janela de 390 × 844, largura por altura em pixels');
     });
 
     it('has the runner write its verdicts in the language the QA reads, whatever the case is in', () => {
@@ -440,8 +442,8 @@ describe('Harness', () => {
         language: 'pt',
       });
 
-      expect(prompt).toContain(
-        'in Brazilian Portuguese, the language the QA reads QAzinho in',
+      expect(prompt.replace(/\s+/g, ' ')).toContain(
+        'no idioma Brazilian Portuguese, o idioma em que o QA lê o QAzinho',
       );
       expect(prompt).not.toContain('{{language}}');
     });
@@ -453,8 +455,8 @@ describe('Harness', () => {
           viewport: DESKTOP,
           language: 'en',
         }),
-      ).not.toContain('## Talking with the QA');
-      expect(harness.chat(EMPTY_CHAT).systemPrompt).not.toContain('## Running a case');
+      ).not.toContain('## Conversando com o QA');
+      expect(harness.chat(EMPTY_CHAT).systemPrompt).not.toContain('## Rodando um caso');
     });
   });
 
@@ -478,17 +480,17 @@ describe('Harness', () => {
         minutes: 5,
       });
 
-      expect(exploring).toContain('## Exploring the app');
-      expect(exploring).toContain('for about 5 minutes');
-      expect(exploring).toContain('in Brazilian Portuguese');
-      expect(exploring).not.toContain('## Running a case');
+      expect(exploring).toContain('## Explorando o app');
+      expect(exploring).toContain('por cerca de 5 minutos');
+      expect(exploring.replace(/\s+/g, ' ')).toContain('no idioma Brazilian Portuguese');
+      expect(exploring).not.toContain('## Rodando um caso');
       expect(
         harness.run({
           target: { kind: 'web', value: 'x' },
           viewport: DESKTOP,
           language: 'en',
         }),
-      ).not.toContain('## Exploring the app');
+      ).not.toContain('## Explorando o app');
     });
 
     it('starts an exploration with its time, the variables and the screen', async () => {
@@ -562,8 +564,8 @@ describe('Harness', () => {
       const { systemPrompt } = harness.assistant({ text: 'Oi', told: {}, app: APP });
 
       await expect(systemPrompt).toMatchFileSnapshot('./__prompts__/assistant.txt');
-      expect(systemPrompt).not.toContain('## Talking with the QA');
-      expect(systemPrompt).not.toContain('## Running a case');
+      expect(systemPrompt).not.toContain('## Conversando com o QA');
+      expect(systemPrompt).not.toContain('## Rodando um caso');
     });
 
     it('opens the first message with what is on screen and every project and workspace', async () => {
@@ -621,9 +623,11 @@ describe('Harness', () => {
 
       await expect(systemPrompt).toMatchFileSnapshot('./__prompts__/builder.txt');
       await expect(schema).toMatchFileSnapshot('./__prompts__/build-schema.txt');
-      expect(systemPrompt).toContain('in Brazilian Portuguese');
-      expect(systemPrompt).not.toContain('## Talking with the QA');
-      expect(systemPrompt).not.toContain('## Being the Estagiário');
+      expect(systemPrompt.replace(/\s+/g, ' ')).toContain(
+        'no idioma Brazilian Portuguese',
+      );
+      expect(systemPrompt).not.toContain('## Conversando com o QA');
+      expect(systemPrompt).not.toContain('## Sendo o Estagiário');
     });
 
     it('asks for the build with the copy and the machine it runs on', async () => {
@@ -685,9 +689,11 @@ describe('Harness', () => {
 
       await expect(systemPrompt).toMatchFileSnapshot('./__prompts__/reporter.txt');
       await expect(schema).toMatchFileSnapshot('./__prompts__/review-schema.txt');
-      expect(systemPrompt).toContain('in Brazilian Portuguese');
-      expect(systemPrompt).not.toContain('## Talking with the QA');
-      expect(systemPrompt).not.toContain('## Being the Estagiário');
+      expect(systemPrompt.replace(/\s+/g, ' ')).toContain(
+        'no idioma Brazilian Portuguese',
+      );
+      expect(systemPrompt).not.toContain('## Conversando com o QA');
+      expect(systemPrompt).not.toContain('## Sendo o Estagiário');
       expect(readDirs).toEqual(['/data/runs/w-1']);
     });
 
@@ -767,10 +773,12 @@ describe('Harness', () => {
 
       await expect(systemPrompt).toMatchFileSnapshot('./__prompts__/reader.txt');
       await expect(schema).toMatchFileSnapshot('./__prompts__/pull-schema.txt');
-      expect(systemPrompt).toContain('## Reading a pull request');
-      expect(systemPrompt).toContain('in Brazilian Portuguese');
-      expect(systemPrompt).not.toContain('## Talking with the QA');
-      expect(systemPrompt).not.toContain('## Being the Estagiário');
+      expect(systemPrompt).toContain('## Lendo um pull request');
+      expect(systemPrompt.replace(/\s+/g, ' ')).toContain(
+        'no idioma Brazilian Portuguese',
+      );
+      expect(systemPrompt).not.toContain('## Conversando com o QA');
+      expect(systemPrompt).not.toContain('## Sendo o Estagiário');
       expect(harness.toolsFor('reader').allowedTools).toEqual([]);
     });
 
@@ -855,10 +863,12 @@ describe('Harness', () => {
 
       await expect(systemPrompt).toMatchFileSnapshot('./__prompts__/automator.txt');
       await expect(schema).toMatchFileSnapshot('./__prompts__/change-schema.txt');
-      expect(systemPrompt).toContain('in Brazilian Portuguese');
-      expect(systemPrompt).not.toContain('## Talking with the QA');
-      expect(systemPrompt).not.toContain('## Being the Estagiário');
-      expect(systemPrompt).not.toContain('## Building the app');
+      expect(systemPrompt.replace(/\s+/g, ' ')).toContain(
+        'no idioma Brazilian Portuguese',
+      );
+      expect(systemPrompt).not.toContain('## Conversando com o QA');
+      expect(systemPrompt).not.toContain('## Sendo o Estagiário');
+      expect(systemPrompt).not.toContain('## Construindo o app');
     });
 
     it('asks for the fix with the suite, the test that broke and how it failed', async () => {
@@ -927,7 +937,7 @@ describe('Harness', () => {
           machine: { androidSdk: null, javaHome: null, hasXcode: false },
           language: 'en',
         }).systemPrompt,
-      ).not.toContain("## Changing the team's suite");
+      ).not.toContain('## Mudando a suíte do time');
     });
   });
 

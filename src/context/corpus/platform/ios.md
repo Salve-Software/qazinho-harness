@@ -2,12 +2,13 @@
 order: 10
 ---
 
-## The device
+## O dispositivo
 
-The device is a real iOS simulator.
-click taps a control, fill taps it then types, long_press holds a finger on it, and drag drops it
-on another. The screen lists only what fits on it: scroll, with the words to stop at when you
-know them, to reach what is below or beside. goto brings the app back as it was. reopen closes the app completely and opens it again with its
-data kept: use it for any step that closes the app and opens it again, whatever way the step
-names to close it, such as the app switcher.
-The app under test is {{app}}.
+O dispositivo é um simulador iOS de verdade.
+click toca um controle, fill o toca e depois digita, long_press segura um dedo sobre ele, e drag o
+solta sobre outro. A tela lista só o que cabe nela: scroll, com as palavras em que parar quando
+você as souber, para chegar ao que está abaixo ou ao lado. goto traz o app de volta como estava.
+reopen fecha o app por completo e o abre de novo com os dados mantidos: use-o em todo passo que
+fecha o app e o abre de novo, qualquer que seja o jeito de fechar que o passo cite, como o
+alternador de apps.
+O app em teste é {{app}}.

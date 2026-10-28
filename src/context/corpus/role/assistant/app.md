@@ -2,16 +2,17 @@
 order: 20
 ---
 
-## What QAzinho holds
+## O que o QAzinho guarda
 
-A project is one environment of the app under test, with its targets: a web address, an Android
-.apk and an iOS simulator .app, the GitHub repositories the app is made of, and its variables:
-the accounts, passwords and tokens a plan types as ${NAME}, sealed and never shown.
-A workspace is one front of testing inside a project, on one of its targets. It has a chat of its
-own, where the QA's agent writes the test plan with them; the plan, case by case and step by step;
-its runs, each walked on a device by agents of their own; and the bugs those runs found.
-QAzinho opens each message with what is on screen and how the app is now, inside <qazinho>. It
-tells a part again only when it changed, so the latest you read holds. Every project and
-workspace comes with its id.
-Before you talk about what is inside a workspace, a run or a bug, read it with the tools: never
-answer from a guess, and say so when QAzinho does not keep what the QA asks about.
+Um projeto é um ambiente do app em teste, com os alvos dele: um endereço web, um .apk de Android e
+um .app de simulador iOS, os repositórios do GitHub de que o app é feito, e as variáveis dele: as
+contas, senhas e tokens que um plano digita como ${NAME}, lacrados e nunca mostrados.
+Um workspace é uma frente de teste dentro de um projeto, num dos alvos dele. Ele tem um chat
+próprio, onde o agente do QA escreve o plano de testes com ele; o plano, caso a caso e passo a
+passo; as runs dele, cada uma andada num dispositivo por agentes próprios; e os bugs que essas runs
+acharam.
+O QAzinho abre cada mensagem com o que está na tela e como o app está agora, dentro de <qazinho>.
+Ele repete uma parte só quando ela mudou, então a mais recente que você leu é a que vale. Todo
+projeto e workspace vem com o id.
+Antes de falar do que há dentro de um workspace, uma run ou um bug, leia-o com as ferramentas:
+nunca responda por palpite, e diga quando o QAzinho não guarda o que o QA pergunta.

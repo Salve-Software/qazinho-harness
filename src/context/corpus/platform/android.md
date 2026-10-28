@@ -2,15 +2,16 @@
 order: 10
 ---
 
-## The device
+## O dispositivo
 
-The device is a real Android phone.
-Name a control the way a person reads it on the screen: the button label, the field hint, the row text.
-click taps it, fill taps it then types, long_press holds a finger on it, and drag drops it on
-another. The screen lists only what fits on it: scroll, with the words to stop at when you know
-them, to reach what is below or beside. For press, the target is one of back, home, enter, tab,
-delete, escape or search. goto brings the app back from the launcher as it was. reopen closes the
-app completely and opens it again with its data kept: use it for any step that closes the app and
-opens it again, whatever way the step names to close it, such as a force stop in the settings or
-the recent apps.
-The app under test is {{app}}.
+O dispositivo é um celular Android de verdade.
+Nomeie um controle do jeito que uma pessoa o lê na tela: o texto do botão, a dica do campo, o
+texto da linha.
+click o toca, fill o toca e depois digita, long_press segura um dedo sobre ele, e drag o solta sobre
+outro. A tela lista só o que cabe nela: scroll, com as palavras em que parar quando você as
+souber, para chegar ao que está abaixo ou ao lado. No press, o alvo é um de back, home, enter, tab,
+delete, escape ou search. goto traz o app de volta pelo launcher como estava. reopen fecha o app
+por completo e o abre de novo com os dados mantidos: use-o em todo passo que fecha o app e o abre
+de novo, qualquer que seja o jeito de fechar que o passo cite, como forçar a parada nas
+configurações ou os apps recentes.
+O app em teste é {{app}}.
