@@ -1,48 +1,48 @@
-# Tooling
+# Ferramentas
 
-## Commands
+## Comandos
 
-| Command                           | What it does                                             |
+| Comando                           | O que faz                                                |
 | --------------------------------- | -------------------------------------------------------- |
 | `npm run build`                   | `dist/index.js`, `contract.js`, `engine.js`, `runner.js` |
-| `npm run typecheck`               | `tsc` over the package                                   |
-| `npm run typecheck:fast`          | the same through `tsgo`                                  |
+| `npm run typecheck`               | `tsc` sobre o pacote                                     |
+| `npm run typecheck:fast`          | o mesmo pelo `tsgo`                                      |
 | `npm run lint` / `lint:fix`       | ESLint                                                   |
 | `npm run format` / `format:check` | Prettier                                                 |
 | `npm test` / `test:watch`         | Vitest                                                   |
 
-## The build
+## O build
 
-- **Vite's library mode** bundles `src/index.ts`, `src/contract/index.ts` and
-  `src/engine/index.ts` into ES modules for Node 22, and embeds the corpus. Node builtins, `zod`,
-  `yaml`, the MCP SDK and `playwright-core` stay external.
-- **`tsc` writes the declarations** into `dist/types/` (`tsconfig.build.json`), and `tsc-alias`
-  rewrites `@/` into relative paths, so a host resolves them without this package's aliases.
-- A host bundles the built package or loads it as it is. It never compiles the source.
+- **O modo biblioteca do Vite** empacota `src/index.ts`, `src/contract/index.ts` e
+  `src/engine/index.ts` em módulos ES para o Node 22, e embute o corpus. Os builtins do Node,
+  `zod`, `yaml`, o SDK de MCP e o `playwright-core` ficam externos.
+- **O `tsc` escreve as declarações** em `dist/types/` (`tsconfig.build.json`), e o `tsc-alias`
+  troca `@/` por caminhos relativos, para que um host as resolva sem os aliases deste pacote.
+- Um host empacota o pacote construído ou o carrega como está. Ele nunca compila o fonte.
 
-## Dependencies
+## Dependências
 
-- `zod`, `yaml` and `@modelcontextprotocol/sdk` are **peerDependencies**: the host ships one copy,
-  and the schemas the harness hands the MCP SDK come from the zod the SDK uses. `playwright-core`
-  is an optional one, for a host that loads `/engine`.
-- The devDependencies pin the versions the desktop installs (zod 4.6.7, the MCP SDK 1.30.0,
-  yaml 2.9.1), so the pinned prompts match what a host serves. Lift them together with the
+- `zod`, `yaml` e `@modelcontextprotocol/sdk` são **peerDependencies**: o host entrega uma cópia
+  só, e os schemas que o harness passa ao SDK de MCP vêm do zod que o SDK usa. O
+  `playwright-core` é opcional, para um host que carrega `/engine`.
+- As devDependencies fixam as versões que o desktop instala (zod 4.6.7, o SDK de MCP 1.30.0,
+  yaml 2.9.1), para que os prompts fixados batam com o que um host serve. Suba-as junto com os
   hosts.
 
-## Versions held back on purpose
+## Versões seguradas de propósito
 
-| Held           | Because                                     |
-| -------------- | ------------------------------------------- |
-| TypeScript 5.9 | typescript-eslint accepts TypeScript `<6.1` |
+| Segurada       | Porque                                       |
+| -------------- | -------------------------------------------- |
+| TypeScript 5.9 | o typescript-eslint aceita TypeScript `<6.1` |
 
-## Prettier and ESLint
+## Prettier e ESLint
 
-Prettier is the single source of formatting; ESLint does not format. The rules backing the
-structure: `max-params: 2`, `member-ordering`, `consistent-type-imports`, `import-x/order` with
-the `type` group on top, `../` banned, a host's framework banned, and `no-restricted-syntax` over
-`**/*.class.ts`.
+O Prettier é a única fonte de formatação; o ESLint não formata. As regras que sustentam a
+estrutura: `max-params: 2`, `member-ordering`, `consistent-type-imports`, `import-x/order` com o
+grupo `type` no topo, `../` proibido, o framework de um host proibido, e `no-restricted-syntax`
+sobre `**/*.class.ts`.
 
 ## CI
 
-`.github/workflows/ci.yml`, on every PR and every push to `main`: lint, typecheck, format, test,
+`.github/workflows/ci.yml`, em todo PR e todo push na `main`: lint, typecheck, formatação, testes,
 build.

@@ -1,44 +1,48 @@
-# Comments
+# Comentários
 
-**No comments in the code.** Not `//`, not `/* */`, not `{/* */}` in JSX, not in CSS. The code,
-its names and its tests say what it does; a commit message says why it changed.
+**Nada de comentários no código.** Nem `//`, nem `/* */`, nem `{/* */}` no JSX, nem no CSS. O
+código, os nomes e os testes dizem o que ele faz; a mensagem de commit diz por que ele mudou.
 
-## JSDoc, and only here
+## JSDoc, e só aqui
 
-JSDoc is the one exception, so hovering a name in the editor explains it. It goes **only** above:
+O JSDoc é a única exceção, para que passar o mouse sobre um nome no editor o explique. Ele vai
+**só** acima de:
 
-| Where                                        | Example                                          |
-| -------------------------------------------- | ------------------------------------------------ |
-| A function in a `library/` file              | `export function isInternalNavigation(...)`      |
-| A type in a `types/` file                    | `export interface IQazinhoApi`, `export type …`  |
-| A class declaration, and each of its methods | `export class AgentRunner`, `public async ask()` |
-| A component declaration                      | `export const Composer: React.FC<...>`           |
+| Onde                                      | Exemplo                                          |
+| ----------------------------------------- | ------------------------------------------------ |
+| Uma função num arquivo de `library/`      | `export function isInternalNavigation(...)`      |
+| Um tipo num arquivo de `types/`           | `export interface IQazinhoApi`, `export type …`  |
+| A declaração de uma classe, e cada método | `export class AgentRunner`, `public async ask()` |
+| A declaração de um componente             | `export const Composer: React.FC<...>`           |
 
-Nowhere else: not on a constant, a view model, a hook, a store, a service function, a variable, a
-CSS rule, or inside an interface body.
+Em nenhum outro lugar: nem numa constante, num view model, num hook, numa store, numa função de
+service, numa variável, numa regra de CSS, nem dentro do corpo de uma interface.
 
 ```ts
-/** Whether a navigation stays inside the app: same origin, or the packaged page itself. */
+/** Se uma navegação fica dentro do app: mesma origem, ou a própria página empacotada. */
 export function isInternalNavigation(appUrl: string, url: string): boolean {}
 ```
 
-- **Never inside an interface or a type.** No JSDoc and no comment on a property, a method
-  signature or a field of a type literal: what a member means goes in its name, or in the type's
-  own JSDoc. `qazinho/no-comment-in-type` fails the lint on one.
-- **Two lines at most, each within 90 columns.** One is better. Say what the thing does, directly,
-  and stop: not everything it touches, not why it exists. `qazinho/short-jsdoc` fails the lint on
-  a longer one.
-- It says what **that** thing does. If it stays true pasted onto another thing of the same kind,
-  it says nothing.
-- A good name needs no JSDoc: leave it out rather than repeat the name.
+- **Em português do Brasil.** O JSDoc e os comentários dos testes são prosa, como os `.md`; o
+  código que eles descrevem continua em inglês.
+- **Nunca dentro de uma interface ou de um tipo.** Nada de JSDoc nem de comentário numa
+  propriedade, na assinatura de um método ou num campo de um tipo literal: o que um membro
+  significa vai no nome dele, ou no JSDoc do próprio tipo. O `qazinho/no-comment-in-type`
+  reprova o lint num caso desses.
+- **Duas linhas no máximo, cada uma dentro de 90 colunas.** Uma é melhor. Diga o que a coisa faz,
+  direto, e pare: não tudo o que ela toca, nem por que ela existe. O `qazinho/short-jsdoc` reprova
+  o lint num mais longo.
+- Ele diz o que **aquela** coisa faz. Se continuar verdadeiro colado em outra coisa do mesmo tipo,
+  não diz nada.
+- Um bom nome dispensa JSDoc: deixe-o de fora em vez de repetir o nome.
 
-## Tests are the exception
+## Os testes são a exceção
 
-In `__tests__/` and `tests/`, comments and JSDoc are free: a test may explain the trap it guards,
-the fake it builds, or why a case exists.
+Em `__tests__/` e `tests/`, comentários e JSDoc são livres: um teste pode explicar a armadilha que
+guarda, o fake que monta ou por que um caso existe.
 
-## What used to be a comment
+## O que antes seria um comentário
 
-A trap that would have been a comment (Electron swallowing a click in a drag region, a CDP frame
-that needs an ack) becomes a test that fails when someone falls into it, a name that says it, or a
-line in the commit message.
+Uma armadilha que viraria comentário (o Electron engolindo um clique numa região de arrasto, um
+frame do CDP que pede um ack) vira um teste que falha quando alguém cai nela, um nome que a diz,
+ou uma linha na mensagem de commit.

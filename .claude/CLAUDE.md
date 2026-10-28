@@ -1,43 +1,45 @@
-# QAzinho harness
+# Harness do QAzinho
 
-The QA harness QAzinho builds around an agent: what the agent is told, the tools it gets and the
-shape it answers in. One package, read by two hosts:
+O harness de QA que o QAzinho monta em volta de um agente: o que o agente ouve, as ferramentas que
+ele recebe e o formato em que responde. Um pacote só, lido por dois hosts:
 
-| Host                                 | Where it runs              | What it runs the harness for                           |
-| ------------------------------------ | -------------------------- | ------------------------------------------------------ |
-| the desktop app (`gocrash`)          | Electron's main process    | the QA's own agent: chat, runs, builds, the Estagiário |
-| QAzinho Pro's API (`qazinho-server`) | Node, on QAzinho's servers | QAzinho's agent: CI runs, reading a PR                 |
+| Host                                    | Onde roda                       | Para que roda o harness                                |
+| --------------------------------------- | ------------------------------- | ------------------------------------------------------ |
+| o app desktop (`gocrash`)               | o processo main do Electron     | o agente do próprio QA: chat, runs, builds, Estagiário |
+| a API do QAzinho Pro (`qazinho-server`) | Node, nos servidores do QAzinho | o agente do QAzinho: runs do CI, leitura de PR         |
 
-**The agent's CLI stays the engine.** The harness never spawns an agent, never holds a key and
-never opens a window: the host does, with what the harness hands it (a system prompt, a JSON
-Schema, the tools a role may call, an MCP config).
+**A CLI do agente continua sendo o motor.** O harness nunca inicia um agente, nunca guarda uma
+chave e nunca abre uma janela: quem faz isso é o host, com o que o harness entrega (um system
+prompt, um JSON Schema, as ferramentas que um papel pode chamar, uma config de MCP).
 
-## The rules that are not up for negotiation
+## As regras que não se negociam
 
-1. **The harness is a library, not a host.** No Electron, no Fastify, no database, no host's
-   folder or path. What it needs from the outside world is a port in its types (`IDevicePort`,
-   `IAttachApp`, `IAttachSources`, `IAttachSuite`), and the host fills it. ESLint refuses an
-   import of a host's framework.
-2. **Both hosts read the same words.** `src/__tests__/__prompts__/` pins what the agent reads for
-   each role and platform; changing what the agent is told is a diff of those files, made on
-   purpose.
-3. **Every shape the agent fills is one zod schema**: an answer, or a tool's arguments. The same
-   schema becomes the JSON Schema the agent reads and reads back what it sent.
-4. **The contract stays pure.** `@salve-software/qazinho-harness/contract` holds the types and
-   plain constants a host's other side shares (the desktop's page imports it): no Node, no zod,
-   no MCP in there.
-5. **A secret never reaches the agent.** It reads `${NAME}`; the host types the value.
-6. **All code is in English**: names, strings, docs and commits.
+1. **O harness é uma biblioteca, não um host.** Sem Electron, sem Fastify, sem banco, sem pasta
+   ou caminho de um host. O que ele precisa do mundo de fora é uma porta nos seus tipos
+   (`IDevicePort`, `IAttachApp`, `IAttachSources`, `IAttachSuite`), e o host a preenche. O ESLint
+   recusa importar o framework de um host.
+2. **Os dois hosts leem as mesmas palavras.** `src/__tests__/__prompts__/` fixa o que o agente lê
+   para cada papel e plataforma; mudar o que o agente ouve é um diff desses arquivos, feito de
+   propósito.
+3. **Todo formato que o agente preenche é um schema zod**: uma resposta, ou os argumentos de uma
+   ferramenta. O mesmo schema vira o JSON Schema que o agente lê e lê de volta o que ele mandou.
+4. **O contrato continua puro.** `@salve-software/qazinho-harness/contract` guarda os tipos e as
+   constantes simples que o outro lado de um host compartilha (a página do desktop o importa):
+   nada de Node, zod ou MCP ali dentro.
+5. **Um segredo nunca chega ao agente.** Ele lê `${NAME}`; o host digita o valor.
+6. **O código é em inglês, a prosa em português.** Nomes, strings, nomes de testes e commits
+   ficam em inglês. Os `.md` (o corpus incluído), o JSDoc e os comentários são em português do
+   Brasil.
 
-## How a host takes it
+## Como um host o recebe
 
-A git submodule at `packages/qazinho-harness`, depended on with
-`"@salve-software/qazinho-harness": "file:packages/qazinho-harness"`, and built once by the
-host's `harness:build` script (`npm --prefix packages/qazinho-harness ci && … run build`), the
-way Rotuz-server takes its engine. The host imports the built `dist/`, never the source: both
-repositories map `@/` to their own `src/`.
+Um submódulo git em `packages/qazinho-harness`, como dependência
+`"@salve-software/qazinho-harness": "file:packages/qazinho-harness"`, construído uma vez pelo
+script `harness:build` do host (`npm --prefix packages/qazinho-harness ci && … run build`), do
+jeito que o Rotuz-server recebe o motor dele. O host importa o `dist/` construído, nunca o fonte:
+os dois repositórios apontam `@/` para o próprio `src/`.
 
-## Mandatory rules
+## Regras obrigatórias
 
 @rules/architecture.md
 @rules/code-structure.md

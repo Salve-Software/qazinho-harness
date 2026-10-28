@@ -1,7 +1,7 @@
-# QAzinho harness
+# Harness do QAzinho
 
-The QA harness QAzinho builds around an agent: what the agent is told, the tools it gets and the
-shape it answers in. The desktop app and QAzinho Pro's API both run it.
+O harness de QA que o QAzinho monta em volta de um agente: o que o agente ouve, as ferramentas que
+ele recebe e o formato em que responde. O app desktop e a API do QAzinho Pro rodam ele.
 
 ```ts
 import { Harness, McpHost } from '@salve-software/qazinho-harness';
@@ -11,9 +11,9 @@ const harness = new Harness();
 const chat = harness.chat({ … });
 ```
 
-## In a host
+## Num host
 
-Add it as a git submodule and a `file:` dependency, and build it before the host builds:
+Adicione como submódulo git e dependência `file:`, e construa antes do build do host:
 
 ```bash
 git submodule add https://github.com/Salve-Software/qazinho-harness.git packages/qazinho-harness
@@ -30,11 +30,11 @@ git submodule add https://github.com/Salve-Software/qazinho-harness.git packages
 }
 ```
 
-The host provides `zod`, `yaml` and `@modelcontextprotocol/sdk`.
+O host fornece `zod`, `yaml` e `@modelcontextprotocol/sdk`.
 
-## Development
+## Desenvolvimento
 
-Requires Node 22.12 or newer.
+Pede Node 22.12 ou mais novo.
 
 ```bash
 npm install
@@ -42,8 +42,8 @@ npm test
 npm run build
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) and `.claude/rules/` before opening a PR.
+Leia o [CONTRIBUTING.md](CONTRIBUTING.md) e o `.claude/rules/` antes de abrir um PR.
 
-## License
+## Licença
 
-Proprietary. © 2026 Salve Software. All rights reserved. See [LICENSE](LICENSE).
+Proprietária. © 2026 Salve Software. Todos os direitos reservados. Veja a [LICENSE](LICENSE).

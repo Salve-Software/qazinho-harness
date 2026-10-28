@@ -1,140 +1,149 @@
-# Architecture
+# Arquitetura
 
-The harness answers one question per channel, for a target `{ role, platform }`:
+O harness responde uma pergunta por canal, para um alvo `{ role, platform }`:
 
-| Channel | Where                        | Becomes                                                   |
-| ------- | ---------------------------- | --------------------------------------------------------- |
-| context | `src/context/corpus/**/*.md` | the system prompt, through `--append-system-prompt`       |
-| tools   | `src/tools/`                 | QAzinho's MCP server and the `--allowedTools` a role gets |
-| schemas | `src/schemas/`               | the shape an answer must take, through `--json-schema`    |
+| Canal   | Onde                         | Vira                                                         |
+| ------- | ---------------------------- | ------------------------------------------------------------ |
+| context | `src/context/corpus/**/*.md` | o system prompt, pelo `--append-system-prompt`               |
+| tools   | `src/tools/`                 | o servidor MCP do QAzinho e o `--allowedTools` de cada papel |
+| schemas | `src/schemas/`               | o formato que uma resposta precisa ter, pelo `--json-schema` |
 
-`Harness` (`src/Harness.class.ts`) is the class every host goes through; `McpHost`
-(`src/tools/McpHost.class.ts`) serves the tools on loopback.
+`Harness` (`src/Harness.class.ts`) é a classe pela qual todo host passa; `McpHost`
+(`src/tools/McpHost.class.ts`) serve as ferramentas no loopback.
 
 ```
 src/
 ├── Harness.class.ts   ← chat, run, walk, explore, assistant, build, change, review
-├── index.ts           ← the Node entry: Harness, McpHost, the tools, the contract
-├── contract/          ← the pure entry: types and plain constants a host's other side shares
-├── engine/            ← the `/engine` entry: the devices a run drives, for the desktop and the CI
-├── context/           ← corpus/ of .md, and the library that reads and renders it
-├── tools/             ← McpHost, servers/<group>/, the grants per role
-├── schemas/           ← one zod schema per answer
-├── library/           ← the answer readers, jsonSchemaOf
+├── index.ts           ← a entrada de Node: Harness, McpHost, as ferramentas, o contrato
+├── contract/          ← a entrada pura: tipos e constantes simples que o outro lado de um host divide
+├── engine/            ← a entrada `/engine`: os dispositivos que uma run dirige, para o desktop e o CI
+├── context/           ← corpus/ de .md, e a biblioteca que o lê e o monta
+├── tools/             ← McpHost, servers/<group>/, as permissões por papel
+├── schemas/           ← um schema zod por resposta
+├── library/           ← os leitores de resposta, jsonSchemaOf
 ├── constants/  types/
-└── __tests__/         ← Harness.test.ts and the pinned prompts
+└── __tests__/         ← Harness.test.ts e os prompts fixados
 ```
 
-## The corpus
+## O corpus
 
-- **Prose in `.md`, one `## Title` section per file.** Where a file lives says who reads it:
-  `universal/` every call, `role/<role>/` one role (`chat`, `runner`, `explorer`, `assistant`,
-  `builder`, `automator`, `reporter`), `platform/<x>.md` one device.
-- Layers go from the most stable to the least: universal, role, platform. The frontmatter's
-  `order` sorts a layer, and is unique in it (`CORPUS.test.ts`).
-- `parseCorpusFile` reads where a file applies from the part of its key after `corpus/`, with
-  forward slashes, and its frontmatter with LF line endings. Prettier keeps every file LF.
-- `{{app}}`, `{{viewport}}`, `{{language}}` and `{{minutes}}` are filled per call; a placeholder
-  nothing fills throws.
-- **The corpus is embedded at build time.** `CORPUS.ts` reads the files through Vite's
-  `import.meta.glob(…, { query: '?raw', eager: true })`; Vite's library build turns each file
-  into a string in `dist/index.js`, and Vitest runs the same transform. Nothing reads the disk
-  at runtime, so a host may bundle the package or not.
+- **Prosa em `.md`, em português do Brasil, uma seção `## Título` por arquivo.** Onde um arquivo
+  mora diz quem o lê: `universal/` toda chamada, `role/<role>/` um papel (`chat`, `runner`,
+  `explorer`, `assistant`, `builder`, `automator`, `reporter`), `platform/<x>.md` um dispositivo.
+  Nomes de ferramentas, campos de schema e trechos de código seguem em inglês, como o código.
+- As camadas vão da mais estável à menos: universal, papel, plataforma. O `order` do frontmatter
+  ordena uma camada, e é único nela (`CORPUS.test.ts`).
+- `parseCorpusFile` lê onde um arquivo se aplica a partir da parte da chave depois de `corpus/`,
+  com barras normais, e o frontmatter com finais de linha LF. O Prettier mantém todo arquivo em LF.
+- `{{app}}`, `{{viewport}}`, `{{language}}` e `{{minutes}}` são preenchidos a cada chamada; um
+  placeholder que nada preenche lança erro.
+- **O corpus é embutido na hora do build.** O `CORPUS.ts` lê os arquivos pelo
+  `import.meta.glob(…, { query: '?raw', eager: true })` do Vite; o build de biblioteca do Vite
+  transforma cada arquivo numa string em `dist/index.js`, e o Vitest roda a mesma transformação.
+  Nada lê o disco na hora de rodar, então um host pode empacotar o pacote ou não.
 
-## The tools
+## As ferramentas
 
-- **Granted per role** (`TOOL_GRANTS`). The runner and the explorer get the device, the assistant
-  gets the app, the chat gets its sources, the automator gets the suite.
-- **Each group is a server** under `tools/servers/<group>/`: its zod schemas (`*_TOOLS`), a
-  `register*Tools` that puts them on an `McpServer`, a `read*ToolCall` that reads the arguments
-  back, and a `call*Tool` that does the call through the host's port.
-- **The ports the host fills:**
+- **Liberadas por papel** (`TOOL_GRANTS`). O runner e o explorer recebem o dispositivo, o
+  assistente recebe o app, o chat recebe as fontes dele, o automator recebe a suíte.
+- **Cada grupo é um servidor** em `tools/servers/<group>/`: os schemas zod (`*_TOOLS`), um
+  `register*Tools` que os coloca num `McpServer`, um `read*ToolCall` que lê os argumentos de volta,
+  e um `call*Tool` que faz a chamada pela porta do host.
+- **As portas que o host preenche:**
 
-  | Port             | What the host gives                                           | Tools                     |
-  | ---------------- | ------------------------------------------------------------- | ------------------------- |
-  | `IAttachDevice`  | a workspace, an `IDevicePort` driver, and the run's callbacks | device (runner, explorer) |
-  | `IAttachApp`     | a scope, and `perform(call: AppToolCall)`                     | app (assistant)           |
-  | `IAttachSources` | a scope, and `fetch(call: SourceCall)`                        | sources (chat)            |
-  | `IAttachSuite`   | a scope, and `runTests(call: ISuiteTestsCall)`                | suite (automator)         |
+  | Porta            | O que o host entrega                                        | Ferramentas               |
+  | ---------------- | ----------------------------------------------------------- | ------------------------- |
+  | `IAttachDevice`  | um workspace, um driver `IDevicePort` e os callbacks da run | device (runner, explorer) |
+  | `IAttachApp`     | um escopo, e `perform(call: AppToolCall)`                   | app (assistente)          |
+  | `IAttachSources` | um escopo, e `fetch(call: SourceCall)`                      | sources (chat)            |
+  | `IAttachSuite`   | um escopo, e `runTests(call: ISuiteTestsCall)`              | suite (automator)         |
 
-- `McpHost` serves every attached scope on `127.0.0.1` with a token per process, and answers the
-  permission tool (`PERMISSION_TOOL`) beside each group. `mcpConfigFor(scope)` writes the config
-  the agent's CLI reads; `mcpConfigWith` adds the QA's own servers, such as Figma's.
-- **The agent asks the QA mid-run** through the device group's `ask_qa`; the call holds until the
-  host answers through `onAsk`.
+- O `McpHost` serve todo escopo anexado em `127.0.0.1` com um token por processo, e responde a
+  ferramenta de permissão (`PERMISSION_TOOL`) ao lado de cada grupo. O `mcpConfigFor(scope)`
+  escreve a config que a CLI do agente lê; o `mcpConfigWith` acrescenta os servidores do próprio
+  QA, como o do Figma.
+- **O agente pergunta ao QA no meio da run** pelo `ask_qa` do grupo device; a chamada espera até o
+  host responder pelo `onAsk`.
 
-## The answers
+## As respostas
 
-- **Every shape the agent fills is one zod schema** in `src/schemas/`. `jsonSchemaOf` turns it
-  into the JSON Schema the agent reads (`--json-schema`), dropping the `$schema` key, which makes
-  Claude Code ignore a schema in silence.
-- The `read*Answer` functions read what came back against the same schema, and say what broke a
-  rule in words the agent can act on.
+- **Todo formato que o agente preenche é um schema zod** em `src/schemas/`. O `jsonSchemaOf` o
+  transforma no JSON Schema que o agente lê (`--json-schema`), tirando a chave `$schema`, que faz o
+  Claude Code ignorar um schema em silêncio.
+- As funções `read*Answer` leem o que voltou contra o mesmo schema, e dizem o que quebrou uma
+  regra com palavras com que o agente consegue agir.
 
-## The contract
+## O contrato
 
-`src/contract/` holds the types a host shares with its own other side, and two plain constants
-(`VARIABLE_NAME` here, `FIGMA_MCP` with the tools). The desktop re-exports each type from its
-`src/shared/types/` with one line, so its page and its main read one definition, the one the
-zod schemas are held to.
+`src/contract/` guarda os tipos que um host divide com o outro lado dele, e duas constantes simples
+(`VARIABLE_NAME` aqui, `FIGMA_MCP` com as ferramentas). O desktop reexporta cada tipo do seu
+`src/shared/types/` com uma linha, para que a página e o main dele leiam uma definição só, a mesma
+a que os schemas zod se prendem.
 
-- Nothing in `src/contract/` imports Node, zod or the MCP SDK: the desktop's page compiles it
-  without Node's types.
-- A type that only the harness reads stays in `src/types/` or beside its group.
+- Nada em `src/contract/` importa Node, zod ou o SDK de MCP: a página do desktop o compila sem os
+  tipos do Node.
+- Um tipo que só o harness lê fica em `src/types/` ou ao lado do seu grupo.
 
-## What a host does
+## O que um host faz
 
-- Builds `new Harness()` and `new McpHost()` once, starts the host (`start()`) when it is ready,
-  and closes it on the way out.
-- Hands the agent's CLI what a `Harness` method returns: the system prompt, the prompt, the
-  schema, the allowed tools, the folders it may read, the permission tool.
-- Fills the ports, and keeps every secret on its side.
+- Constrói `new Harness()` e `new McpHost()` uma vez, inicia o host (`start()`) quando estiver
+  pronto, e o fecha na saída.
+- Entrega à CLI do agente o que um método do `Harness` devolve: o system prompt, o prompt, o
+  schema, as ferramentas liberadas, as pastas que ele pode ler, a ferramenta de permissão.
+- Preenche as portas, e guarda todo segredo do lado dele.
 
-## The engine
+## O motor
 
-`src/engine/` is what walks a run on a device, apart from what the agent is told: the desktop and
-the CI's runner machines drive the same code. It is its own entry, `/engine`, so a host that only
-asks the agent (the API) never loads Playwright.
+`src/engine/` é o que anda uma run num dispositivo, à parte do que o agente ouve: o desktop e as
+máquinas do runner do CI dirigem o mesmo código. É uma entrada própria, `/engine`, para que um
+host que só pergunta ao agente (a API) nunca carregue o Playwright.
 
-- **`devices/`** holds each device a run drives, behind `IDeviceDriver`: `WebDriver` drives Chrome
-  over playwright-core, one profile per workspace, and notes each request the app makes;
-  `AndroidDriver` drives an AVD through `adb` and `uiautomator`; `IosDriver` a simulator through
-  `simctl` and idb. A phone records itself into the run's folder (`RUN_VIDEO_FILES`).
-- A browser is recorded from its live frames. The desktop encodes them in a hidden window;
-  a CI machine has none, so `FrameRecorder` hands them to the machine's ffmpeg at a steady rate,
-  each frame held until the next, and the video keeps the wall clock.
-- **`library/`** starts every child process the way each platform needs (`spawnCommand`,
-  `execCommand`): an npm `.cmd` shim on Windows runs as what it points at, with no console window.
-- **`walk/`** walks a plan's cases on one device (`PlanWalker`), each on the app opened anew, by
-  the run's mode (`WalkMode`): a case whose recording still shows each step's proof is walked again
-  with no agent (`recipeFor`, `proofHolds`); the rest go to the agent, which heals a recording that
-  broke, and a case it passed with every proof becomes a recording (`recipeOf`).
-  - The agent is a port (`ICaseAgent`): one turn per case, acting through the device tools'
-    callbacks (`IAttachDevice`), so whatever reaches the model walks the same way.
-  - A `${NAME}` is typed with its value and read back as its name (`variablePort`).
-  - With no agent, or once the run spent all it may on the model, a case no recording holds is
-    skipped and says why. A question for the QA ends its case skipped, since no one answers.
-  - It tells its host each step it starts and settles, each bug filed beside one, each note and
-    what each case cost (`WalkEvent`); the host keeps them.
-- **`agents/`** holds the agents a walk can hand a case to. `GatewayAgent` is the CI's: a loop over
-  Anthropic's Messages API (`@anthropic-ai/sdk`, an optional peer) that carries out each tool call
-  on the device here, through `callDeviceTool`, and answers it with the screen.
-  - It reaches the model through QAzinho's gateway: the machine's environment points the SDK at
-    it, with the job's token as its key. A 402 means the run spent all it may (`capped`).
-  - The system prompt and the device tools come first and stay the same, so every call caches
-    the prefix (`cache_control`); a cancelled turn aborts the call in flight.
-- `ClaudeCodeAgent` walks a case through the Claude Code of the computer it runs on, the device
-  tools served to it by `McpHost` on loopback, with none of its built-in tools and none of the
-  developer's hooks: a CI run on a developer's own computer, which never reaches the gateway.
-- **`runner/`** walks a CI job on the machine QAzinho's API starts for it, keeping the protocol in
-  the API's `docs/runner-protocol.md`. `src/runner.ts` is its entry, built as `dist/runner.js`:
-  it reads the machine's environment (`runnerEnvOf`), opens the device the job names on its build,
-  and hands `JobRunner` the agent the job calls for (`gateway`, `claude-code` or none).
-  - `JobRunner` reads the job, records the device, walks each plan with `PlanWalker`, and sends
-    each run with its screens, video and requests, the bugs it filed or saw again, and the
-    recordings it made (`RunnerApi`). It beats while it goes and stops before its deadline.
-  - A failure lands on the open bug it is, which takes a sighting and keeps what it says; the rest
-    are filed new under the run's id (`filedBugsOf`).
-- It never imports a host either: what differs between the desktop and a CI machine (scaling a
-  screenshot down, where a profile lives) arrives through its constructor.
-- `playwright-core` is an optional peer dependency: only a host that loads `/engine` needs it.
+- **`devices/`** guarda cada dispositivo que uma run dirige, atrás de `IDeviceDriver`: o
+  `WebDriver` dirige o Chrome pelo playwright-core, um perfil por workspace, e anota cada
+  requisição que o app faz; o `AndroidDriver` dirige um AVD pelo `adb` e pelo `uiautomator`; o
+  `IosDriver`, um simulador pelo `simctl` e pelo idb. Um celular grava a si mesmo na pasta da run
+  (`RUN_VIDEO_FILES`).
+- Um navegador é gravado pelos frames ao vivo. O desktop os codifica numa janela escondida; uma
+  máquina do CI não tem nenhuma, então o `FrameRecorder` os entrega ao ffmpeg da máquina num ritmo
+  constante, cada frame mantido até o próximo, e o vídeo guarda o tempo de relógio.
+- **`library/`** inicia todo processo filho do jeito que cada plataforma pede (`spawnCommand`,
+  `execCommand`): um shim `.cmd` do npm no Windows roda como aquilo para que aponta, sem janela de
+  console.
+- **`walk/`** anda os casos de um plano num dispositivo (`PlanWalker`), cada um no app aberto do
+  zero, pelo modo da run (`WalkMode`): um caso cuja gravação ainda mostra a prova de cada passo é
+  andado de novo sem agente (`recipeFor`, `proofHolds`); o resto vai para o agente, que conserta
+  uma gravação que quebrou, e um caso que ele passou com todas as provas vira uma gravação
+  (`recipeOf`).
+  - O agente é uma porta (`ICaseAgent`): um turno por caso, agindo pelos callbacks das
+    ferramentas do dispositivo (`IAttachDevice`), para que o que chegar ao modelo ande do mesmo
+    jeito.
+  - Um `${NAME}` é digitado com o seu valor e lido de volta como o seu nome (`variablePort`).
+  - Sem agente, ou quando a run gastou tudo o que podia no modelo, um caso que nenhuma gravação
+    cobre é pulado e diz por quê. Uma pergunta ao QA termina o caso como pulado, já que ninguém
+    responde.
+  - Ele avisa o host de cada passo que começa e termina, de cada bug aberto ao lado de um, de cada
+    nota e do que cada caso custou (`WalkEvent`); o host os guarda.
+- **`agents/`** guarda os agentes a que um walk pode entregar um caso. O `GatewayAgent` é o do CI:
+  um loop sobre a Messages API da Anthropic (`@anthropic-ai/sdk`, um peer opcional) que executa
+  cada chamada de ferramenta no dispositivo daqui, pelo `callDeviceTool`, e a responde com a tela.
+  - Ele chega ao modelo pelo gateway do QAzinho: o ambiente da máquina aponta o SDK para ele, com
+    o token do job como chave. Um 402 quer dizer que a run gastou tudo o que podia (`capped`).
+  - O system prompt e as ferramentas do dispositivo vêm primeiro e não mudam, então toda chamada
+    guarda o prefixo em cache (`cache_control`); um turno cancelado aborta a chamada em andamento.
+- O `ClaudeCodeAgent` anda um caso pelo Claude Code do computador em que roda, com as ferramentas
+  do dispositivo servidas pelo `McpHost` no loopback, sem nenhuma ferramenta embutida e sem os hooks
+  do desenvolvedor: uma run do CI no computador de um desenvolvedor, que nunca chega ao gateway.
+- **`runner/`** anda um job do CI na máquina que a API do QAzinho inicia para ele, seguindo o
+  protocolo do `docs/runner-protocol.md` da API. O `src/runner.ts` é a entrada dele, construída
+  como `dist/runner.js`: ele lê o ambiente da máquina (`runnerEnvOf`), abre o dispositivo que o job
+  nomeia no build dele, e entrega ao `JobRunner` o agente que o job pede (`gateway`, `claude-code`
+  ou nenhum).
+  - O `JobRunner` lê o job, grava o dispositivo, anda cada plano com o `PlanWalker`, e manda cada
+    run com as telas, o vídeo e as requisições, os bugs que abriu ou viu de novo, e as gravações
+    que fez (`RunnerApi`). Ele dá sinal de vida enquanto anda e para antes do prazo.
+  - Uma falha cai no bug aberto que ela é, que ganha um avistamento e guarda o que ele diz; o resto
+    é aberto como novo com o id da run (`filedBugsOf`).
+- Ele também nunca importa um host: o que muda entre o desktop e uma máquina do CI (diminuir uma
+  captura de tela, onde mora um perfil) chega pelo construtor.
+- O `playwright-core` é uma dependência peer opcional: só um host que carrega `/engine` precisa
+  dele.

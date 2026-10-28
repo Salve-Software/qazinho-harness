@@ -1,6 +1,6 @@
-# Contributing
+# Como contribuir
 
-## Before opening a PR
+## Antes de abrir um PR
 
 ```bash
 npm run lint
@@ -10,20 +10,21 @@ npm test
 npm run build
 ```
 
-CI runs all of those.
+O CI roda todos eles.
 
-## What a change to the harness means
+## O que uma mudança no harness significa
 
-What the agent reads is pinned in `src/__tests__/__prompts__/`. A change to the corpus, a schema
-or a tool shows up there as a diff: review it as a change to the product, then update the pins
-with `npx vitest -u`. Both hosts pick the change up when they move their submodule.
+O que o agente lê fica fixado em `src/__tests__/__prompts__/`. Uma mudança no corpus, num schema
+ou numa ferramenta aparece ali como diff: revise-a como uma mudança no produto, depois atualize os
+fixados com `npx vitest -u`. Os dois hosts recebem a mudança quando movem o submódulo.
 
 ## Commits
 
-[Conventional](https://www.conventionalcommits.org/) and small: `feat`, `fix`, `docs`, `test`,
-`refactor`, `chore`, `ci`, `build`. Never mix unrelated changes.
+[Convencionais](https://www.conventionalcommits.org/), pequenos e em inglês: `feat`, `fix`,
+`docs`, `test`, `refactor`, `chore`, `ci`, `build`. Nunca misture mudanças sem relação.
 
-## How the code is expected to look
+## Como o código deve ficar
 
-`.claude/rules/` is the style guide: the harness's architecture, one thing per file, comments,
-tests and tooling.
+O `.claude/rules/` é o guia de estilo: a arquitetura do harness, uma coisa por arquivo,
+comentários, testes e ferramentas. O código fica em inglês; os `.md`, o corpus, o JSDoc e os
+comentários, em português do Brasil.
