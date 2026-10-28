@@ -456,7 +456,7 @@
   },
   {
     "name": "ask_qa",
-    "description": "Ask the QA a question and wait for the answer, when you cannot go on without them: data nothing you were given holds, such as a code sent to their phone, a choice only they can make, or something on screen only they can judge. The run holds until they answer.",
+    "description": "Ask the QA a question and wait for the answer, when you cannot go on without them: data nothing you were given holds, such as a code sent to their phone, a choice only they can make, or something on screen only they can judge, that the step leaves open. The run holds until they answer. Never ask whether a screen that differs from what the step expects is right: report the step failed.",
     "inputSchema": {
       "type": "object",
       "properties": {
