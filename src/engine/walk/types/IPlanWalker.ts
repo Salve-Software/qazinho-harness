@@ -6,8 +6,8 @@ import type { IVariableValue } from '@/engine/types';
 import type { Harness } from '@/Harness.class';
 
 /**
- * A walk's run: its tools' scope, the device, the agent, the app, the variables, open
- * bugs and its listeners.
+ * A run de um walk: o escopo das ferramentas, o dispositivo, o agente, o app, as
+ * variáveis, os bugs abertos e quem ouve.
  */
 export interface IPlanWalker {
   scope: string;

@@ -5,8 +5,8 @@ import { maskedBody } from './maskedBody';
 import { privateUrlOf } from './privateUrlOf';
 
 /**
- * One API call as the agent reads it: its id, method, address, how it ended and how long
- * it took, and the start of what it answered when it failed, secrets left out.
+ * Uma chamada de API como o agente a lê: o id, o método, o endereço, como terminou e
+ * quanto demorou, e o começo do que respondeu quando falhou, sem segredos.
  */
 export function callLineOf(props: {
   call: INetworkEntry;

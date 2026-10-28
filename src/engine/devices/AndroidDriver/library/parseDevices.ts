@@ -1,6 +1,6 @@
 /**
- * Reads `adb devices`. A device that is not `device` yet is still booting, so it is not
- * ready.
+ * Lê o `adb devices`. Um aparelho que ainda não é `device` está ligando, então não está
+ * pronto.
  */
 export function parseDevices(stdout: string): string[] {
   return stdout

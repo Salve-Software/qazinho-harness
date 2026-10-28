@@ -3,8 +3,8 @@ import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
 
 /**
- * A file's size and sha256, read as a stream so a long video never sits whole in memory;
- * null when it is gone.
+ * O tamanho e o sha256 de um arquivo, lidos como stream para um vídeo longo nunca ficar
+ * inteiro na memória; null quando ele sumiu.
  */
 export async function fileFactsOf(
   file: string,

@@ -1,6 +1,6 @@
 /**
- * Where a finger starts and ends to bring into view what lies in a direction: it moves
- * the other way, across the middle of the screen.
+ * Onde um dedo começa e termina para trazer à vista o que está numa direção: ele se move
+ * para o lado oposto, cruzando o meio da tela.
  */
 export function swipeOf(props: {
   size: { width: number; height: number };

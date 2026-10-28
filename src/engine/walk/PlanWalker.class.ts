@@ -47,8 +47,8 @@ import {
 } from './library';
 
 /**
- * Walks a plan's cases on one device, each on the app opened anew: from its recording
- * with no agent where one holds, by the agent where not.
+ * Anda os casos de um plano num dispositivo, cada um no app aberto do zero: pela gravação
+ * sem agente onde uma vale, pelo agente onde não.
  */
 export class PlanWalker {
   private readonly scope: string;
@@ -82,8 +82,8 @@ export class PlanWalker {
   }
 
   /**
-   * Walks every case in order the way `mode` says, and answers with the recordings the
-   * agent made and why the walk broke off, if it did.
+   * Anda cada caso em ordem do jeito que o `mode` diz, e responde com as gravações que o
+   * agente fez e por que o walk parou no meio, se parou.
    */
   public async walk(props: {
     steps: IFlatStep[];
@@ -144,8 +144,8 @@ export class PlanWalker {
   }
 
   /**
-   * Stops the walk: the case under way ends with its agent's turn, and no other case
-   * starts.
+   * Para o walk: o caso em andamento termina com o turno do agente, e nenhum outro caso
+   * começa.
    */
   public stop(): void {
     this.isStopped = true;
@@ -153,8 +153,8 @@ export class PlanWalker {
   }
 
   /**
-   * One agent turn on one case, kept as a recording once every step passed with its
-   * proof; a question for the QA ends the case, since no one answers.
+   * Um turno do agente num caso, guardado como gravação quando todo passo passou com a
+   * prova; uma pergunta ao QA termina o caso, já que ninguém responde.
    */
   private async walkCase(props: {
     agent: ICaseAgent;
@@ -412,8 +412,8 @@ export class PlanWalker {
   }
 
   /**
-   * Walks a case again without the agent, the way its recording says, checking each
-   * step's proof; its steps are told only once the whole case held.
+   * Anda um caso de novo sem o agente, do jeito que a gravação diz, conferindo a prova de
+   * cada passo; os passos só são contados quando o caso inteiro valeu.
    */
   private async replayCase(props: {
     steps: IIndexedStep[];
@@ -482,8 +482,8 @@ export class PlanWalker {
   }
 
   /**
-   * Settles the steps a case never reached: the first as `verdict` says and why, the rest
-   * skipped after it.
+   * Resolve os passos que um caso nunca alcançou: o primeiro como o `verdict` diz e por
+   * quê, o resto pulado depois dele.
    */
   private unwalked(props: {
     pending: IIndexedStep[];

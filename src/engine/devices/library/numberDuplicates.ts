@@ -1,6 +1,6 @@
 /**
- * Numbers the controls that read alike, #1, #2… in page order whatever their role, so the
- * agent can name the one it means.
+ * Numera os controles que dizem o mesmo, #1, #2… na ordem da página qualquer que seja o
+ * papel, para o agente nomear o que quer.
  */
 export function numberDuplicates(lines: string[]): string[] {
   const totals = new Map<string, number>();

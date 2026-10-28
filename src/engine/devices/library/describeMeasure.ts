@@ -4,8 +4,8 @@ import { hexOfColor } from './hexOfColor';
 const UNIT_NAMES = { px: 'CSS px', dp: 'dp', pt: 'points' } as const;
 
 /**
- * What `inspect` answers: the thing measured, in the screen's unit, with the box it sits
- * in, the space around it, and in a browser its type, colours and spacing.
+ * O que o `inspect` responde: a coisa medida, na unidade da tela, com a caixa em que
+ * está, o espaço em volta, e num navegador a tipografia, as cores e o espaçamento.
  */
 export function describeMeasure(measure: IElementMeasure): string {
   const { style, gaps } = measure;

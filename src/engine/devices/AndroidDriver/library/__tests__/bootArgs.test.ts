@@ -3,8 +3,9 @@ import { bootArgs } from '@/engine/devices/AndroidDriver/library';
 
 describe('bootArgs', () => {
   /**
-   * The emulator opened its own window over QAzinho for every run, though the device panel
-   * already shows its screen. The emulator does not run here, so the test reads the flags.
+   * O emulador abria uma janela própria por cima do QAzinho em toda run, embora o painel
+   * do dispositivo já mostre a tela dele. O emulador não roda aqui, então o teste lê as
+   * flags.
    */
   it('boots the emulator with no window of its own', () => {
     expect(bootArgs('Pixel_8')).toContain('-no-window');

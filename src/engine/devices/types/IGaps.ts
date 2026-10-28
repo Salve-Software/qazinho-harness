@@ -1,6 +1,6 @@
 /**
- * The space between something on screen and the nearest thing on each side of it; null
- * where nothing sits on that side.
+ * O espaço entre algo na tela e a coisa mais próxima de cada lado; null onde nada fica
+ * daquele lado.
  */
 export interface IGaps {
   above: number | null;

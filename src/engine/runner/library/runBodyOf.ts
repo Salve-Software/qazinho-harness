@@ -5,8 +5,8 @@ import { caseVerdictOf } from './caseVerdictOf';
 import { videoSecondsOf } from './videoSecondsOf';
 
 /**
- * A plan's walk as the run the API keeps: each case with each step's verdict, why, bug,
- * screen and place on the video; a step the walk never reached is skipped.
+ * O walk de um plano como a run que a API guarda: cada caso com veredito, porquê, bug,
+ * tela e lugar no vídeo de cada passo; um passo nunca alcançado é pulado.
  */
 export function runBodyOf(props: {
   plan: RunnerJob['plans'][number];

@@ -1,6 +1,6 @@
 import type { IModelClient } from './IModelClient';
 
-/** The client a gateway agent calls the model with, and the model it asks for. */
+/** O cliente com que um agente do gateway chama o modelo, e o modelo que ele pede. */
 export interface IGatewayAgent {
   client: IModelClient;
   model: string;

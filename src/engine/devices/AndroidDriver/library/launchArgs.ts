@@ -1,6 +1,6 @@
 /**
- * The shell words that bring an app's launcher activity to the front; monkey sends no
- * system key, which a device without physical keys refuses.
+ * As palavras de shell que trazem a activity de abertura de um app para a frente; o
+ * monkey não manda tecla de sistema, que um aparelho sem teclas físicas recusa.
  */
 export function launchArgs(app: string): string[] {
   return [

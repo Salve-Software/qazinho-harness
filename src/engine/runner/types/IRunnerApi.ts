@@ -5,7 +5,7 @@ import type { ISightingBody } from './ISightingBody';
 import type { RunnerJob } from './RunnerJob';
 import type { ICaseRecipe } from '@/contract';
 
-/** QAzinho's API as a CI run's machine calls it, with its job's token. */
+/** A API do QAzinho como a máquina de uma run do CI a chama, com o token do job. */
 export interface IRunnerApi {
   job: () => Promise<RunnerJob>;
   build: (file: string) => Promise<void>;

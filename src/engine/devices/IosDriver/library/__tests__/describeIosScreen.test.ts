@@ -43,7 +43,7 @@ describe('describeIosScreen', () => {
     expect(said).not.toContain('other:');
   });
 
-  /** An app that failed to launch left the home screen, read as if it were the app. */
+  /** Um app que não conseguiu abrir deixava a tela inicial, lida como se fosse o app. */
   it('says the home screen is the home screen, and that the app is not open', () => {
     expect(
       describeIosScreen({

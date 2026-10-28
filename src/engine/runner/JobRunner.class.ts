@@ -34,8 +34,8 @@ import {
 import { RunnerApiError } from './RunnerApiError.class';
 
 /**
- * Walks a CI job on its machine: opens the device, walks each plan, sends each run, and
- * says how it ended.
+ * Anda um job do CI na máquina dele: abre o dispositivo, anda cada plano, manda cada run,
+ * e diz como terminou.
  */
 export class JobRunner {
   private readonly api: IRunnerApi;
@@ -64,7 +64,7 @@ export class JobRunner {
     this.now = props.now ?? Date.now;
   }
 
-  /** Walks the job, and says how it ended: finished, or broke and why. */
+  /** Anda o job, e diz como terminou: terminado, ou quebrado e por quê. */
   public async run(): Promise<void> {
     const job = await this.api.job();
     const heartbeat = setInterval(() => {
@@ -227,8 +227,8 @@ export class JobRunner {
   }
 
   /**
-   * Records the device: a browser's frames through the machine's ffmpeg, else the phone
-   * itself.
+   * Grava o dispositivo: os frames de um navegador pelo ffmpeg da máquina, senão o
+   * próprio celular.
    */
   private async record(driver: IDeviceDriver): Promise<Recording> {
     const frames = this.frames;
@@ -294,8 +294,8 @@ export class JobRunner {
   }
 
   /**
-   * Sends every run with its evidence first, then the bugs each filed or saw again, then
-   * the recordings each made.
+   * Manda cada run com as evidências primeiro, depois os bugs que cada uma abriu ou viu
+   * de novo, depois as gravações que cada uma fez.
    */
   private async send(props: {
     job: RunnerJob;
@@ -365,8 +365,8 @@ export class JobRunner {
   }
 
   /**
-   * Uploads each file the API takes, and answers with the key each is known by; a file it
-   * cannot read or the API refuses is left out, unless the job is over.
+   * Sobe cada arquivo que a API aceita, e responde com a chave de cada um; um arquivo
+   * ilegível ou recusado pela API fica de fora, a menos que o job tenha acabado.
    */
   private async upload(files: string[]): Promise<Record<string, string>> {
     const keys: Record<string, string> = {};

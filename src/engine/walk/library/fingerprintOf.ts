@@ -2,8 +2,8 @@ import type { IFlatStep, TargetKind } from '@/contract';
 import { createHash } from 'node:crypto';
 
 /**
- * What a case says, as a short hash: a recipe holds only while its case reads the same on
- * the same kind of target.
+ * O que um caso diz, como um hash curto: uma receita só vale enquanto o caso disser o
+ * mesmo no mesmo tipo de alvo.
  */
 export function fingerprintOf(props: {
   targetKind: TargetKind;

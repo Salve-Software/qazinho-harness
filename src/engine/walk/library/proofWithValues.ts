@@ -1,8 +1,8 @@
 import { proofLinesOf } from './proofLinesOf';
 
 /**
- * A passed step's proof with each value its expected result names that the screen shows
- * and the proof left out, as a line of its own.
+ * A prova de um passo que passou com cada valor que o resultado esperado nomeia, que a
+ * tela mostra e a prova deixou de fora, numa linha própria.
  */
 export function proofWithValues(props: {
   proof: string;

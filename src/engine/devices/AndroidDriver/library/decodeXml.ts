@@ -6,7 +6,7 @@ const ENTITIES: Record<string, string> = {
   '&apos;': "'",
 };
 
-/** uiautomator escapes what a label may contain, and the agent should read the label. */
+/** O uiautomator escapa o que um rótulo pode conter, e o agente deve ler o rótulo. */
 export function decodeXml(text: string): string {
   return text.replace(/&(?:amp|lt|gt|quot|apos);/g, (one) => ENTITIES[one] ?? one);
 }

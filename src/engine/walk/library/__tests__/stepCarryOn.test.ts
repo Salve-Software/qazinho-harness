@@ -3,8 +3,8 @@ import { findingAnswer, stepCarryOn } from '@/engine/walk/library';
 
 describe('stepCarryOn', () => {
   /**
-   * Haiku filed the wrong total it saw as a bug, then failed the step for the same thing:
-   * the QA got it twice in the run. The answer names the way to keep it one bug.
+   * O Haiku abria o total errado que viu como bug, e depois reprovava o passo pela mesma
+   * coisa: o QA recebia duas vezes na run. A resposta diz como manter num bug só.
    */
   it('tells the agent to fail the step under the same title when the bug is what it expects', () => {
     expect(findingAnswer({ asked: undefined, kept: null, carryOn: stepCarryOn(2) })).toBe(

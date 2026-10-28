@@ -1,8 +1,8 @@
 import type { IRunVideo } from '@/contract';
 
 /**
- * What records a browser's live frames into a video: started on a file, handed each
- * frame, and stopped with what it made.
+ * O que grava os frames ao vivo de um navegador num vídeo: iniciado num arquivo,
+ * recebendo cada frame, e parado com o que fez.
  */
 export interface IFrameSink {
   start: (file: string) => void;

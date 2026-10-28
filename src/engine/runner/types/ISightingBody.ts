@@ -1,6 +1,6 @@
 /**
- * A time a bug was caught, as a runner sends it: the run by its own id and when it
- * started, the step, its screen's key and its moment in seconds into the video.
+ * Uma vez em que um bug foi pego, como um runner a manda: a run pelo próprio id e quando
+ * começou, o passo, a chave da tela e o momento em segundos no vídeo.
  */
 export interface ISightingBody {
   runId: string;

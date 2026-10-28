@@ -2,7 +2,7 @@ import type { IFlatStep } from '@/contract';
 import type { RunnerJob } from '@/engine/runner/types';
 
 /**
- * A plan's cases flattened into the steps a walk takes, in order, each carrying its case.
+ * Os casos de um plano achatados nos passos que um walk dá, em ordem, cada um com o caso.
  */
 export function flatStepsOf(cases: RunnerJob['plans'][number]['cases']): IFlatStep[] {
   return cases.flatMap((testCase) =>

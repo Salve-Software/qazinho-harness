@@ -1,8 +1,8 @@
 import type { IRunFinding, IStepOutcome } from '@/contract';
 
 /**
- * What a walk tells its host as it goes: the step it starts, a step it settled, a bug
- * filed on the side of one, a note of the agent's, and what a case's agent spent.
+ * O que um walk conta ao host enquanto anda: o passo que começa, um passo que resolveu,
+ * um bug aberto ao lado de um, uma nota do agente, e o que o agente de um caso gastou.
  */
 export type WalkEvent =
   | { kind: 'doing'; index: number; at: number }

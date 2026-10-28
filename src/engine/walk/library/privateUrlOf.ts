@@ -2,8 +2,8 @@ import type { IVariableValue } from '@/engine/types';
 import { RUN_WALK, SECRET_PARAMS } from '@/engine/walk/constants';
 
 /**
- * A request's address safe to keep: a variable's value in it reads as its ${NAME}, and
- * the password in it and the values of secret-looking keys as dots.
+ * O endereço de uma requisição seguro de guardar: o valor de uma variável nele lido como
+ * o seu ${NAME}, e a senha e os valores de chaves com cara de segredo como pontos.
  */
 export function privateUrlOf(props: { url: string; values: IVariableValue[] }): string {
   const named = props.values

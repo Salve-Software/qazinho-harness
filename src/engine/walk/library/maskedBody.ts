@@ -5,8 +5,8 @@ const JWT = /eyJ[\w-]{6,}\.[\w-]{6,}\.[\w-]{6,}/g;
 const PAIR = /("?)([\w-]+)\1(\s*[:=]\s*)("(?:[^"\\]|\\.)*"|[^\s,;&}]+)/g;
 
 /**
- * What an API call answered, safe to show or keep: the values of secret-looking keys and
- * anything shaped like a token as dots, in JSON or in plain text.
+ * O que uma chamada de API respondeu, seguro de mostrar ou guardar: os valores de chaves
+ * com cara de segredo e o que tem forma de token como pontos, em JSON ou texto.
  */
 export function maskedBody(text: string): string {
   try {

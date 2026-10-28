@@ -1,8 +1,8 @@
 const SHELL_CHARACTERS = /[\\'`$&|;<>()*?[\]{}~#!]/g;
 
 /**
- * A text as the `adb shell input text` calls that type it, escaped for the phone's shell,
- * spaces as %s.
+ * Um texto como as chamadas de `adb shell input text` que o digitam, escapado para o
+ * shell do celular, com espaços como %s.
  */
 export function adbTextsOf(text: string): string[] {
   const parts = text.split('%s');

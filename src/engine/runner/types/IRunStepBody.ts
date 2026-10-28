@@ -1,6 +1,6 @@
 /**
- * One step of a run as the API takes it: what was done, how it went and why, the bug it
- * broke on, its screen's key, who walked it, and where it sits on the video.
+ * Um passo de uma run como a API o recebe: o que foi feito, como foi e por quê, o bug em
+ * que quebrou, a chave da tela, quem o andou e onde fica no vídeo.
  */
 export interface IRunStepBody {
   number: number;

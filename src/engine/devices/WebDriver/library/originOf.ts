@@ -1,6 +1,6 @@
 /**
- * The origin whose storage a page writes to, for a web page only: about:blank, data: and
- * the rest keep none.
+ * A origem em cujo armazenamento uma página escreve, só para uma página web: about:blank,
+ * data: e o resto não guardam nada.
  */
 export function originOf(url: string): string | null {
   try {

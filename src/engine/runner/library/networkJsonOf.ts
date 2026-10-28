@@ -3,8 +3,8 @@ import type { IVariableValue } from '@/engine/types';
 import { hiddenValues, maskedBody, privateUrlOf } from '@/engine/walk/library';
 
 /**
- * The requests a run kept, as the file that goes beside its video: each address and
- * answer with a variable's value read back as its name and a secret as dots.
+ * As requisições de uma run, como o arquivo ao lado do vídeo: cada endereço e resposta,
+ * com o valor de uma variável lido como o nome e um segredo como pontos.
  */
 export function networkJsonOf(props: {
   entries: INetworkEntry[];

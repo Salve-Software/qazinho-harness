@@ -6,8 +6,8 @@ import type { ICaseAgent } from '@/engine/walk/types';
 import type { Harness } from '@/Harness.class';
 
 /**
- * What a CI machine walks its job with: the API, the harness, its folder, the device, the
- * agent and the clock.
+ * Com o que uma máquina do CI anda o job: a API, o harness, a pasta, o dispositivo, o
+ * agente e o relógio.
  */
 export interface IJobRunner {
   api: IRunnerApi;

@@ -6,8 +6,8 @@ import { GATEWAY_AGENT } from './constants';
 import { argsOf, deviceToolsOf, toolResultOf, turnFailureOf } from './library';
 
 /**
- * Walks a case through Anthropic's Messages API with its tool calls carried out here, on
- * the device: the CI's agent, which reaches the model through QAzinho's gateway.
+ * Anda um caso pela Messages API da Anthropic com as chamadas de ferramenta feitas aqui,
+ * no dispositivo: o agente do CI, que chega ao modelo pelo gateway do QAzinho.
  */
 export class GatewayAgent implements ICaseAgent {
   private readonly client: IModelClient;
@@ -20,8 +20,8 @@ export class GatewayAgent implements ICaseAgent {
   }
 
   /**
-   * One turn on one case: each tool call the model makes is carried out on the device and
-   * answered, until it ends its turn, its calls run out, or the turn is cancelled.
+   * Um turno de um caso: cada chamada de ferramenta do modelo é feita no dispositivo e
+   * respondida, até ele terminar o turno, as chamadas acabarem ou o turno ser cancelado.
    */
   public async walk(turn: ICaseTurn): Promise<CaseTurnEnd> {
     const controller = new AbortController();
@@ -88,8 +88,8 @@ export class GatewayAgent implements ICaseAgent {
   }
 
   /**
-   * Ends the turn of a scope under way: the call in flight is aborted and no other
-   * starts.
+   * Termina o turno em andamento de um escopo: a chamada em voo é abortada e nenhuma
+   * outra começa.
    */
   public cancel(scope: string): void {
     this.turns.get(scope)?.abort();

@@ -12,8 +12,8 @@ type Read = {
 };
 
 /**
- * Measures what a locator found where the page sits, scrolled or not: its box, the box it
- * sits in, its neighbours' distance, and its computed style.
+ * Mede o que um locator achou onde a página está, rolada ou não: a caixa, a caixa em que
+ * está, a distância aos vizinhos e o estilo calculado.
  */
 export async function measureLocator(locator: Locator): Promise<IElementMeasure> {
   const read = await locator.evaluate((node): Read => {

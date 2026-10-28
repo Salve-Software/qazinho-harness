@@ -12,7 +12,9 @@ function png(width: number, height: number): Buffer {
   return bytes;
 }
 
-/** A shrink that remembers what it was asked, and answers with a marker instead of a JPEG. */
+/**
+ * Um shrink que lembra o que pediram a ele, e responde com uma marca em vez de um JPEG.
+ */
 function fakeShrink(): { shrink: ShrinkImage; asked: Parameters<ShrinkImage>[0][] } {
   const asked: Parameters<ShrinkImage>[0][] = [];
 

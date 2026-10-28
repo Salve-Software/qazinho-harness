@@ -1,6 +1,6 @@
 /**
- * How a command is started: the file to run, its arguments, and whether they go through
- * cmd.exe already quoted.
+ * Como um comando é iniciado: o arquivo a rodar, os argumentos, e se eles passam pelo
+ * cmd.exe já entre aspas.
  */
 export interface ILaunch {
   file: string;

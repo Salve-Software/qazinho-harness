@@ -8,8 +8,8 @@ import { maskedBody } from './maskedBody';
 import { resolvedAction } from './resolvedAction';
 
 /**
- * The device as a run reaches it: a ${NAME} typed as its value, and every value shown
- * read back as its name.
+ * O dispositivo como uma run o alcança: um ${NAME} digitado como o seu valor, e todo
+ * valor mostrado lido de volta como o seu nome.
  */
 export function variablePort(props: {
   device: Pick<

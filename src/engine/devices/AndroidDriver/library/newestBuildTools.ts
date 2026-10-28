@@ -1,6 +1,4 @@
-/**
- * An SDK carries several build-tools; the newest is the one that knows the newest apk.
- */
+/** Um SDK traz várias build-tools; a mais nova é a que conhece o apk mais novo. */
 export function newestBuildTools(names: string[]): string | null {
   const versions = names.filter((name) => /^\d+(\.\d+)*$/.test(name));
 

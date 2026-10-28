@@ -26,8 +26,9 @@ describe('numberDuplicates', () => {
   });
 
   /**
-   * A sign-in page has an "Entrar" link in its menu and an "Entrar" button in its form. Left
-   * unnumbered, the agent called the button "Entrar #2" anyway, and the click found the heading.
+   * Uma página de login tem um link "Entrar" no menu e um botão "Entrar" no formulário.
+   * Sem número, o agente chamava o botão de "Entrar #2" mesmo assim, e o clique achava o
+   * título.
    */
   it('numbers a link and a button of the same words, since the agent names both by their words', () => {
     expect(numberDuplicates(['a: Entrar', 'input: E-mail', 'button: Entrar'])).toEqual([

@@ -1,8 +1,8 @@
 import { CLAUDE_CODE_AGENT } from '@/engine/agents/constants';
 
 /**
- * The flags that make Claude Code walk one case in JSON lines, with QAzinho's tools alone
- * and no hooks.
+ * As flags que fazem o Claude Code andar um caso em linhas JSON, só com as ferramentas do
+ * QAzinho e sem hooks.
  */
 export function claudeArgsOf(props: {
   systemPrompt: string;

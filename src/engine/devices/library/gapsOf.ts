@@ -1,8 +1,8 @@
 import type { IBox, IGaps } from '@/engine/devices/types';
 
 /**
- * The space between a box and the nearest box on each side of it, counting only boxes
- * that sit beside it, not around or inside it.
+ * O espaço entre uma caixa e a caixa mais próxima de cada lado dela, contando só as
+ * caixas que ficam ao lado, não em volta nem dentro.
  */
 export function gapsOf(props: { box: IBox; others: IBox[] }): IGaps {
   const { box } = props;

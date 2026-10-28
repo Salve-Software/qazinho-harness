@@ -2,8 +2,8 @@ import type { ICaseRecipe, IRecipeBook, IFlatStep, TargetKind } from '@/contract
 import { fingerprintOf } from './fingerprintOf';
 
 /**
- * The recipe a case can be walked again with: one kept for this very case, on this kind
- * of target, with a step for each of its steps.
+ * A receita com que um caso pode ser andado de novo: uma guardada para este mesmo caso,
+ * neste tipo de alvo, com um passo para cada passo dele.
  */
 export function recipeFor(props: {
   book: IRecipeBook;

@@ -4,8 +4,8 @@ import type { IVariableValue } from '@/engine/types';
 const PLACEHOLDER = /\$\{([A-Z][A-Z0-9_]*)\}/g;
 
 /**
- * The action as the device carries it out: each ${NAME} in it turned into that variable's
- * value, and a name the project does not keep refused.
+ * A ação como o dispositivo a executa: cada ${NAME} nela trocado pelo valor da variável,
+ * e um nome que o projeto não guarda recusado.
  */
 export function resolvedAction(props: {
   action: IStepAction;

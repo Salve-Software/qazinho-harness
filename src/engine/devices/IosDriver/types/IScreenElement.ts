@@ -1,8 +1,8 @@
 import type { IBox } from '@/engine/devices/types';
 
 /**
- * One element of the accessibility tree, with its box in points, the point a finger would
- * land on, and whether it is an app's icon on the home screen.
+ * Um elemento da árvore de acessibilidade, com a caixa em pontos, o ponto em que um dedo
+ * pousaria, e se é o ícone de um app na tela inicial.
  */
 export interface IScreenElement {
   label: string;

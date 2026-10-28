@@ -1,8 +1,8 @@
 import type { IKnownBug } from '@/contract';
 
 /**
- * The bug already open an agent said it saw again, when it is one the run was told of;
- * null for a new bug or an id that names none.
+ * O bug já aberto que um agente disse ter visto de novo, quando é um de que a run foi
+ * avisada; null para um bug novo ou um id que não nomeia nenhum.
  */
 export function keptBugId(props: {
   asked: string | undefined;

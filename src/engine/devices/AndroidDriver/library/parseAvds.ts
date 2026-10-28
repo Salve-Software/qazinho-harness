@@ -1,4 +1,4 @@
-/** Reads `emulator -list-avds`. The tool prefixes warnings with `INFO` and the like. */
+/** Lê o `emulator -list-avds`. A ferramenta põe `INFO` e afins na frente dos avisos. */
 export function parseAvds(stdout: string): string[] {
   return stdout
     .split('\n')

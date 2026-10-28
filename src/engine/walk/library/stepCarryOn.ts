@@ -1,6 +1,6 @@
 /**
- * What the agent hears after a bug it saw on a step: report the step failed under the
- * same title when that is what the step expects, then carry on with it.
+ * O que o agente ouve depois de um bug que viu num passo: relatar o passo como falho com
+ * o mesmo título quando é isso que o passo espera, e então seguir com ele.
  */
 export function stepCarryOn(step: number): string {
   const number = String(step);

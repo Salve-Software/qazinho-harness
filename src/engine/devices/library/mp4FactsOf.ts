@@ -4,8 +4,8 @@ interface IBox {
 }
 
 /**
- * How long an MP4's video plays and how large it is, read from its video track, the way a
- * <video> reads it; null when it has none.
+ * Quanto tempo o vídeo de um MP4 toca e qual o tamanho dele, lido da trilha de vídeo,
+ * como um <video> o lê; null quando não há trilha.
  */
 export function mp4FactsOf(
   bytes: Buffer | null,

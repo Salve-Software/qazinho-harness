@@ -2,7 +2,7 @@ import type { IStepOutcome } from '@/contract';
 import type { IWalkLog, RunnerJob } from '@/engine/runner/types';
 import { flatStepsOf } from '@/engine/runner/library';
 
-/** A plan of two cases: paying with Pix in three steps, and a coupon in one. */
+/** Um plano de dois casos: pagar com Pix em três passos, e um cupom em um. */
 export const PLAN: RunnerJob['plans'][number] = {
   id: 'plan-1',
   name: 'Checkout',
@@ -57,7 +57,7 @@ export const outcomeOf = (
   };
 };
 
-/** A walk where the Pix code never showed, and the coupon was never reached. */
+/** Um walk em que o código Pix nunca apareceu, e o cupom nunca foi alcançado. */
 export const LOG: IWalkLog = {
   outcomes: [
     outcomeOf({ index: 0 }),

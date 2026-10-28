@@ -1,6 +1,6 @@
 /**
- * Scales a screenshot down to the size the agent reads, with a filter that keeps
- * hairlines, and gives it back as a JPEG.
+ * Reduz uma captura de tela ao tamanho que o agente lê, com um filtro que mantém linhas
+ * finas, e a devolve como JPEG.
  */
 export type ShrinkImage = (props: {
   image: Buffer;

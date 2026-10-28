@@ -1,8 +1,8 @@
 type Described = { type?: unknown; frame?: { width?: unknown; height?: unknown } };
 
 /**
- * How big the simulator's screen is, in the points idb taps at, read off the app at the
- * root of `idb ui describe-all`; null when it lists no app.
+ * O tamanho da tela do simulador, nos pontos em que o idb toca, lido do app na raiz do
+ * `idb ui describe-all`; null quando ele não lista app nenhum.
  */
 export function screenOf(described: string): { width: number; height: number } | null {
   const trimmed = described.trim();

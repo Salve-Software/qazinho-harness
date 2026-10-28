@@ -1,4 +1,4 @@
-/** How a browser draws an element, as its computed style reads. */
+/** Como um navegador desenha um elemento, como o estilo calculado diz. */
 export interface IElementStyle {
   font: string;
   fontSize: string;

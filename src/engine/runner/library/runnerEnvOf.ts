@@ -3,8 +3,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 /**
- * The machine's environment as a runner reads it; the words that say what is missing when
- * it cannot walk a job.
+ * O ambiente da máquina como um runner o lê; as palavras que dizem o que falta quando ele
+ * não consegue andar um job.
  */
 export function runnerEnvOf(env: NodeJS.ProcessEnv): IRunnerEnv | string {
   const apiUrl = filled(env.QAZINHO_API_URL);

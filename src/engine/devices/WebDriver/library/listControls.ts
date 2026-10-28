@@ -2,8 +2,8 @@ import type { Page } from 'playwright-core';
 import { CONTROL_SELECTOR } from '@/engine/devices/WebDriver/constants';
 
 /**
- * The controls a person can see, in page order: the role, the words each goes by, and its
- * place among every control.
+ * Os controles que uma pessoa vê, na ordem da página: o papel, as palavras pelas quais
+ * cada um é chamado, e o lugar dele entre todos os controles.
  */
 export async function listControls(
   page: Page,

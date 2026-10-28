@@ -1,6 +1,6 @@
 /**
- * An environment with one PATH: Windows names its own `Path`, and a `PATH` QAzinho set
- * beside it must be the one the child reads.
+ * Um ambiente com um PATH só: o Windows chama o dele de `Path`, e um `PATH` que o QAzinho
+ * definiu ao lado tem que ser o que o filho lê.
  */
 export function envWithOnePath(props: {
   env: NodeJS.ProcessEnv;

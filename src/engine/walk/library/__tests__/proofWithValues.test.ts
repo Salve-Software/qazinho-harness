@@ -5,8 +5,8 @@ const SCREEN = 'Carrinho\n1 item: Caneca\nTotal: R$ 30,00\nCupom inválido';
 
 describe('proofWithValues', () => {
   /**
-   * Haiku proved "the cart shows 1 item and the total R$ 30,00" with "1 item: Caneca" alone:
-   * walked again without it, a wrong total would have passed.
+   * O Haiku provou "o carrinho mostra 1 item e o total R$ 30,00" só com "1 item: Caneca":
+   * andado de novo sem isso, um total errado teria passado.
    */
   it('adds a value the step expects that the screen shows and the proof left out', () => {
     expect(

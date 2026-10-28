@@ -13,8 +13,8 @@ const KINDS: Record<
 };
 
 /**
- * Whether a file of a run is a screen, its video or its requests, and its content type;
- * null for one a runner never sends.
+ * Se um arquivo de uma run é uma tela, o vídeo ou as requisições dela, e o content type;
+ * null para um que um runner nunca manda.
  */
 export function evidenceKindOf(
   file: string,

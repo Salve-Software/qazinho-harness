@@ -6,8 +6,8 @@ const SHIM_TARGET = /"%~?dp0%?\\([^"]+)"\s*%\*/i;
 const CMD_SPECIAL = /([()\][%!^"`<>&|;, *?])/g;
 
 /**
- * How to start a command on this platform; on Windows an npm .cmd shim runs as what it
- * points at.
+ * Como iniciar um comando nesta plataforma; no Windows um shim .cmd do npm roda como
+ * aquilo para que aponta.
  */
 export function launchOf(props: {
   command: string;

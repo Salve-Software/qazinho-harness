@@ -1,7 +1,7 @@
 import type { RunnerJob } from '@/engine/runner/types';
 import type { IVariableValue } from '@/engine/types';
 
-/** The project's CI variables as a walk types them. */
+/** As variáveis de CI do projeto como um walk as digita. */
 export function valuesOf(variables: RunnerJob['variables']): IVariableValue[] {
   return variables.map(({ name, description, value }) => ({
     name,

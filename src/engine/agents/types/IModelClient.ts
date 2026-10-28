@@ -1,8 +1,8 @@
 import type Anthropic from '@anthropic-ai/sdk';
 
 /**
- * What the gateway agent needs of Anthropic's SDK: one Messages API call, which ending
- * the turn aborts.
+ * O que o agente do gateway precisa do SDK da Anthropic: uma chamada da Messages API, que
+ * terminar o turno aborta.
  */
 export interface IModelClient {
   create: (props: {

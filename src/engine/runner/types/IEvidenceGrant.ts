@@ -1,6 +1,6 @@
 /**
- * Where the API lets a runner upload one file: the key it will be known by, the address
- * to send it to, and the headers that address wants.
+ * Onde a API deixa um runner subir um arquivo: a chave pela qual ele será conhecido, o
+ * endereço para onde mandá-lo, e os headers que esse endereço quer.
  */
 export interface IEvidenceGrant {
   key: string;

@@ -1,6 +1,6 @@
 /**
- * How one case's walk ended for the walk around it: settled, stopped with the run, or
- * broken by its agent, with why.
+ * Como terminou o walk de um caso para o walk em volta: resolvido, parado com a run, ou
+ * quebrado pelo agente, com o porquê.
  */
 export type CaseWalk =
   { kind: 'walked' } | { kind: 'stopped' } | { kind: 'failed'; reason: string };

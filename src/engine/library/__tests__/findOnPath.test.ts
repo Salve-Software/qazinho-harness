@@ -69,7 +69,10 @@ describe('findOnPath', () => {
       ).toBe(join(directory, 'claude.exe'));
     });
 
-    /** npm writes an extensionless sh script beside each .cmd; spawning it fails on Windows. */
+    /**
+     * O npm escreve um script sh sem extensão ao lado de cada .cmd; iniciá-lo falha no
+     * Windows.
+     */
     it('takes the npm .cmd shim, and never the sh script with no extension', () => {
       const directory = windowsDirectoryWith(['codex', 'codex.cmd', 'codex.ps1']);
 

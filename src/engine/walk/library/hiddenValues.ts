@@ -2,8 +2,8 @@ import type { IVariableValue } from '@/engine/types';
 import { RUN_WALK } from '@/engine/walk/constants';
 
 /**
- * The text with each variable's value that shows in it read back as its ${NAME}, the
- * longest first; a value too short to tell from an ordinary word stays.
+ * O texto com o valor de cada variável que aparece nele lido de volta como o seu ${NAME},
+ * o mais longo primeiro; um valor curto demais para distinguir de uma palavra comum fica.
  */
 export function hiddenValues(props: { text: string; values: IVariableValue[] }): string {
   return props.values

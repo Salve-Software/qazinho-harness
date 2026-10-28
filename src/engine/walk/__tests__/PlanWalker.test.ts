@@ -12,7 +12,7 @@ import { describe, expect, it } from 'vitest';
 import { fingerprintOf, PlanWalker, UNWALKED } from '@/engine/walk';
 import { Harness } from '@/Harness.class';
 
-/** Two cases of two steps each, as a run flattens them. */
+/** Dois casos de dois passos cada, como uma run os achata. */
 const STEPS: IFlatStep[] = [
   ['cart', 1, 'Open the cart', 'The cart shows 2 items'],
   ['cart', 2, 'Tap Pay with Pix', 'The Pix code shows'],
@@ -31,7 +31,10 @@ const STEPS: IFlatStep[] = [
 
 const NO_RECORDINGS: IRecipeBook = { cases: [] };
 
-/** A device that shows whatever the test says, keeps every action and screenshot, and counts how often the app was opened anew. */
+/**
+ * Um dispositivo que mostra o que o teste mandar, guarda cada ação e captura de tela, e
+ * conta quantas vezes o app foi aberto do zero.
+ */
 function fakeDevice(screen: { text: string }) {
   const acted: IStepAction[] = [];
   const shots: string[] = [];
@@ -80,7 +83,10 @@ const report = (step: number, overrides: Partial<IStepReport> = {}): IStepReport
   ...overrides,
 });
 
-/** An agent whose every turn plays what the test wrote for its case, through the device tools' callbacks, and ends as the test says. */
+/**
+ * Um agente cujo turno toca o que o teste escreveu para o caso, pelos callbacks das
+ * ferramentas do dispositivo, e termina como o teste diz.
+ */
 function fakeAgent(
   play: (turn: ICaseTurn) => Promise<CaseTurnEnd | undefined>,
 ): ICaseAgent & { turns: ICaseTurn[]; cancels: number } {
@@ -100,7 +106,7 @@ function fakeAgent(
   return agent;
 }
 
-/** An agent that clicks the step's action and reports each step it is told to, passing. */
+/** Um agente que clica na ação do passo e relata cada passo que mandam, passando. */
 const passingAgent = () =>
   fakeAgent(async (turn) => {
     for (const step of [1, 2]) {

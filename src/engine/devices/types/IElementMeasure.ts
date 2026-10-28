@@ -3,8 +3,8 @@ import type { IElementStyle } from './IElementStyle';
 import type { IGaps } from './IGaps';
 
 /**
- * One thing on the device's screen, measured to hold it to a design: its box, the box it
- * sits in, the space around it, and in a browser its style.
+ * Uma coisa da tela do dispositivo, medida para conferir com um design: a caixa, a caixa
+ * em que está, o espaço em volta, e num navegador o estilo.
  */
 export interface IElementMeasure {
   role: string;

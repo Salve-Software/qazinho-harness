@@ -3,8 +3,8 @@ import type { IBugBody, ICatch } from '@/engine/runner/types';
 import { videoSecondsOf } from './videoSecondsOf';
 
 /**
- * A failure or a finding as a new bug: what broke, the steps to it, its screens and its
- * moment on the video.
+ * Uma falha ou um achado como um bug novo: o que quebrou, os passos até lá, as telas e o
+ * momento no vídeo.
  */
 export function bugBodyOf(props: {
   caught: ICatch;

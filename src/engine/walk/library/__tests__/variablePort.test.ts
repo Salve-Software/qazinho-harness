@@ -4,7 +4,10 @@ import { variablePort } from '@/engine/walk/library';
 
 const VALUES = [{ name: 'LOGIN_PASSWORD', description: '', value: 'Sup3r-s3cret' }];
 
-/** A device that keeps what it was asked to type, shows a page that echoes it, and fails when told to. */
+/**
+ * Um dispositivo que guarda o que pediram para digitar, mostra uma página que repete o
+ * texto, e falha quando mandam.
+ */
 function fakeDevice(failing = false) {
   const typed: IStepAction[] = [];
   const device: Parameters<typeof variablePort>[0]['device'] = {
@@ -77,7 +80,10 @@ describe('variablePort', () => {
       size: 10,
     };
 
-    /** A browser that made three calls, an old one, a failed one after the click and one that went well. */
+    /**
+     * Um navegador que fez três chamadas: uma antiga, uma que falhou depois do clique e
+     * uma que deu certo.
+     */
     function browser() {
       const startedAt = Date.now();
       const calls = [

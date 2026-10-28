@@ -3,8 +3,8 @@ import type { IVariableValue } from '@/engine/types';
 import { hiddenValues } from './hiddenValues';
 
 /**
- * The action a recipe keeps, its ${NAME} as the agent wrote it, with how a web run found
- * its targets unless that would keep a variable's value.
+ * A ação que uma receita guarda, com o ${NAME} como o agente escreveu, e como uma run web
+ * achou os alvos, a menos que isso guardasse o valor de uma variável.
  */
 export function recordedAction(props: {
   action: IStepAction;

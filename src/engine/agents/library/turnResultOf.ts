@@ -1,6 +1,6 @@
 /**
- * What Claude Code's closing line says of a turn: what it cost, and whether it ended in
- * an error, with its words; null on any other line.
+ * O que a linha final do Claude Code diz de um turno: quanto custou e se terminou em
+ * erro, com as palavras dele; null em qualquer outra linha.
  */
 export function turnResultOf(
   line: string,

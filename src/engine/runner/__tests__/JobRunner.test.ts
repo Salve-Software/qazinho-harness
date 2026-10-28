@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 import { JobRunner, RUNNER, RunnerApiError } from '@/engine/runner';
 import { Harness } from '@/Harness.class';
 
-/** A job of one plan on the web: paying with Pix in two steps, and a coupon in one. */
+/** Um job de um plano na web: pagar com Pix em dois passos, e um cupom em um. */
 const JOB: RunnerJob = {
   job: {
     id: 'j1',
@@ -61,7 +61,10 @@ const JOB: RunnerJob = {
   build: null,
 };
 
-/** The API as a runner calls it: each call kept by name, each file granted the next key. */
+/**
+ * A API como um runner a chama: cada chamada guardada pelo nome, cada arquivo recebendo a
+ * próxima chave.
+ */
 function fakeApi(
   props: { job?: RunnerJob; refuse?: (name: string) => Error | null } = {},
 ) {
@@ -105,7 +108,10 @@ function fakeApi(
   return { api, calls, of, names: () => calls.map(({ name }) => name) };
 }
 
-/** A browser whose every screenshot is a file on disk, which streams frames or not, and keeps the requests it says. */
+/**
+ * Um navegador em que cada captura de tela é um arquivo em disco, que transmite frames ou
+ * não, e guarda as requisições que ele diz.
+ */
 function fakeDriver(props: { isBrowser: boolean }) {
   const happened: string[] = [];
   const driver: IDeviceDriver = {
@@ -169,7 +175,7 @@ function fakeDriver(props: { isBrowser: boolean }) {
   return { driver, happened };
 }
 
-/** Frames recorded into a video as long as the walk ran. */
+/** Frames gravados num vídeo do tamanho do tempo que o walk durou. */
 function fakeFrames(): IFrameSink & { frames: number } {
   let startedAt = 0;
   const sink = {
@@ -200,7 +206,10 @@ const report = (step: number, overrides: Partial<IStepReport> = {}): IStepReport
   ...overrides,
 });
 
-/** An agent that passes every step of every case, unless the test plays the case its own way. */
+/**
+ * Um agente que passa todo passo de todo caso, a menos que o teste jogue o caso do seu
+ * jeito.
+ */
 function agentThat(
   play?: (turn: ICaseTurn) => Promise<CaseTurnEnd | undefined>,
 ): ICaseAgent {

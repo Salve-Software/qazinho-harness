@@ -2,8 +2,8 @@ import type { IBox, IElementMeasure } from '@/engine/devices/types';
 import { gapsOf } from './gapsOf';
 
 /**
- * One thing on a phone's screen measured from the screen's tree: its box in the unit a
- * design uses, the smallest box around it, and the space to its neighbours.
+ * Uma coisa da tela de um celular medida pela árvore da tela: a caixa na unidade que um
+ * design usa, a menor caixa em volta e o espaço até os vizinhos.
  */
 export function phoneMeasureOf(props: {
   role: string;

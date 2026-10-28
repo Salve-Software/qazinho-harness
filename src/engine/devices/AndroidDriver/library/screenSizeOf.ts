@@ -1,6 +1,6 @@
 /**
- * The size an emulator's screen shows at, from `wm size`: an override the QA set wins
- * over the physical size.
+ * O tamanho em que a tela de um emulador aparece, pelo `wm size`: uma sobrescrita do QA
+ * vence o tamanho físico.
  */
 export function screenSizeOf(printed: string): { width: number; height: number } | null {
   const sizes = [...printed.matchAll(/(Physical|Override) size:\s*(\d+)x(\d+)/g)].map(

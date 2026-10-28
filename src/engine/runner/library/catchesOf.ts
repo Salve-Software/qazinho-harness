@@ -1,6 +1,8 @@
 import type { IWalkLog, ICatch } from '@/engine/runner/types';
 
-/** Every failed step and every bug seen beside one in a walk, in the order they came. */
+/**
+ * Todo passo que falhou e todo bug visto ao lado de um num walk, na ordem em que vieram.
+ */
 export function catchesOf(log: IWalkLog): ICatch[] {
   return [
     ...log.outcomes

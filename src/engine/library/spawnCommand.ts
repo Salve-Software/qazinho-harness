@@ -4,8 +4,8 @@ import { envWithOnePath } from './envWithOnePath';
 import { launchHere } from './launchHere';
 
 /**
- * Starts a command the way this platform needs, with no console window flashing up on
- * Windows; its streams are pipes unless `stdio` says otherwise.
+ * Inicia um comando do jeito que esta plataforma pede, sem janela de console piscando no
+ * Windows; os streams são pipes a menos que o `stdio` diga outra coisa.
  */
 export function spawnCommand(props: {
   command: string;

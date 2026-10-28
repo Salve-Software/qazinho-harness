@@ -33,7 +33,7 @@ import {
   screenOf,
 } from './library';
 
-/** Drives an iOS simulator. simctl boots and installs; only idb can touch the screen. */
+/** Dirige um simulador iOS. O simctl liga e instala; só o idb toca a tela. */
 export class IosDriver implements IDeviceDriver {
   private readonly idb: string;
   private readonly udid: string;
@@ -66,8 +66,8 @@ export class IosDriver implements IDeviceDriver {
   }
 
   /**
-   * Starts the app over on a fresh install: a simulator keeps an app's data until the app
-   * is removed.
+   * Começa o app do zero numa instalação nova: um simulador guarda os dados de um app até
+   * o app ser removido.
    */
   public async restart(): Promise<void> {
     await this.installFresh();
@@ -165,8 +165,8 @@ export class IosDriver implements IDeviceDriver {
   }
 
   /**
-   * One thing on the screen measured to hold it to a design: its box in points, the box
-   * around it and the space to its neighbours.
+   * Uma coisa da tela medida para conferir com um design: a caixa em pontos, a caixa em
+   * volta e o espaço até os vizinhos.
    */
   public async inspect(target: string): Promise<string> {
     const elements = await this.read();
@@ -187,8 +187,8 @@ export class IosDriver implements IDeviceDriver {
   }
 
   /**
-   * The simulator's screen as the agent reads it, through a file simctl writes and
-   * QAzinho removes.
+   * A tela do simulador como o agente a lê, por um arquivo que o simctl escreve e o
+   * QAzinho remove.
    */
   public async glance(): Promise<IDeviceImage | null> {
     const file = join(tmpdir(), `qazinho-glance-${randomUUID()}.png`);
@@ -203,25 +203,27 @@ export class IosDriver implements IDeviceDriver {
   }
 
   /**
-   * A simulator has no layout-shift timeline to read, so it says nothing about motion.
+   * Um simulador não tem linha do tempo de deslocamento de layout para ler, então não diz
+   * nada sobre movimento.
    */
   public async motion(): Promise<IActionMotion | null> {
     return Promise.resolve(null);
   }
 
   /**
-   * A simulator keeps the size of the device it is, so a new window size changes nothing.
+   * Um simulador mantém o tamanho do aparelho que ele é, então um novo tamanho de janela
+   * não muda nada.
    */
   public async resize(_viewport: IViewport): Promise<void> {
     return Promise.resolve();
   }
 
-  /** A simulator is not streamed, so watching it up close changes nothing. */
+  /** Um simulador não é transmitido, então vê-lo de perto não muda nada. */
   public async focus(): Promise<void> {
     return Promise.resolve();
   }
 
-  /** The simulator's screen kept in the run, as a JPEG at its full size. */
+  /** A tela do simulador guardada na run, como JPEG no tamanho cheio. */
   public async shoot(file: string): Promise<IShot | null> {
     await this.simctl(['io', this.udid, 'screenshot', file]);
 
@@ -236,15 +238,16 @@ export class IosDriver implements IDeviceDriver {
   }
 
   /**
-   * QAzinho only shuts down what QAzinho started: a simulator the QA opened stays open.
+   * O QAzinho só desliga o que o QAzinho iniciou: um simulador que o QA abriu continua
+   * aberto.
    */
   public async stream(): Promise<boolean> {
     return Promise.resolve(false);
   }
 
   /**
-   * Records the simulator's screen into the run's folder until stopped, from the moment
-   * simctl says it started.
+   * Grava a tela do simulador na pasta da run até mandarem parar, a partir do momento em
+   * que o simctl diz que começou.
    */
   public async record(folder: string): Promise<boolean> {
     const file = join(folder, RUN_VIDEO_FILES.mp4);
@@ -285,8 +288,8 @@ export class IosDriver implements IDeviceDriver {
   }
 
   /**
-   * Ends the recording the way simctl writes its file whole, and reads how long and how
-   * large it came out.
+   * Termina a gravação do jeito que o simctl escreve o arquivo inteiro, e lê quanto tempo
+   * e quanto peso ela deu.
    */
   public async stopRecording(): Promise<IRunVideo | null> {
     const recording = this.recording;

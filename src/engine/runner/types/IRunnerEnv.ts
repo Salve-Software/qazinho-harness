@@ -1,6 +1,6 @@
 /**
- * What a CI run's machine starts with: where the API answers, its job and token, where it
- * works, and where its device tools are, when the machine says.
+ * Com o que a máquina de uma run do CI começa: onde a API responde, o job e o token, onde
+ * ela trabalha, e onde estão as ferramentas do dispositivo, quando a máquina diz.
  */
 export interface IRunnerEnv {
   apiUrl: string;

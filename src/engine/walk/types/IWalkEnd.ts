@@ -1,8 +1,8 @@
 import type { ICaseRecipe } from '@/contract';
 
 /**
- * What a walk leaves once it ends: the recordings its agent made or healed, and why it
- * broke off, if it did.
+ * O que um walk deixa quando termina: as gravações que o agente fez ou consertou, e por
+ * que ele parou no meio, se parou.
  */
 export interface IWalkEnd {
   recorded: ICaseRecipe[];

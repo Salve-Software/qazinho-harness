@@ -1,8 +1,8 @@
 import { proofLinesOf } from './proofLinesOf';
 
 /**
- * Whether the screen still shows every line of the words that proved a step, read the way
- * a person would: case and spacing aside.
+ * Se a tela ainda mostra cada linha das palavras que provaram um passo, lida como uma
+ * pessoa leria: sem ligar para maiúsculas e espaços.
  */
 export function proofHolds(props: { screen: string; proof: string }): boolean {
   const screen = plain(props.screen);

@@ -16,8 +16,8 @@ import { RUNNER_JOB_SCHEMA } from './constants';
 import { RunnerApiError } from './RunnerApiError.class';
 
 /**
- * QAzinho's API as a CI run's machine calls it with its job's token: its job and build,
- * the heartbeat, each file of evidence, what it walked, and how it ended.
+ * A API do QAzinho como a máquina de uma run do CI a chama com o token do job: o job e o
+ * build, o sinal de vida, cada arquivo de evidência, o que ela andou, e como terminou.
  */
 export class RunnerApi implements IRunnerApi {
   private readonly url: string;
@@ -30,14 +30,14 @@ export class RunnerApi implements IRunnerApi {
     this.fetch = props.fetch ?? globalThis.fetch;
   }
 
-  /** The job, read against its schema; the first call marks it running. */
+  /** O job, lido contra o schema; a primeira chamada o marca como rodando. */
   public async job(): Promise<RunnerJob> {
     return RUNNER_JOB_SCHEMA.parse(
       await this.send({ method: 'GET', path: '/api/runner/job' }),
     );
   }
 
-  /** Downloads the job's build into `file`, following the API to where it keeps it. */
+  /** Baixa o build do job em `file`, seguindo a API até onde ela o guarda. */
   public async build(file: string): Promise<void> {
     const response = await this.answered({ method: 'GET', path: '/api/runner/build' });
 
@@ -55,7 +55,7 @@ export class RunnerApi implements IRunnerApi {
     await this.send({ method: 'POST', path: '/api/runner/progress', body: progress });
   }
 
-  /** Where to upload one file, and the key it will be known by. */
+  /** Onde subir um arquivo, e a chave pela qual ele será conhecido. */
   public async evidence(file: {
     kind: 'screenshot' | 'video' | 'network';
     contentType: string;
@@ -70,8 +70,8 @@ export class RunnerApi implements IRunnerApi {
   }
 
   /**
-   * Streams a file from disk to the address the API signed, with its length, so a video
-   * never sits whole in memory.
+   * Transmite um arquivo do disco para o endereço que a API assinou, com o tamanho, para
+   * um vídeo nunca ficar inteiro na memória.
    */
   public async upload(props: { grant: IEvidenceGrant; file: string }): Promise<void> {
     const { size } = await stat(props.file);
@@ -114,7 +114,10 @@ export class RunnerApi implements IRunnerApi {
     });
   }
 
-  /** Adds a time the run saw a bug the job named again, leaving what the bug says. */
+  /**
+   * Acrescenta uma vez em que a run viu de novo um bug que o job nomeou, deixando o que o
+   * bug diz.
+   */
   public async addSighting(props: {
     planId: string;
     bugId: string;
@@ -127,7 +130,7 @@ export class RunnerApi implements IRunnerApi {
     });
   }
 
-  /** Keeps the recordings the run made or healed, on the job's branch. */
+  /** Guarda as gravações que a run fez ou consertou, na branch do job. */
   public async putRecordings(props: {
     planId: string;
     recordings: ICaseRecipe[];
@@ -148,8 +151,7 @@ export class RunnerApi implements IRunnerApi {
   }
 
   /**
-   * Says the job walked what it could, or broke and why; the API then destroys the
-   * machine.
+   * Diz que o job andou o que pôde, ou quebrou e por quê; a API então destrói a máquina.
    */
   public async complete(ending: {
     ending: 'finished' | 'broke';

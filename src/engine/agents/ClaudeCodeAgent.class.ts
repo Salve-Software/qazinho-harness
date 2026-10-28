@@ -9,8 +9,8 @@ import { CLAUDE_CODE_AGENT } from './constants';
 import { claudeArgsOf, turnResultOf } from './library';
 
 /**
- * Walks a case through the local Claude Code with QAzinho's device tools on loopback,
- * never the gateway.
+ * Anda um caso pelo Claude Code local com as ferramentas de dispositivo do QAzinho no
+ * loopback, nunca pelo gateway.
  */
 export class ClaudeCodeAgent implements ICaseAgent {
   private readonly command: string;
@@ -28,8 +28,8 @@ export class ClaudeCodeAgent implements ICaseAgent {
   }
 
   /**
-   * One turn on one case: Claude Code acts through the device tools until it ends its
-   * turn, and says what the turn cost.
+   * Um turno de um caso: o Claude Code age pelas ferramentas do dispositivo até terminar
+   * o turno, e diz quanto o turno custou.
    */
   public async walk(turn: ICaseTurn): Promise<CaseTurnEnd> {
     await this.tools.start();
@@ -49,7 +49,9 @@ export class ClaudeCodeAgent implements ICaseAgent {
     }
   }
 
-  /** Ends the turn of a scope under way, Claude Code and all it started. */
+  /**
+   * Termina o turno em andamento de um escopo, o Claude Code e tudo o que ele iniciou.
+   */
   public cancel(scope: string): void {
     const child = this.children.get(scope);
 

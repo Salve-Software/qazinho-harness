@@ -2,8 +2,8 @@ import type { IKnownBug } from '@/contract';
 import type { Landing } from '@/engine/runner/types';
 
 /**
- * Where a failure lands: the bug its agent named, its step's bug, one with its title, or
- * a new bug.
+ * Onde uma falha cai: no bug que o agente dela nomeou, no bug do passo, num com o título
+ * dela, ou num bug novo.
  */
 export function landingOf(props: {
   sameAs: string | undefined;

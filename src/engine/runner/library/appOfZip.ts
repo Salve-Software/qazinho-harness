@@ -3,8 +3,8 @@ import { join } from 'node:path';
 import { execCommand } from '@/engine/library';
 
 /**
- * The simulator app a zipped build holds, unpacked into `folder` the way macOS keeps a
- * bundle; null when it holds none.
+ * O app de simulador que um build zipado traz, descompactado em `folder` do jeito que o
+ * macOS guarda um bundle; null quando não traz nenhum.
  */
 export async function appOfZip(props: {
   zip: string;

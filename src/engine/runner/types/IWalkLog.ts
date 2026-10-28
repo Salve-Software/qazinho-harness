@@ -1,8 +1,8 @@
 import type { IRunFinding, IStepOutcome } from '@/contract';
 
 /**
- * What a runner kept of one plan's walk: each step settled, when each began, each bug
- * seen beside one, and when the walk began and ended, in epoch ms.
+ * O que um runner guardou do walk de um plano: cada passo resolvido e quando começou,
+ * cada bug visto ao lado de um, e o início e o fim do walk, em ms de epoch.
  */
 export interface IWalkLog {
   outcomes: IStepOutcome[];

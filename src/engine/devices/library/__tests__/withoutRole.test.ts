@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { withoutRole } from '@/engine/devices/library';
 
-/** The agent copies a control the way look lists it, "button: Entrar", and that is not its name. */
+/**
+ * O agente copia um controle do jeito que o look o lista, "button: Entrar", e esse não é
+ * o nome dele.
+ */
 describe('withoutRole', () => {
   it('reads the name out of a control as look lists it', () => {
     expect(withoutRole('button: Entrar')).toBe('Entrar');

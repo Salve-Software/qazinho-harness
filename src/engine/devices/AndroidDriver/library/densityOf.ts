@@ -1,8 +1,8 @@
 import { ANDROID } from '@/engine/devices/AndroidDriver/constants';
 
 /**
- * The screen's density as `wm density` prints it, the override over the physical one; the
- * baseline 160 when it says neither.
+ * A densidade da tela como o `wm density` a imprime, a sobrescrita acima da física; a
+ * base 160 quando ele não diz nenhuma.
  */
 export function densityOf(printed: string): number {
   const read = (label: string) =>

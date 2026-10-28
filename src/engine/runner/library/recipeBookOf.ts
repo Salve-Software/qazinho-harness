@@ -3,8 +3,8 @@ import type { RunnerJob } from '@/engine/runner/types';
 import { RECORDED_STEPS_SCHEMA } from '@/engine/runner/constants';
 
 /**
- * The recordings a job holds for one plan, as a walk reads them; one whose steps do not
- * read as a recording's is left out.
+ * As gravações que um job guarda para um plano, como um walk as lê; uma cujos passos não
+ * batem com os de uma gravação fica de fora.
  */
 export function recipeBookOf(props: {
   recordings: RunnerJob['recordings'];

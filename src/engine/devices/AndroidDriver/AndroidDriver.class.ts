@@ -37,7 +37,7 @@ import {
   screenSizeOf,
 } from './library';
 
-/** Drives an Android emulator through adb. The QA watches the phone work. */
+/** Dirige um emulador Android pelo adb. O QA vê o celular trabalhar. */
 export class AndroidDriver implements IDeviceDriver {
   private readonly sdkRoot: string;
   private readonly avd: string;
@@ -63,9 +63,7 @@ export class AndroidDriver implements IDeviceDriver {
     await this.launchFresh();
   }
 
-  /**
-   * Starts the app over with its data cleared, the way it was the day it was installed.
-   */
+  /** Começa o app do zero com os dados limpos, como no dia em que foi instalado. */
   public async restart(): Promise<void> {
     if (this.serial.length === 0) throw new Error('The emulator is not open.');
 
@@ -166,8 +164,8 @@ export class AndroidDriver implements IDeviceDriver {
   }
 
   /**
-   * One thing on the screen measured to hold it to a design: its box in dp at the
-   * screen's density, the box around it and the space to its neighbours.
+   * Uma coisa da tela medida para conferir com um design: a caixa em dp na densidade da
+   * tela, a caixa em volta e o espaço até os vizinhos.
    */
   public async inspect(target: string): Promise<string> {
     const nodes = await this.read();
@@ -190,8 +188,8 @@ export class AndroidDriver implements IDeviceDriver {
   }
 
   /**
-   * The emulator's screen as the agent reads it, from screencap, shrunk to what the agent
-   * needs.
+   * A tela do emulador como o agente a lê, pelo screencap, reduzida ao que o agente
+   * precisa.
    */
   public async glance(): Promise<IDeviceImage | null> {
     if (this.serial.length === 0) return null;
@@ -201,24 +199,28 @@ export class AndroidDriver implements IDeviceDriver {
     return phoneGlance({ image, shrink: this.shrink });
   }
 
-  /** A phone has no layout-shift timeline to read, so it says nothing about motion. */
+  /**
+   * Um celular não tem linha do tempo de deslocamento de layout para ler, então não diz
+   * nada sobre movimento.
+   */
   public async motion(): Promise<IActionMotion | null> {
     return Promise.resolve(null);
   }
 
   /**
-   * A emulator keeps the size of the device it is, so a new window size changes nothing.
+   * Um emulador mantém o tamanho do aparelho que ele é, então um novo tamanho de janela
+   * não muda nada.
    */
   public async resize(_viewport: IViewport): Promise<void> {
     return Promise.resolve();
   }
 
-  /** An emulator is not streamed, so watching it up close changes nothing. */
+  /** Um emulador não é transmitido, então vê-lo de perto não muda nada. */
   public async focus(): Promise<void> {
     return Promise.resolve();
   }
 
-  /** The emulator's screen kept in the run, as a JPEG at its full size. */
+  /** A tela do emulador guardada na run, como JPEG no tamanho cheio. */
   public async shoot(file: string): Promise<IShot | null> {
     if (this.serial.length === 0) return null;
 
@@ -236,15 +238,16 @@ export class AndroidDriver implements IDeviceDriver {
   }
 
   /**
-   * QAzinho only shuts down what QAzinho started: an emulator the QA opened stays open.
+   * O QAzinho só desliga o que o QAzinho iniciou: um emulador que o QA abriu continua
+   * aberto.
    */
   public async stream(): Promise<boolean> {
     return Promise.resolve(false);
   }
 
   /**
-   * Records the emulator's screen into the run's folder through its console, for as long
-   * as its console allows.
+   * Grava a tela do emulador na pasta da run pelo console dele, pelo tempo que o console
+   * permite.
    */
   public async record(folder: string): Promise<boolean> {
     const file = join(folder, RUN_VIDEO_FILES.webm);
@@ -265,8 +268,8 @@ export class AndroidDriver implements IDeviceDriver {
   }
 
   /**
-   * Ends the recording, waits for the emulator to write its file, and says how long it
-   * ran and the screen's size.
+   * Termina a gravação, espera o emulador escrever o arquivo, e diz quanto tempo durou e
+   * o tamanho da tela.
    */
   public async stopRecording(): Promise<IRunVideo | null> {
     const recording = this.recording;
@@ -295,8 +298,8 @@ export class AndroidDriver implements IDeviceDriver {
   }
 
   /**
-   * Shuts down an emulator QAzinho started, and waits until it is gone, so the next run
-   * or look never finds it half shut.
+   * Desliga um emulador que o QAzinho iniciou, e espera ele sumir, para a próxima run ou
+   * olhada nunca o achar meio desligado.
    */
   public async close(): Promise<void> {
     if (this.isOurs && this.serial.length > 0) {

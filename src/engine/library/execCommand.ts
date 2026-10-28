@@ -8,8 +8,8 @@ const run = promisify(execFile);
 const MAX_BUFFER_BYTES = 16 * 1024 * 1024;
 
 /**
- * Runs a command to its end the way this platform needs, and answers with what it
- * printed; rejects as execFile does, with what it printed on the error.
+ * Roda um comando até o fim do jeito que esta plataforma pede, e responde com o que ele
+ * imprimiu; rejeita como o execFile, com o que ele imprimiu no erro.
  */
 export async function execCommand(props: {
   command: string;

@@ -4,8 +4,8 @@ import { WEB_DRIVER } from '@/engine/devices/WebDriver/constants';
 import { listControls } from './listControls';
 
 /**
- * What the agent is allowed to look at: what a person would see, not the markup, with
- * controls that read alike numbered.
+ * O que o agente pode ver: o que uma pessoa veria, não o markup, com os controles que
+ * dizem o mesmo numerados.
  */
 export async function describePage(page: Page): Promise<string> {
   const text = (

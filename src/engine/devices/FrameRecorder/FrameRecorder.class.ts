@@ -8,8 +8,8 @@ import { FRAME_RECORDER } from './constants';
 import { ffmpegArgsOf, framesDueOf } from './library';
 
 /**
- * Records a browser's frames into an MP4 through the machine's ffmpeg, at a steady rate,
- * for a CI machine.
+ * Grava os frames de um navegador num MP4 pelo ffmpeg da máquina, num ritmo constante,
+ * para uma máquina do CI.
  */
 export class FrameRecorder {
   private readonly ffmpeg: string;
@@ -26,7 +26,7 @@ export class FrameRecorder {
     this.fps = props.fps ?? FRAME_RECORDER.fps;
   }
 
-  /** Starts writing `file`; the clock starts with the first frame pushed. */
+  /** Começa a escrever `file`; o relógio começa com o primeiro frame entregue. */
   public start(file: string): void {
     this.file = file;
     this.latest = null;
@@ -42,7 +42,7 @@ export class FrameRecorder {
     });
   }
 
-  /** Takes the newest frame, which the video holds until another comes. */
+  /** Pega o frame mais novo, que o vídeo mantém até chegar outro. */
   public push(jpeg: Buffer): void {
     if (this.child === null) return;
 
@@ -58,8 +58,8 @@ export class FrameRecorder {
   }
 
   /**
-   * Ends the file and says when its first frame showed, how long it plays and how large
-   * it is, read from the file; null when nothing was recorded.
+   * Fecha o arquivo e diz quando o primeiro frame apareceu, quanto tempo ele toca e
+   * quanto pesa, lido do arquivo; null quando nada foi gravado.
    */
   public async stop(): Promise<IRunVideo | null> {
     const child = this.child;

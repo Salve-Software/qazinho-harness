@@ -1,6 +1,6 @@
 /**
- * A call the API refused: its status and the code it answered with, which a runner reads
- * to stop when its job is over.
+ * Uma chamada que a API recusou: o status e o código com que respondeu, que um runner lê
+ * para parar quando o job acabou.
  */
 export class RunnerApiError extends Error {
   public readonly status: number;

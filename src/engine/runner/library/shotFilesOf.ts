@@ -1,7 +1,8 @@
 import type { IPlanWalk } from '@/engine/runner/types';
 
 /**
- * Every screen a job's walks kept, each once: the steps' and the bugs seen beside them.
+ * Toda tela que os walks de um job guardaram, cada uma uma vez: as dos passos e as dos
+ * bugs vistos ao lado deles.
  */
 export function shotFilesOf(walks: IPlanWalk[]): string[] {
   return [

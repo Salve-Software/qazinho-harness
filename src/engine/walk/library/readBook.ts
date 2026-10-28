@@ -1,8 +1,8 @@
 import type { IRecipeBook } from '@/contract';
 
 /**
- * The recipes a workspace kept, read back from their file; a file that is missing or
- * broken is an empty book, never a failed run.
+ * As receitas que um workspace guardou, lidas de volta do arquivo; um arquivo ausente ou
+ * quebrado é um livro vazio, nunca uma run que falhou.
  */
 export function readBook(text: string | null): IRecipeBook {
   if (text === null) return { cases: [] };

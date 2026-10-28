@@ -6,8 +6,8 @@ import { landingOf } from './landingOf';
 import { videoSecondsOf } from './videoSecondsOf';
 
 /**
- * Lands each failure and finding of a walk on a bug: one the job named, one this run
- * filed, or a new one.
+ * Põe cada falha e cada achado de um walk num bug: um que o job nomeou, um que esta run
+ * abriu, ou um novo.
  */
 export function filedBugsOf(props: {
   log: IWalkLog;

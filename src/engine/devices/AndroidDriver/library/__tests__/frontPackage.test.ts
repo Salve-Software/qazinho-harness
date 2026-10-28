@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { frontPackage } from '@/engine/devices/AndroidDriver/library';
 
-/** One real line out of `adb shell dumpsys window` on a Pixel 3. */
+/** Uma linha real do `adb shell dumpsys window` num Pixel 3. */
 const DUMPED =
   '  mCurrentFocus=Window{9fba570 u0 com.android.settings/com.android.settings.homepage.SettingsHomepageActivity}';
 

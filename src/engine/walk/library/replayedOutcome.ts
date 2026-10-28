@@ -3,8 +3,8 @@ import type { IShot } from '@/engine/devices/types';
 import { proofLinesOf } from './proofLinesOf';
 
 /**
- * A step walked again without the agent: passed, since its proof showed, with each line
- * of the proof as what the screen said.
+ * Um passo andado de novo sem o agente: passou, já que a prova apareceu, com cada linha
+ * da prova como o que a tela disse.
  */
 export function replayedOutcome(props: {
   step: IFlatStep;

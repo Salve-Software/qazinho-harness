@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { findLocator } from '@/engine/devices/WebDriver/library';
 import { fakeLocator, fakePage, locatorName } from './fakePage';
 
-/** A page where only the named ways of finding answer, each with how many it finds. */
+/**
+ * Uma página em que só os jeitos de achar nomeados respondem, cada um com quantos acha.
+ */
 function pageWith(found: Record<string, number>) {
   const answer = (name: string) => fakeLocator({ name, count: found[name] ?? 0 });
   const exactly = (options?: { exact?: boolean }) =>
@@ -23,8 +25,9 @@ function pageWith(found: Record<string, number>) {
 
 describe('findLocator', () => {
   /**
-   * "Cupom" named both a field and the "Aplicar cupom" button, and a fill found the button
-   * first: the run typed nothing and clicked Apply on an empty coupon.
+   * "Cupom" nomeava tanto um campo quanto o botão "Aplicar cupom", e um preenchimento
+   * achava o botão primeiro: a run não digitava nada e clicava em Aplicar com o cupom
+   * vazio.
    */
   it('finds a field to type in before a button that shares its name', async () => {
     const page = pageWith({ 'role:button': 1, label: 1, 'label:exact': 1 });
@@ -50,7 +53,7 @@ describe('findLocator', () => {
     ).toBe('role:button:exact');
   });
 
-  /** Three "Comprar" buttons, one per product: the agent names the one it means by number. */
+  /** Três botões "Comprar", um por produto: o agente nomeia o que quer pelo número. */
   it('takes the second of several when the agent says #2', async () => {
     const page = pageWith({ 'role:button:exact': 3 });
 
@@ -67,7 +70,10 @@ describe('findLocator', () => {
     ).toBe('text:exact#3');
   });
 
-  /** The agent copied the control the way look lists it, "button: Entrar", which is not its name. */
+  /**
+   * O agente copiou o controle do jeito que o look o lista, "button: Entrar", que não é o
+   * nome dele.
+   */
   it('finds a control the agent copied the way look lists it', async () => {
     const named = (name?: string) =>
       fakeLocator({ name: 'role:button', count: name === 'Entrar' ? 1 : 0 });
@@ -122,8 +128,9 @@ describe('findLocator', () => {
   });
 
   /**
-   * The menu's "Entrar" link and the form's "Entrar" button: look numbers them #1 and #2 in page
-   * order, and "Entrar #2" has to be the button, not the second of whatever role came first.
+   * O link "Entrar" do menu e o botão "Entrar" do formulário: o look os numera #1 e #2 na
+   * ordem da página, e "Entrar #2" tem que ser o botão, não o segundo de qualquer papel
+   * que veio primeiro.
    */
   it('takes "#2" as the second control of that name in the list look gave, whatever its role', async () => {
     const page = fakePage({

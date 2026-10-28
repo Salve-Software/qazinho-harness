@@ -1,6 +1,6 @@
 import type { ICaseRecipe, IRecipeBook } from '@/contract';
 
-/** The book with new recipes in, each one taking the place of the one its case had. */
+/** O livro com as receitas novas, cada uma no lugar da que o caso dela tinha. */
 export function bookWith(props: {
   book: IRecipeBook;
   recipes: ICaseRecipe[];

@@ -66,7 +66,7 @@ describe('findNode', () => {
     expect(findNode({ nodes: NODES, target: '  ' })).toBeNull();
   });
 
-  /** A screen titled "Entrar" with an "Entrar" button: the tap belongs on the button. */
+  /** Uma tela com o título "Entrar" e um botão "Entrar": o toque é no botão. */
   it('taps the control before the text that reads the same', () => {
     const node = NODES[0];
 

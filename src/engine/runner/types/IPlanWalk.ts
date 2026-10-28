@@ -3,8 +3,8 @@ import type { RunnerJob } from './RunnerJob';
 import type { ICaseRecipe, IFlatStep } from '@/contract';
 
 /**
- * One plan as a job walked it: the plan, its run's id, its steps, what the walk kept, the
- * recordings it made and why it broke off, if it did.
+ * Um plano como um job o andou: o plano, o id da run, os passos, o que o walk guardou, as
+ * gravações que fez e por que parou no meio, se parou.
  */
 export interface IPlanWalk {
   plan: RunnerJob['plans'][number];

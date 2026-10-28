@@ -1,8 +1,8 @@
 import { spawn } from 'node:child_process';
 
 /**
- * Signals an agent and everything it started: on POSIX the agent leads its own process
- * group, and on Windows, which has no signals, taskkill ends the whole tree.
+ * Sinaliza um agente e tudo o que ele iniciou: no POSIX o agente lidera o próprio grupo
+ * de processos, e no Windows, que não tem sinais, o taskkill encerra a árvore toda.
  */
 export function killTree(
   child: {

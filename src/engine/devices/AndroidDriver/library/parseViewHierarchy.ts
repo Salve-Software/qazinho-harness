@@ -10,8 +10,8 @@ const ATTRIBUTE = /([\w-]+)="([^"]*)"/g;
 const EDITABLE = ['EditText', 'AutoCompleteTextView', 'SearchView'];
 
 /**
- * Reads `uiautomator dump`. An attribute value never holds a raw quote, so this stays a
- * scan.
+ * Lê o `uiautomator dump`. O valor de um atributo nunca guarda uma aspa crua, então isto
+ * fica uma varredura.
  */
 export function parseViewHierarchy(xml: string): IScreenNode[] {
   return [...xml.matchAll(NODE)].flatMap(([, one]) => {

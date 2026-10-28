@@ -1,9 +1,6 @@
 import type { ShrinkImage } from '@/engine/devices/types';
 
-/**
- * The SDK and AVD the QA already has, the apk under test, and how to shrink what the
- * agent sees.
- */
+/** O SDK e o AVD que o QA já tem, o apk em teste, e como reduzir o que o agente vê. */
 export interface IAndroidDriver {
   sdkRoot: string;
   avd: string;

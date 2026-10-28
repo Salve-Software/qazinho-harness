@@ -2,8 +2,8 @@ import type { IScreenElement } from '@/engine/devices/IosDriver/types';
 import { ordinalOf, withoutRole } from '@/engine/devices/library';
 
 /**
- * The agent names what a person would read, the label, "#2" for the second of several,
- * and a control copied as look lists it.
+ * O agente nomeia o que uma pessoa leria, o rótulo, "#2" para o segundo de vários, e um
+ * controle copiado como o look o lista.
  */
 export function findElement(props: {
   elements: IScreenElement[];

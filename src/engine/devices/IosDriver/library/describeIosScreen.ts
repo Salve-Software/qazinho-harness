@@ -3,8 +3,8 @@ import { IOS } from '@/engine/devices/IosDriver/constants';
 import { numberDuplicates } from '@/engine/devices/library';
 
 /**
- * What the agent is allowed to look at: what a person would read on the screen, and the
- * home screen said as such when the app is not open.
+ * O que o agente pode ver: o que uma pessoa leria na tela, e a tela inicial dita como tal
+ * quando o app não está aberto.
  */
 export function describeIosScreen(props: {
   elements: IScreenElement[];

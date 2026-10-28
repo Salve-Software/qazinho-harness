@@ -1,8 +1,8 @@
 import type { McpHost } from '@/tools/McpHost.class';
 
 /**
- * Where the developer's Claude Code is, the model the job asks for, the host that serves
- * QAzinho's tools to it, and the folder it runs in.
+ * Onde está o Claude Code do desenvolvedor, o modelo que o job pede, o host que serve as
+ * ferramentas do QAzinho a ele, e a pasta em que roda.
  */
 export interface IClaudeCodeAgent {
   command: string;

@@ -5,7 +5,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { describe, expect, it } from 'vitest';
 import { GATEWAY_AGENT, GatewayAgent } from '@/engine/agents';
 
-/** A model message with the blocks a test gives it, as the Messages API answers. */
+/** Uma mensagem do modelo com os blocos que o teste dá, como a Messages API responde. */
 function messageOf(
   content: Anthropic.ContentBlock[],
   stop: Anthropic.StopReason = 'tool_use',
@@ -25,7 +25,10 @@ const use = (call: { id: string; name: string; input: Record<string, unknown> })
 
 const said = (text: string) => ({ type: 'text', text }) as Anthropic.TextBlock;
 
-/** A client that answers each call with the next message the test scripted, or the error it holds, and keeps every request. */
+/**
+ * Um cliente que responde cada chamada com a próxima mensagem do roteiro do teste, ou o
+ * erro que ele guarda, e guarda cada requisição.
+ */
 function fakeClient(script: (Anthropic.Message | Error)[]) {
   const asked: Anthropic.MessageCreateParamsNonStreaming[] = [];
   const signals: AbortSignal[] = [];
@@ -43,7 +46,7 @@ function fakeClient(script: (Anthropic.Message | Error)[]) {
   return { client, asked, signals };
 }
 
-/** A device that shows a cart and keeps every action and report. */
+/** Um dispositivo que mostra um carrinho e guarda cada ação e relato. */
 function turnOn(overrides: Partial<ICaseTurn> = {}) {
   const acted: string[] = [];
   const reports: IStepReport[] = [];

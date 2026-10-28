@@ -1,8 +1,8 @@
 const SIGNATURE = [0x89, 0x50, 0x4e, 0x47];
 
 /**
- * The width and height a PNG says it has, from its header; null when the bytes are not a
- * PNG.
+ * A largura e a altura que um PNG diz ter, pelo cabeçalho; null quando os bytes não são
+ * um PNG.
  */
 export function pngSizeOf(image: Buffer): { width: number; height: number } | null {
   if (image.length < 24 || SIGNATURE.some((byte, index) => image[index] !== byte))

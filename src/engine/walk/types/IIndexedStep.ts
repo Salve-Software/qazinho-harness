@@ -1,6 +1,6 @@
 import type { IFlatStep } from '@/contract';
 
-/** A step of a case with its place in the whole run. */
+/** Um passo de um caso com o lugar na run inteira. */
 export interface IIndexedStep {
   step: IFlatStep;
   index: number;

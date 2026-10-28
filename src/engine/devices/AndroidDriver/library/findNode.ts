@@ -3,8 +3,8 @@ import { ordinalOf, withoutRole } from '@/engine/devices/library';
 import { isListedControl } from './isListedControl';
 
 /**
- * The agent names what a person would read, a control before text that reads the same,
- * "#2" for the second look listed, and a control copied as look lists it.
+ * O agente nomeia o que uma pessoa leria, um controle antes de um texto igual, "#2" para
+ * o segundo que o look lista, e um controle copiado como o look o lista.
  */
 export function findNode(props: {
   nodes: IScreenNode[];

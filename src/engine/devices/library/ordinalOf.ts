@@ -1,6 +1,6 @@
 /**
- * Reads "Buy #2" as the second control that reads "Buy"; a name with no number is the
- * first, and says it had none.
+ * Lê "Buy #2" como o segundo controle que diz "Buy"; um nome sem número é o primeiro, e
+ * diz que não tinha número.
  */
 export function ordinalOf(target: string): {
   name: string;

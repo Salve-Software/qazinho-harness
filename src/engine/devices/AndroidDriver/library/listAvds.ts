@@ -3,8 +3,8 @@ import { parseAvds } from './parseAvds';
 import { runAdb } from './runAdb';
 
 /**
- * The emulators the QA already made. QAzinho never creates one, the way it never
- * downloads an SDK.
+ * Os emuladores que o QA já criou. O QAzinho nunca cria um, do mesmo jeito que nunca
+ * baixa um SDK.
  */
 export async function listAvds(sdkRoot: string): Promise<string[]> {
   const listed = await runAdb({

@@ -11,7 +11,7 @@ function box(kind: string, ...parts: Buffer[]): Buffer {
   return Buffer.concat([head, body]);
 }
 
-/** A version-0 tkhd: the size sits after its matrix, as 16.16 fixed point. */
+/** Um tkhd versão 0: o tamanho fica depois da matriz, em ponto fixo 16.16. */
 function tkhd(width: number, height: number): Buffer {
   const body = Buffer.alloc(84);
 
@@ -71,7 +71,10 @@ describe('mp4FactsOf', () => {
     ).toEqual({ durationMs: 5_798, width: 1206, height: 2622 });
   });
 
-  /** simctl writes a movie header twice as long as what plays; a <video> goes by the track. */
+  /**
+   * O simctl escreve um cabeçalho de filme duas vezes mais longo do que o que toca; um
+   * <video> segue a trilha.
+   */
   it("goes by the video track's own length, not the movie header's", () => {
     expect(
       mp4FactsOf(

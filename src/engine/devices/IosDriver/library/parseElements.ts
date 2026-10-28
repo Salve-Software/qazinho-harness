@@ -9,8 +9,8 @@ type Described = {
 };
 
 /**
- * `idb ui describe-all` has answered with both a JSON array and one object per line; take
- * either.
+ * O `idb ui describe-all` já respondeu tanto com um array JSON quanto com um objeto por
+ * linha; aceite os dois.
  */
 export function parseElements(described: string): IScreenElement[] {
   const trimmed = described.trim();

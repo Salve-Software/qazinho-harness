@@ -2,8 +2,8 @@ import type { CaseTurnEnd } from './CaseTurnEnd';
 import type { ICaseTurn } from './ICaseTurn';
 
 /**
- * The agent a walk hands each case to, whatever reaches the model: it acts through the
- * device tools until its turn ends, and a turn under way can be ended.
+ * O agente a que um walk entrega cada caso, seja qual for o caminho até o modelo: age
+ * pelas ferramentas do dispositivo até o turno acabar, e um turno pode ser encerrado.
  */
 export interface ICaseAgent {
   walk: (turn: ICaseTurn) => Promise<CaseTurnEnd>;

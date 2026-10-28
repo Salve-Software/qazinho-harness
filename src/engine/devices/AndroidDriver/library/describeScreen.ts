@@ -3,7 +3,7 @@ import { ANDROID } from '@/engine/devices/AndroidDriver/constants';
 import { numberDuplicates } from '@/engine/devices/library';
 import { isListedControl } from './isListedControl';
 
-/** What the agent is allowed to look at: what a person would read on the screen. */
+/** O que o agente pode ver: o que uma pessoa leria na tela. */
 export function describeScreen(props: { nodes: IScreenNode[]; app: string }): string {
   const text = props.nodes
     .filter((node) => node.text.length > 0)

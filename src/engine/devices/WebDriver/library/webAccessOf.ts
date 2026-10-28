@@ -5,8 +5,8 @@ const USER = 'BASIC_AUTH_USER';
 const PASSWORD = 'BASIC_AUTH_PASSWORD';
 
 /**
- * What lets a run into a protected environment, out of the project's variables by their
- * names: Vercel's bypass for automation, and a browser sign-in's user and password.
+ * O que abre um ambiente protegido para uma run, pelas variáveis do projeto: o bypass de
+ * automação da Vercel, e usuário e senha de um login do navegador.
  */
 export function webAccessOf(variables: { name: string; value: string }[]): IWebAccess {
   const valueOf = (name: string) =>

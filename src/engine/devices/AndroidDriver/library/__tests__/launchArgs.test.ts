@@ -3,9 +3,10 @@ import { launchArgs } from '@/engine/devices/AndroidDriver/library';
 
 describe('launchArgs', () => {
   /**
-   * A foldable or tablet AVD has no physical keys, and monkey aborts on one ("SYS_KEYS has no
-   * physical keys") unless told to send none: the app never opened and every run broke at once.
-   * adb does not run here, so the test reads the declaration.
+   * Um AVD dobrável ou tablet não tem teclas físicas, e o monkey aborta num desses
+   * ("SYS_KEYS has no physical keys") a menos que mandem não enviar nenhuma: o app nunca
+   * abria e toda run quebrava na hora. O adb não roda aqui, então o teste lê a
+   * declaração.
    */
   it('sends no system key, so a device without physical keys still opens the app', () => {
     const args = launchArgs('shop.app');

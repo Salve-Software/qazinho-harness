@@ -2,8 +2,8 @@ import type { ICaseRecipe, IFlatStep, IStepAction, TargetKind } from '@/contract
 import { fingerprintOf } from './fingerprintOf';
 
 /**
- * A case a run walked through, as a recipe: what each step did and the words that proved
- * it; null when a step left no proof to check.
+ * Um caso que uma run andou, como receita: o que cada passo fez e as palavras que o
+ * provaram; null quando um passo não deixou prova a conferir.
  */
 export function recipeOf(props: {
   steps: IFlatStep[];

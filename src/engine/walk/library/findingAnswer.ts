@@ -1,6 +1,6 @@
 /**
- * What the agent hears once a bug it saw is in: counted on the bug already open it named,
- * or filed anew, then what to do next.
+ * O que o agente ouve quando um bug que ele viu entra: contado no bug já aberto que ele
+ * nomeou, ou aberto como novo, e então o que fazer em seguida.
  */
 export function findingAnswer(props: {
   asked: string | undefined;

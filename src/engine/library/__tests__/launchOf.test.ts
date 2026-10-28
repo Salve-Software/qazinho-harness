@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { launchOf } from '@/engine/library';
 
-/** The shim npm 10 writes for a package's bin, here Claude Code's. */
+/** O shim que o npm 10 escreve para o bin de um pacote, aqui o do Claude Code. */
 const NPM_SHIM = [
   '@ECHO off',
   'GOTO start',
@@ -53,7 +53,10 @@ describe('launchOf', () => {
     ).toBe('C:\\Users\\Ana\\.local\\bin\\claude.exe');
   });
 
-  /** Node refuses to spawn a .cmd without a shell, and cmd.exe would mangle a JSON argument. */
+  /**
+   * O Node se recusa a iniciar um .cmd sem shell, e o cmd.exe estragaria um argumento
+   * JSON.
+   */
   it('runs the script an npm shim points at with node, its arguments untouched', () => {
     const schema = '{"type":"object","properties":{"a":{"type":"string"}}}';
 

@@ -2,8 +2,8 @@ import type { ISightingBody } from './ISightingBody';
 import type { Severity } from '@/contract';
 
 /**
- * A bug a runner files, as the API takes it: its words, where it broke, how to reach it,
- * its screens by key, and the run that caught it.
+ * Um bug que um runner abre, como a API o recebe: as palavras, onde quebrou, como chegar
+ * até ele, as telas pela chave, e a run que o pegou.
  */
 export interface IBugBody {
   severity: Severity;

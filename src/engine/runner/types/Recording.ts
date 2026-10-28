@@ -1,6 +1,6 @@
 /**
- * How a job records its device: a browser's frames through the machine's ffmpeg into a
- * file, a phone into a folder of its own, or not at all.
+ * Como um job grava o dispositivo: os frames de um navegador pelo ffmpeg da máquina num
+ * arquivo, um celular numa pasta própria, ou nada.
  */
 export type Recording =
   | { kind: 'frames'; file: string }

@@ -1,7 +1,8 @@
 import type { IFlatStep } from '@/contract';
 
 /**
- * The flat plan cut back into its cases, each step keeping its place in the whole run.
+ * O plano achatado cortado de volta nos casos, cada passo mantendo o lugar na run
+ * inteira.
  */
 export function casesOf(steps: IFlatStep[]): { step: IFlatStep; index: number }[][] {
   const cases: { step: IFlatStep; index: number }[][] = [];

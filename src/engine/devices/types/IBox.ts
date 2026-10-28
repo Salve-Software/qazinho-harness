@@ -1,7 +1,4 @@
-/**
- * Where something on the device's screen sits and how big it is, in the screen's own
- * unit.
- */
+/** Onde algo está na tela do dispositivo e qual o tamanho, na unidade da própria tela. */
 export interface IBox {
   x: number;
   y: number;

@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { pngSizeOf } from '@/engine/devices/library';
 
-/** The first 24 bytes of a PNG: its signature, then the IHDR chunk with width and height. */
+/**
+ * Os primeiros 24 bytes de um PNG: a assinatura, depois o chunk IHDR com largura e
+ * altura.
+ */
 function header(width: number, height: number): Buffer {
   const bytes = Buffer.alloc(24);
 

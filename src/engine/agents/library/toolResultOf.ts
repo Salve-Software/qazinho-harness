@@ -2,8 +2,8 @@ import type { ToolAnswer } from '@/tools/types';
 import type Anthropic from '@anthropic-ai/sdk';
 
 /**
- * A device tool's answer as the Messages API takes a tool's result: its words, and the
- * screen as a picture.
+ * A resposta de uma ferramenta de dispositivo como a Messages API recebe o resultado de
+ * uma ferramenta: as palavras, e a tela como imagem.
  */
 export function toolResultOf(props: {
   id: string;

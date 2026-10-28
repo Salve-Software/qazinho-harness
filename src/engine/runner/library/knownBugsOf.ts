@@ -1,7 +1,7 @@
 import type { IKnownBug } from '@/contract';
 import type { RunnerJob } from '@/engine/runner/types';
 
-/** The bugs already open on one plan, as its walk's agents hear of them. */
+/** Os bugs já abertos num plano, como os agentes do walk ficam sabendo deles. */
 export function knownBugsOf(props: {
   bugs: RunnerJob['bugs'];
   planId: string;

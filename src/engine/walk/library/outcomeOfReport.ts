@@ -3,8 +3,8 @@ import type { IShot } from '@/engine/devices/types';
 import type { IStepReport } from '@/tools/servers/device/types';
 
 /**
- * A step as the run files it: the agent's report, the screenshot taken when it arrived,
- * the time it took and when it came; a failure keeps the Figma frame it is off.
+ * Um passo como a run o registra: o relato do agente, a captura feita quando ele chegou,
+ * o tempo que levou e quando veio; uma falha guarda o frame do Figma de que destoa.
  */
 export function outcomeOfReport(props: {
   report: IStepReport;

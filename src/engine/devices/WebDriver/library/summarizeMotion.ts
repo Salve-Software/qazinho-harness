@@ -1,8 +1,8 @@
 import type { IActionMotion } from '@/contract';
 
 /**
- * What the page's probe recorded since an action began, summed into how much the page
- * moved.
+ * O que a sonda da página gravou desde que uma ação começou, somado em quanto a página se
+ * mexeu.
  */
 export function summarizeMotion(props: {
   shifts: { value: number; hadInput: boolean }[];

@@ -35,7 +35,9 @@ interface ICall {
   body: string | null;
 }
 
-/** A fetch that answers each call as the test says, and keeps what each sent. */
+/**
+ * Um fetch que responde cada chamada como o teste diz, e guarda o que cada uma mandou.
+ */
 function fakeFetch(
   answer: (call: ICall) => Response = () => new Response(null, { status: 204 }),
 ) {

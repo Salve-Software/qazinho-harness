@@ -4,8 +4,8 @@ import { extname, join } from 'node:path';
 const WINDOWS_EXTENSIONS = ['.exe', '.cmd', '.bat', '.com'];
 
 /**
- * Finds a binary the way the platform's shell would, with no process per check; on
- * Windows, by extension.
+ * Acha um binário do jeito que o shell da plataforma acharia, sem um processo por
+ * checagem; no Windows, pela extensão.
  */
 export function findOnPath(props: {
   command: string;

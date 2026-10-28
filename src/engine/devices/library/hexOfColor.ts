@@ -2,8 +2,8 @@ const RGB =
   /^rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)(?:\s*[,/]\s*([\d.]+%?))?\s*\)$/i;
 
 /**
- * A colour as a design file writes it: `#1F6FEB`, with its opacity when it has one, or
- * "transparent"; any other notation stays as the browser wrote it.
+ * Uma cor como um arquivo de design a escreve: `#1F6FEB`, com a opacidade quando tem, ou
+ * "transparent"; qualquer outra notação fica como o navegador a escreveu.
  */
 export function hexOfColor(color: string): string {
   const read = RGB.exec(color.trim());

@@ -6,7 +6,10 @@ describe('adbTextsOf', () => {
     expect(adbTextsOf('Ana Souza')).toEqual(['Ana%sSouza']);
   });
 
-  /** A password went through the phone's shell as typed: $& and (x) never reached the field. */
+  /**
+   * Uma senha passava pelo shell do celular como foi digitada: $& e (x) nunca chegavam ao
+   * campo.
+   */
   it("escapes every character the phone's shell would read instead of typing", () => {
     expect(adbTextsOf("P@ss $& (x) 'a' ;b|c<d>e*f?g[h]{i}~#!\\`")).toEqual([
       "P@ss%s\\$\\&%s\\(x\\)%s\\'a\\'%s\\;b\\|c\\<d\\>e\\*f\\?g\\[h\\]\\{i\\}\\~\\#\\!\\\\\\`",

@@ -9,8 +9,8 @@ import type {
 } from '@/contract';
 
 /**
- * What a run needs from a device, browser or phone; a browser also tells its locators and
- * requests.
+ * O que uma run precisa de um dispositivo, navegador ou celular; um navegador também diz
+ * os locators e as requisições.
  */
 export interface IDeviceDriver {
   open: () => Promise<void>;

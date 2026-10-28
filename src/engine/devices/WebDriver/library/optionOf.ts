@@ -1,6 +1,6 @@
 /**
- * The option a fill means on a dropdown: its words or its value, exact first, then
- * regardless of case; null when none does.
+ * A opção que um preenchimento quer dizer num dropdown: as palavras ou o valor, exato
+ * primeiro, depois sem diferenciar maiúsculas; null quando nenhuma serve.
  */
 export function optionOf(props: {
   options: { label: string; value: string }[];

@@ -1,6 +1,6 @@
 import type { IFlatStep } from '@/contract';
 
-/** A two-step case, as the page flattens it for a run. */
+/** Um caso de dois passos, como a página o achata para uma run. */
 export const STEPS: IFlatStep[] = [
   {
     caseId: 'TC-01',

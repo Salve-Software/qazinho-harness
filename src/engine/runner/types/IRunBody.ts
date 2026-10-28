@@ -1,8 +1,8 @@
 import type { IRunStepBody } from './IRunStepBody';
 
 /**
- * A plan's run as a runner sends it: when and how it ended, on what, how its cases went,
- * and its video and requests by key.
+ * A run de um plano como um runner a manda: quando e como terminou, em quê, como foram os
+ * casos, e o vídeo e as requisições pela chave.
  */
 export interface IRunBody {
   kind: 'run';

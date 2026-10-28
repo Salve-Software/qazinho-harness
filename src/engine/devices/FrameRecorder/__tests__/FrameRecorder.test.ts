@@ -11,7 +11,9 @@ const FFMPEG = findOnPath({
   directories: (process.env.PATH ?? '').split(delimiter),
 });
 
-/** A frame ffmpeg itself drew, so the test needs no picture of its own. */
+/**
+ * Um frame que o próprio ffmpeg desenhou, para o teste não precisar de imagem própria.
+ */
 function frameOf(ffmpeg: string): Buffer {
   return execFileSync(ffmpeg, [
     '-hide_banner',

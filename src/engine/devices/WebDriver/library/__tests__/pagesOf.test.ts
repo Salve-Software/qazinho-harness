@@ -31,7 +31,7 @@ describe('pagesOf', () => {
     ).toEqual([]);
   });
 
-  /** Opening a link is a GET, and some apps sign out or delete on one. */
+  /** Abrir um link é um GET, e alguns apps saem da conta ou apagam algo num deles. */
   it('never follows a link that signs out or deletes', () => {
     expect(
       pagesOf({

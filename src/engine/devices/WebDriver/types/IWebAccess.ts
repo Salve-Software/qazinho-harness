@@ -1,6 +1,6 @@
 /**
- * What lets the browser into a protected environment, sent to the app's origin alone:
- * headers and a sign-in.
+ * O que deixa o navegador entrar num ambiente protegido, mandado só à origem do app:
+ * headers e um login.
  */
 export interface IWebAccess {
   headers: Record<string, string>;

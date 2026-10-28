@@ -2,8 +2,8 @@ const LEAVING =
   /\/(logout|log-out|signout|sign-out|sair|delete|remove|excluir|apagar|destroy)(\/|$|\?)/i;
 
 /**
- * The pages a menu leads to on the app's own site, once each, in order: no other site, no
- * anchor, nothing that signs out or deletes.
+ * As páginas a que um menu leva no próprio site do app, uma vez cada, em ordem: nenhum
+ * outro site, nenhuma âncora, nada que saia da conta ou apague.
  */
 export function pagesOf(props: { hrefs: string[]; current: string }): string[] {
   let origin: string;

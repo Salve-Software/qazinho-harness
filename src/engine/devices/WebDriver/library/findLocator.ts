@@ -4,8 +4,8 @@ import { CONTROL_SELECTOR } from '@/engine/devices/WebDriver/constants';
 import { listControls } from './listControls';
 
 /**
- * Finds what the agent named the way a person would: a field to type in or a control to
- * click, by name.
+ * Acha o que o agente nomeou do jeito que uma pessoa acharia: um campo para digitar ou um
+ * controle para clicar, pelo nome.
  */
 export async function findLocator(props: {
   page: Page;

@@ -8,8 +8,9 @@ import { ClaudeCodeAgent } from '@/engine/agents';
 import { McpHost } from '@/tools/McpHost.class';
 
 /**
- * A fake `claude`: it keeps the arguments it was started with and what it read on stdin, then
- * says a turn cost two cents, sleeps when the prompt asks it to, or fails when it is told to.
+ * Um `claude` falso: guarda os argumentos com que foi iniciado e o que leu no stdin,
+ * depois diz que um turno custou dois centavos, dorme quando o prompt pede, ou falha
+ * quando mandam.
  */
 const FAKE = `#!/usr/bin/env node
 const { writeFileSync } = require('node:fs');

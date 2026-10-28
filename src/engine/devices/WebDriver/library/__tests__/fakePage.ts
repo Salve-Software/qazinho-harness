@@ -8,7 +8,10 @@ type FakeLocator = {
   nth: (index: number) => Locator;
 };
 
-/** A stand-in for the browser: the library talks to a port, so a test does not need Chrome. */
+/**
+ * Um substituto do navegador: a biblioteca fala com uma porta, então um teste não precisa
+ * do Chrome.
+ */
 export function fakeLocator(props: { name: string; count: number }): Locator {
   const locator: FakeLocator = {
     name: props.name,

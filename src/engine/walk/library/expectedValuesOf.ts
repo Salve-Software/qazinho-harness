@@ -6,8 +6,8 @@ const PATTERNS = [
 const QUOTED = /["“]([^"”\n]{2,80})["”]/g;
 
 /**
- * The values a step's expected result names, in its order: prices, percentages and the
- * words it quotes, none inside another.
+ * Os valores que o resultado esperado de um passo nomeia, na ordem: preços, porcentagens
+ * e as palavras que ele cita, nenhum dentro de outro.
  */
 export function expectedValuesOf(expected: string): string[] {
   const found = [

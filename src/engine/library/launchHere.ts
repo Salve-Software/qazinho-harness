@@ -5,8 +5,8 @@ import { findOnPath } from './findOnPath';
 import { launchOf } from './launchOf';
 
 /**
- * How to start a command on this machine, an npm shim on Windows read from disk and its
- * node found beside it or on PATH.
+ * Como iniciar um comando nesta máquina, um shim do npm no Windows lido do disco e o node
+ * dele achado ao lado ou no PATH.
  */
 export function launchHere(props: { command: string; args: string[] }): ILaunch {
   const shim = shimOf(props.command);
