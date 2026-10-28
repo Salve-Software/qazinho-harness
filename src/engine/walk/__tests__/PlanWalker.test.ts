@@ -220,6 +220,29 @@ describe('PlanWalker', () => {
     ]);
   });
 
+  it('keeps in the proof each value the step expects that the screen showed and the agent left out', async () => {
+    const agent = fakeAgent(async (turn) => {
+      await turn.device.onReport?.(report(1, { proof: '1 item: Caneca' }));
+      await turn.device.onReport?.(report(2, { proof: 'Pix' }));
+
+      return undefined;
+    });
+    const steps: IFlatStep[] = [
+      { ...STEPS[0]!, expected: 'The cart shows 1 item and the total R$ 30,00' },
+      { ...STEPS[1]!, expected: 'The Pix code shows' },
+    ];
+    const { ended } = await walkWith({
+      agent,
+      steps,
+      screen: { text: 'Cart 1 item: Caneca Total: R$ 30,00 Pix' },
+    });
+
+    expect(ended.recorded[0]?.steps.map(({ proof }) => proof)).toEqual([
+      '1 item: Caneca\nR$ 30,00',
+      'Pix',
+    ]);
+  });
+
   it('heals a case whose recording no longer shows its proof, on the app opened anew', async () => {
     const agent = passingAgent();
     const { steps, device } = await walkWith({

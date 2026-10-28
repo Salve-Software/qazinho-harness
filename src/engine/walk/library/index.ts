@@ -1,6 +1,7 @@
 export * from './bookWith';
 export * from './callLineOf';
 export * from './casesOf';
+export * from './expectedValuesOf';
 export * from './findingAnswer';
 export * from './fingerprintOf';
 export * from './hiddenValues';
@@ -10,6 +11,7 @@ export * from './outcomeOfReport';
 export * from './privateUrlOf';
 export * from './proofHolds';
 export * from './proofLinesOf';
+export * from './proofWithValues';
 export * from './readBook';
 export * from './recipeFor';
 export * from './recipeOf';

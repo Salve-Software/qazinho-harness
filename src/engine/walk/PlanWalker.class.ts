@@ -31,10 +31,12 @@ import { join } from 'node:path';
 import { RUN_WALK, UNWALKED } from './constants';
 import {
   casesOf,
+  expectedValuesOf,
   findingAnswer,
   keptBugId,
   outcomeOfReport,
   proofHolds,
+  proofWithValues,
   recipeFor,
   recipeOf,
   recordedAction,
@@ -165,6 +167,7 @@ export class PlanWalker {
     const pending = [...props.steps];
     const actions = new Map<number, IStepAction[]>();
     const proofs = new Map<number, string>();
+    const device = variablePort({ device: this.driver, values: this.values });
     let began = Date.now();
     let isOver = false;
     let over: () => void = () => undefined;
@@ -220,8 +223,20 @@ export class PlanWalker {
         outcome: props.isHealing ? { ...outcome, by: 'healed' } : outcome,
       });
 
-      if (report.verdict === 'passed')
-        proofs.set(walking.step.numberInCase, report.proof);
+      if (report.verdict === 'passed') {
+        const values = expectedValuesOf(walking.step.expected);
+
+        proofs.set(
+          walking.step.numberInCase,
+          values.length === 0
+            ? report.proof
+            : proofWithValues({
+                proof: report.proof,
+                values,
+                screen: await device.describe().catch(() => ''),
+              }),
+        );
+      }
 
       if (report.verdict === 'failed' && report.title.length > 0)
         props.filed.push(report.title);
@@ -312,7 +327,6 @@ export class PlanWalker {
       );
     };
 
-    const device = variablePort({ device: this.driver, values: this.values });
     const port: IDevicePort = {
       describe: () => device.describe(),
       inspect: (target) => device.inspect(target),
