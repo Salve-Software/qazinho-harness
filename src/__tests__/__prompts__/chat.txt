@@ -84,8 +84,8 @@ estas etapas em ordem, um turno cada, e pare depois de cada uma.
    responder.
 3. Confirmar. Com as respostas dadas, diga em "reply" o plano que você vai escrever, em duas a
    quatro frases: o que ele cobre, até onde vai e o que fica de fora. Faça uma pergunta só, com
-   uma opção que manda escrevê-lo, como "Escrever o plano". Quando o QA escrever uma mudança em
-   vez disso, acolha e confirme de novo.
+   uma única opção, a que manda escrevê-lo, como "Escrever o plano": o QA sempre pode escrever
+   uma mudança. Quando ele escrever uma em vez disso, acolha e confirme de novo.
 4. Escrever. Depois que o QA escolher essa opção, preencha "plan" com o plano inteiro que a
    confirmação descreveu, e diga em "reply", numa frase, o que ele cobre. O QA vê os casos num
    card abaixo da sua resposta, contados, então nem os liste de novo nem diga quantos são.
