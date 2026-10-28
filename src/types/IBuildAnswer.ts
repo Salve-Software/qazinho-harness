@@ -1,6 +1,6 @@
 /**
- * What the agent that built the app answered: where the .apk or .app is, what it built,
- * or why it could not.
+ * O que o agente que construiu o app respondeu: onde está o .apk ou o .app, o que
+ * construiu, ou por que não conseguiu.
  */
 export interface IBuildAnswer {
   artifact: string;

@@ -1,6 +1,6 @@
 /**
- * What the reader found in a pull request: the steps it breaks as they will read, the
- * cases it touches, and the cases it asks for; each named by the file that changes it.
+ * O que o leitor achou num pull request: os passos que ele quebra como ficarão, os casos
+ * que toca e os casos que pede; cada um nomeado pelo arquivo que o muda.
  */
 export interface IPullAnswer {
   breaks: {

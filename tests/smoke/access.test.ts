@@ -1,8 +1,8 @@
 /**
- * A protected environment, walked for real on Chrome: the app's server asks for Vercel's bypass
- * header and a browser sign-in on every request, and a third-party server the page loads from
- * keeps what it was sent. The driver gets in with the project's variables, and the other origin
- * hears neither the secret nor the password.
+ * Um ambiente protegido, andado de verdade no Chrome: o servidor do app pede o header de
+ * bypass da Vercel e um login do navegador em toda requisição, e um servidor de terceiros
+ * de que a página carrega guarda o que recebeu. O driver entra com as variáveis do
+ * projeto, e a outra origem não ouve nem o segredo nem a senha.
  */
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';

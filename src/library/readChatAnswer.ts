@@ -2,8 +2,8 @@ import type { IChatAnswer } from '@/contract';
 import { CHAT_ANSWER } from '@/schemas';
 
 /**
- * Checks a chat answer against its schema; prose is still a reply, and a part that breaks
- * the schema costs only itself.
+ * Confere uma resposta do chat contra o schema; prosa ainda é uma resposta, e uma parte
+ * que quebra o schema só custa a si mesma.
  */
 export function readChatAnswer(text: string): IChatAnswer | null {
   const json = jsonOf(text);

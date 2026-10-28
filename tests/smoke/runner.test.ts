@@ -1,7 +1,8 @@
 /**
- * The CI runner, walked for real: `dist/runner.js` started the way QAzinho's API starts a machine,
- * against a fake API that keeps every call, on real Chrome over a page this test serves. The job
- * gives no agent, so the case with a recording is walked again from it and the other is skipped.
+ * O runner do CI, andado de verdade: o `dist/runner.js` iniciado do jeito que a API do
+ * QAzinho inicia uma máquina, contra uma API falsa que guarda cada chamada, num Chrome de
+ * verdade sobre uma página que este teste serve. O job não dá agente, então o caso com
+ * gravação é andado de novo a partir dela e o outro é pulado.
  */
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';

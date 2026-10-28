@@ -1,8 +1,8 @@
 import type { TargetKind } from '@/contract';
 
 /**
- * What QAzinho saw when it opened the app under test for the chat, in a browser or on a
- * phone, or why it could not open it.
+ * O que o QAzinho viu ao abrir o app em teste para o chat, num navegador ou num celular,
+ * ou por que não conseguiu abri-lo.
  */
 export type AppLook =
   | { kind: TargetKind; where: string; isOpen: true; page: string }

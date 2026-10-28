@@ -1,6 +1,6 @@
 /**
- * A broken test of the team's suite as its fixer reads it: where it is, how it failed and
- * its screens.
+ * Um teste quebrado da suíte do time como quem o conserta o lê: onde está, como falhou e
+ * as telas.
  */
 export interface IBrokenTest {
   title: string;

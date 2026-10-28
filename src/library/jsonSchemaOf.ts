@@ -2,8 +2,8 @@ import type { z } from 'zod';
 import { toJSONSchema } from 'zod';
 
 /**
- * A zod schema as the JSON Schema an agent reads, without the "$schema" key Claude Code
- * chokes on.
+ * Um schema zod como o JSON Schema que um agente lê, sem a chave "$schema" em que o
+ * Claude Code engasga.
  */
 export function jsonSchemaOf(schema: z.ZodType): Record<string, unknown> {
   const { $schema: _, ...json } = toJSONSchema(schema);

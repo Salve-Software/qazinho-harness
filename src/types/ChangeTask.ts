@@ -2,8 +2,8 @@ import type { IBrokenTest } from './IBrokenTest';
 import type { IWantedTest } from './IWantedTest';
 
 /**
- * What the agent changing a team's suite is there to do: fix a test that broke, or write
- * a new one.
+ * O que o agente que muda a suíte de um time vai fazer: consertar um teste que quebrou,
+ * ou escrever um novo.
  */
 export type ChangeTask =
   { kind: 'fix'; broken: IBrokenTest } | { kind: 'write'; wanted: IWantedTest };

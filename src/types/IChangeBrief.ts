@@ -2,8 +2,8 @@ import type { ChangeTask } from './ChangeTask';
 import type { Language } from '@/contract';
 
 /**
- * What an agent changing a team's suite is handed: its copy, config, branch, recent
- * commits and the task.
+ * O que um agente que muda a suíte de um time recebe: a cópia, a config, a branch, os
+ * commits recentes e a tarefa.
  */
 export interface IChangeBrief {
   dir: string;

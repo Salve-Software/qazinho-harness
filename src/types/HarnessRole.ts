@@ -1,6 +1,6 @@
 /**
- * Who the agent is in a call: chat, runner, explorer, assistant, builder, automator,
- * reporter or reader.
+ * Quem o agente é numa chamada: chat, runner, explorer, assistant, builder, automator,
+ * reporter ou reader.
  */
 export type HarnessRole =
   | 'chat'

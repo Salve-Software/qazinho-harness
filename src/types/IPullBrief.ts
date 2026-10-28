@@ -1,8 +1,8 @@
 import type { Language } from '@/contract';
 
 /**
- * What the reader weighs a pull request with: the PR, its patches, its issue, the plans
- * and the cases asked.
+ * Com o que o leitor pesa um pull request: o PR, os patches, a issue, os planos e os
+ * casos pedidos.
  */
 export interface IPullBrief {
   pull: {

@@ -20,9 +20,9 @@ describe('CHAT_SCHEMA', () => {
   });
 
   /**
-   * Claude Code drops a --json-schema that carries "$schema" without a word: it stops offering
-   * the StructuredOutput tool, and the agent answers in prose. z.toJSONSchema writes it, so it
-   * has to be taken out.
+   * O Claude Code descarta sem uma palavra um --json-schema que traz "$schema": ele para
+   * de oferecer a ferramenta StructuredOutput, e o agente responde em prosa. O
+   * z.toJSONSchema o escreve, então ele tem que ser tirado.
    */
   it('carries no "$schema", which makes the CLI ignore the schema', () => {
     expect(JSON.parse(CHAT_SCHEMA)).not.toHaveProperty('$schema');

@@ -2,8 +2,8 @@ import type { IReviewAnswer } from '@/types';
 import { REVIEW_ANSWER } from '@/schemas/REVIEW_ANSWER';
 
 /**
- * The review out of what the agent printed, checked against its schema; null when it is
- * not one, or news with nothing to post. A verdict of nothing new keeps no comment.
+ * A revisão a partir do que o agente imprimiu, conferida contra o schema; null quando não
+ * é uma, ou novidade sem nada a postar. Um veredito de nada novo não guarda comentário.
  */
 export function readReviewAnswer(text: string): IReviewAnswer | null {
   try {

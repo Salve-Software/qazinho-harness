@@ -2,8 +2,8 @@ import type { IPullAnswer, IPullBrief } from '@/types';
 import { PULL_ANSWER } from '@/schemas/PULL_ANSWER';
 
 /**
- * The reader's answer, checked against its schema and the plans it was given: what names
- * a plan, case or step the PR was not read against is left out; null when it is not one.
+ * A resposta do leitor, conferida contra o schema e os planos que recebeu: o que nomeia
+ * um plano, caso ou passo fora da leitura do PR sai; null quando não é uma.
  */
 export function readPullAnswer(props: {
   text: string;

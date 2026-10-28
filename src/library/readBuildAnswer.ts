@@ -2,8 +2,8 @@ import type { IBuildAnswer } from '@/types';
 import { BUILD_ANSWER } from '@/schemas/BUILD_ANSWER';
 
 /**
- * The build answer out of what the agent printed, checked against its schema; prose is
- * read as the reason there is no build.
+ * A resposta do build a partir do que o agente imprimiu, conferida contra o schema; prosa
+ * é lida como o motivo de não haver build.
  */
 export function readBuildAnswer(text: string): IBuildAnswer {
   try {

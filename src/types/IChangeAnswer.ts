@@ -1,6 +1,6 @@
 /**
- * What the agent that changed a team's suite answered: passing, app wrong or gave up, and
- * what it wrote.
+ * O que o agente que mudou a suíte de um time respondeu: passando, app errado ou
+ * desistiu, e o que escreveu.
  */
 export interface IChangeAnswer {
   outcome: 'changed' | 'app-bug' | 'gave-up';

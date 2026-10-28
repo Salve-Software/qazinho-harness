@@ -2,8 +2,8 @@ import type { IChangeAnswer } from '@/types';
 import { CHANGE_ANSWER } from '@/schemas/CHANGE_ANSWER';
 
 /**
- * The change answer out of what the agent printed, checked against its schema; prose
- * reads as giving up, with the prose as why.
+ * A resposta da mudança a partir do que o agente imprimiu, conferida contra o schema;
+ * prosa vale como desistência, com a prosa como motivo.
  */
 export function readChangeAnswer(text: string): IChangeAnswer {
   const gaveUp: IChangeAnswer = {

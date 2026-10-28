@@ -1,6 +1,6 @@
 /**
- * What a build finds on this machine: the Android SDK, the JDK it was handed, and whether
- * Xcode is there.
+ * O que um build acha nesta máquina: o SDK do Android, o JDK que recebeu, e se o Xcode
+ * está lá.
  */
 export interface IBuildMachine {
   androidSdk: string | null;

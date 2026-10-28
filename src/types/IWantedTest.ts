@@ -1,8 +1,8 @@
 import type { ISuitePlanCase } from '@/contract';
 
 /**
- * A test the QA asks the agent to write: what it should check in the QA's words, the
- * folder to put it in, '' to follow the suite, and the plan case it automates.
+ * Um teste que o QA pede ao agente para escrever: o que ele deve conferir nas palavras do
+ * QA, a pasta em que colocá-lo, '' para seguir a suíte, e o caso do plano que automatiza.
  */
 export interface IWantedTest {
   text: string;

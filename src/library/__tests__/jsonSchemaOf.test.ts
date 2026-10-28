@@ -12,7 +12,7 @@ describe('jsonSchemaOf', () => {
     });
   });
 
-  /** Claude Code ignores a --json-schema carrying "$schema", without saying so. */
+  /** O Claude Code ignora um --json-schema que traz "$schema", sem avisar. */
   it('leaves out the "$schema" key', () => {
     expect(jsonSchemaOf(z.string())).not.toHaveProperty('$schema');
   });
