@@ -9,6 +9,7 @@ export * from './maskedBody';
 export * from './outcomeOfReport';
 export * from './privateUrlOf';
 export * from './proofHolds';
+export * from './proofLinesOf';
 export * from './readBook';
 export * from './recipeFor';
 export * from './recipeOf';

@@ -28,4 +28,22 @@ describe('replayedOutcome', () => {
       tookMs: 900,
     });
   });
+
+  it('says each line of a proof of several, in one line the QA reads', () => {
+    const [step] = STEPS;
+
+    if (step === undefined) throw new Error('fixture');
+
+    expect(
+      replayedOutcome({
+        step,
+        index: 0,
+        workspaceId: 'w-1',
+        proof: '1 item: Caneca\nTotal: R$ 30,00',
+        tookMs: 900,
+        at: 1_760_000_000_000,
+        shot: null,
+      }).got,
+    ).toBe('1 item: Caneca · Total: R$ 30,00');
+  });
 });

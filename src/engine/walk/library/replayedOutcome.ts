@@ -1,9 +1,10 @@
 import type { IFlatStep, IStepOutcome } from '@/contract';
 import type { IShot } from '@/engine/devices/types';
+import { proofLinesOf } from './proofLinesOf';
 
 /**
- * A step walked again without the agent: passed, since its proof showed, with the proof
- * as what the screen said.
+ * A step walked again without the agent: passed, since its proof showed, with each line
+ * of the proof as what the screen said.
  */
 export function replayedOutcome(props: {
   step: IFlatStep;
@@ -25,7 +26,7 @@ export function replayedOutcome(props: {
     expected: step.expected,
     verdict: 'passed',
     why: '',
-    got: proof,
+    got: proofLinesOf(proof).join(' · '),
     title: '',
     severity: 'medium',
     tookMs,

@@ -1,11 +1,14 @@
+import { proofLinesOf } from './proofLinesOf';
+
 /**
- * Whether the screen still shows the words that proved a step, read the way a person
- * would: case and spacing aside.
+ * Whether the screen still shows every line of the words that proved a step, read the way
+ * a person would: case and spacing aside.
  */
 export function proofHolds(props: { screen: string; proof: string }): boolean {
-  const proof = plain(props.proof);
+  const screen = plain(props.screen);
+  const lines = proofLinesOf(props.proof).map(plain);
 
-  return proof.length > 0 && plain(props.screen).includes(proof);
+  return lines.length > 0 && lines.every((line) => screen.includes(line));
 }
 
 function plain(text: string): string {

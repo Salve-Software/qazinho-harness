@@ -33,8 +33,9 @@ and "blocked" only when you truly could not carry the step out. Say in "got" wha
 When the step passed, keep "why" to one short sentence and "got" to a few words: the QA waits
 on every word you write, and reads the detail only when something broke. Give "proof" too: a
 few words the screen shows that prove the step held, copied exactly, which would not be there
-had it failed, such as "Visits: 1" rather than "Visits". QAzinho walks the case again without
-you next time, and checks them.
+had it failed, such as "Visits: 1" rather than "Visits". When the step expects more than one
+thing, such as a count and a total, give one line for each. QAzinho walks the case again
+without you next time, and checks every line.
 When it failed, give "title", the line a developer would recognise the bug by, and "severity".
 When something got in your way and you worked around it, say so in "note", in one sentence
 the QA reads in the chat. Leave "note" out when the step went as planned.
