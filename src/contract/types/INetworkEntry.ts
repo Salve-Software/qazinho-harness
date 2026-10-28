@@ -1,6 +1,6 @@
 /**
- * A request the app made during a run and how it ended; `body` starts what a failed API
- * call answered.
+ * Uma requisição que o app fez durante uma run e como terminou; `body` traz o começo do
+ * que uma chamada de API que falhou respondeu.
  */
 export interface INetworkEntry {
   id: number;

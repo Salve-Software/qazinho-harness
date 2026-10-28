@@ -2,8 +2,8 @@ import type { IVariableBrief } from './IVariableBrief';
 import type { TargetKind } from './TargetKind';
 
 /**
- * A project as the assistant reads it: its targets, the repositories it is made of with
- * their base branch, and its variables by name, never a value.
+ * Um projeto como o assistente o lê: os alvos, os repositórios de que é feito com a
+ * branch base de cada um, e as variáveis pelo nome, nunca um valor.
  */
 export interface IAppProjectBrief {
   id: string;

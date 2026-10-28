@@ -1,6 +1,6 @@
 import type { ICaseRecipe } from './ICaseRecipe';
 
-/** Every case of a workspace that can be walked again without the agent. */
+/** Todo caso de um workspace que pode ser andado de novo sem o agente. */
 export interface IRecipeBook {
   cases: ICaseRecipe[];
 }

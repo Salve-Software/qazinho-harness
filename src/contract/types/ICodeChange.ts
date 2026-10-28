@@ -1,4 +1,4 @@
-/** One file a branch changed against its base: how, and by how many lines. */
+/** Um arquivo que uma branch mudou contra a base: como, e em quantas linhas. */
 export interface ICodeChange {
   path: string;
   status: string;

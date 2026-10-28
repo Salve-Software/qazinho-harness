@@ -1,8 +1,8 @@
 import type { IVariableBrief } from './IVariableBrief';
 
 /**
- * An answer the QA can pick to the agent's question, and what picking it means; one with
- * `variables` opens a window for the QA to type their values.
+ * Uma resposta que o QA pode escolher para a pergunta do agente, e o que escolhê-la
+ * significa; uma com `variables` abre uma janela para o QA digitar os valores.
  */
 export interface IChatQuestionOption {
   label: string;

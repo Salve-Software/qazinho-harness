@@ -1,8 +1,8 @@
 import type { IConfluencePageRef } from './IConfluencePageRef';
 
 /**
- * A Confluence page read for the agent to plan from: where it is, and its body as
- * Markdown.
+ * Uma página do Confluence lida para o agente planejar a partir dela: onde está, e o
+ * corpo em Markdown.
  */
 export interface IConfluencePage {
   page: IConfluencePageRef;

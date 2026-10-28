@@ -1,6 +1,6 @@
 import type { TargetKind } from './TargetKind';
 
-/** What the run opens: a URL for web, a build on disk for Android and iOS. */
+/** O que a run abre: uma URL na web, um build em disco no Android e no iOS. */
 export interface ITargetUnderTest {
   kind: TargetKind;
   value: string;

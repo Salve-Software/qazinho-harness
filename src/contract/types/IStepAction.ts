@@ -1,8 +1,8 @@
 import type { DialogAnswer } from './DialogAnswer';
 
 /**
- * One action on the device as the agent asked for it, with the locators a web run used to
- * find its targets.
+ * Uma ação no dispositivo como o agente a pediu, com os locators que uma run web usou
+ * para achar os alvos.
  */
 export interface IStepAction {
   kind:

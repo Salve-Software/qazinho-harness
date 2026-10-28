@@ -1,8 +1,8 @@
 import type { IJiraAttachment } from './IJiraAttachment';
 
 /**
- * A Jira issue as the planning agent reads it: what it is and asks for, how it is
- * accepted, what the team said of it, what it links to, and its files.
+ * Uma issue do Jira como o agente que planeja a lê: o que ela é e pede, como é aceita, o
+ * que o time disse dela, a que se liga, e os arquivos.
  */
 export interface IJiraStory {
   key: string;

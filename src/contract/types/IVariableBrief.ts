@@ -1,6 +1,6 @@
 /**
- * A project's variable as the page and the agents know it: its name and what it holds,
- * never its value.
+ * Uma variável de um projeto como a página e os agentes a conhecem: o nome e o que ela
+ * guarda, nunca o valor.
  */
 export interface IVariableBrief {
   name: string;

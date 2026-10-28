@@ -1,4 +1,4 @@
-/** The size of the browser window a web run drives, in CSS pixels. */
+/** O tamanho da janela do navegador que uma run web dirige, em pixels CSS. */
 export interface IViewport {
   width: number;
   height: number;

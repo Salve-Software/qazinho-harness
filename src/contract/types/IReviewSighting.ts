@@ -1,6 +1,6 @@
 /**
- * A time a run caught a filed bug again, as the agent reads it: the run, the step, what
- * the run's agent noted, the screen it left and the requests that failed around it.
+ * Uma vez em que uma run pegou de novo um bug aberto: a run, o passo, o que o agente dela
+ * anotou, a tela que deixou e as requisições que falharam em volta.
  */
 export interface IReviewSighting {
   runId: string;

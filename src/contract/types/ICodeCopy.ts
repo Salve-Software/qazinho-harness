@@ -1,8 +1,8 @@
 import type { ICodeChange } from './ICodeChange';
 
 /**
- * A branch copied for the agent to read: where it sits, its commit, and its diff against
- * the base, if any.
+ * Uma branch copiada para o agente ler: onde ela está, o commit, e o diff contra a base,
+ * se houver.
  */
 export interface ICodeCopy {
   repository: string;

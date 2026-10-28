@@ -1,6 +1,6 @@
 /**
- * A Confluence page as QAzinho points at it: its id, its title, the space it is in, and
- * where it opens.
+ * Uma página do Confluence como o QAzinho aponta para ela: o id, o título, o espaço em
+ * que está e onde abre.
  */
 export interface IConfluencePageRef {
   id: string;

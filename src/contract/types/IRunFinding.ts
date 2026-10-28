@@ -1,8 +1,8 @@
 import type { Severity } from './Severity';
 
 /**
- * A bug the runner filed beside a step, with its screen and when; `sameAs` names an open
- * bug seen again.
+ * Um bug que o runner abriu ao lado de um passo, com a tela e o quando; `sameAs` nomeia
+ * um bug aberto visto de novo.
  */
 export interface IRunFinding {
   caseId: string;

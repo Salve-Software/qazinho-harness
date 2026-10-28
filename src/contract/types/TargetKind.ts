@@ -1,2 +1,2 @@
-/** What a run drives: a web page, an Android app or an iOS app. */
+/** O que uma run dirige: uma página web, um app Android ou um app iOS. */
 export type TargetKind = 'web' | 'android' | 'ios';

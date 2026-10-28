@@ -1,6 +1,6 @@
 /**
- * A run's recording: `startedAt` is when its first frame shows, in epoch ms, so every
- * moment of the run finds its place in it.
+ * A gravação de uma run: `startedAt` é quando o primeiro frame aparece, em ms de epoch,
+ * para todo momento da run achar o seu lugar nela.
  */
 export interface IRunVideo {
   startedAt: number;

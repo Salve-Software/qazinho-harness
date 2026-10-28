@@ -1,8 +1,8 @@
 import type { IStepAction } from './IStepAction';
 
 /**
- * One step of a case as a passing run walked it: what was done on the device, and the
- * words on screen that proved it held.
+ * Um passo de um caso como uma run que passou o andou: o que foi feito no dispositivo, e
+ * as palavras na tela que provaram que valeu.
  */
 export interface IStepRecipe {
   number: number;

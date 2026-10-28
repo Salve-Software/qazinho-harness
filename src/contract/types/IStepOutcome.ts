@@ -2,8 +2,8 @@ import type { Severity } from './Severity';
 import type { StepVerdict } from './StepVerdict';
 
 /**
- * One step a run reported, with its inline screen, when, who walked it, and the bug or
- * frame it points to.
+ * Um passo que uma run relatou, com a tela embutida, o quando, quem o andou, e o bug ou
+ * frame para que ele aponta.
  */
 export interface IStepOutcome {
   workspaceId: string;

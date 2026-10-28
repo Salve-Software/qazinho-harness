@@ -5,8 +5,8 @@ import type { Language } from './Language';
 import type { TargetKind } from './TargetKind';
 
 /**
- * One of QAzinho's app tools as the assistant called it, read against its schema: what
- * the page carries out.
+ * Uma das ferramentas de app do QAzinho como o assistente a chamou, lida contra o schema:
+ * o que a página executa.
  */
 export type AppToolCall =
   | { name: 'workspace_details'; args: { workspace: string } }

@@ -1,6 +1,6 @@
 /**
- * The Figma design a workspace is checked against: the file, and the frame or page its
- * link points at when it names one.
+ * O design do Figma contra o qual um workspace é conferido: o arquivo, e o frame ou
+ * página para que o link aponta quando nomeia um.
  */
 export interface IDesignLink {
   url: string;

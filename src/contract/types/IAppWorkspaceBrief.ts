@@ -2,8 +2,8 @@ import type { IAppRunBrief } from './IAppRunBrief';
 import type { TargetKind } from './TargetKind';
 
 /**
- * A workspace at a glance: its target, plan size, latest run, what it is busy with and
- * the questions waiting.
+ * Um workspace num relance: o alvo, o tamanho do plano, a última run, com o que está
+ * ocupado e as perguntas esperando.
  */
 export interface IAppWorkspaceBrief {
   id: string;

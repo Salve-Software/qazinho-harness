@@ -1,8 +1,7 @@
 import type { IssueTracker } from './IssueTracker';
 
 /**
- * The issue a bug became in the QA's tracker: its key there, its page, and when it was
- * filed.
+ * A issue que um bug virou no tracker do QA: a chave lá, a página, e quando foi aberta.
  */
 export interface IFiledIssue {
   tracker: IssueTracker;

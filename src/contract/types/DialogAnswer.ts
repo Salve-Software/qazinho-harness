@@ -1,5 +1,5 @@
 /**
- * How a browser dialog an action opens is answered: OK, the way a person goes on, or
- * Cancel.
+ * Como um diálogo do navegador aberto por uma ação é respondido: OK, como uma pessoa
+ * seguiria, ou Cancelar.
  */
 export type DialogAnswer = 'ok' | 'cancel';

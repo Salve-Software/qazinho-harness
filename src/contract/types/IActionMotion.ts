@@ -1,6 +1,6 @@
 /**
- * How a page moved while one action ran: layout shifts (all, and with no input to explain
- * them) and long frames.
+ * Como uma página se mexeu enquanto uma ação rodava: deslocamentos de layout (todos, e os
+ * sem uma entrada que os explique) e frames longos.
  */
 export interface IActionMotion {
   shift: number;

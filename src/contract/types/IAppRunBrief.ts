@@ -1,6 +1,6 @@
 /**
- * A run told in a line: the day and time it started, how it ended, and what its steps
- * came to.
+ * Uma run contada numa linha: o dia e a hora em que começou, como terminou, e no que
+ * deram os passos.
  */
 export interface IAppRunBrief {
   id: string;

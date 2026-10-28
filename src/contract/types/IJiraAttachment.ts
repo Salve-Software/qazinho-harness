@@ -1,4 +1,4 @@
-/** A file attached to a Jira issue, as Jira lists it. */
+/** Um arquivo anexado a uma issue do Jira, como o Jira o lista. */
 export interface IJiraAttachment {
   id: string;
   filename: string;

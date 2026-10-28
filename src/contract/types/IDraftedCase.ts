@@ -1,6 +1,6 @@
 /**
- * One case the agent drafted: `id` names the case it changes, none for a new one; a
- * step's `frame` is its Figma node.
+ * Um caso que o agente rascunhou: `id` nomeia o caso que ele muda, nenhum para um novo; o
+ * `frame` de um passo é o nó dele no Figma.
  */
 export interface IDraftedCase {
   id?: string | undefined;

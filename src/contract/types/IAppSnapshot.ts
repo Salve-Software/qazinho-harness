@@ -4,8 +4,8 @@ import type { IntegrationId } from './IntegrationId';
 import type { Language } from './Language';
 
 /**
- * QAzinho as the assistant reads it with a message: what is on screen, how the QA set it
- * up, and every project and workspace.
+ * O QAzinho como o assistente o lê com uma mensagem: o que está na tela, como o QA o
+ * configurou, e cada projeto e workspace.
  */
 export interface IAppSnapshot {
   screen: 'home' | 'workspace' | 'settings';
