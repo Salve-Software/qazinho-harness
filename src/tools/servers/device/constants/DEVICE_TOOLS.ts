@@ -3,6 +3,7 @@ import { DRAFTED_CASE } from '@/schemas/DRAFTED_CASE';
 import { bugIdNamed } from '@/tools/library/bugIdNamed';
 import { textNamed } from '@/tools/library/textNamed';
 import { variableNamed } from '@/tools/library/variableNamed';
+import { SEVERITY_SCALE } from './SEVERITY_SCALE';
 
 export const DEVICE_TOOLS = [
   {
@@ -230,6 +231,7 @@ export const DEVICE_TOOLS = [
         .enum(['high', 'medium', 'low'], {
           error: '"severity" is high, medium or low.',
         })
+        .describe(`When it failed: ${SEVERITY_SCALE}`)
         .optional(),
       note: z
         .string()
@@ -263,9 +265,11 @@ export const DEVICE_TOOLS = [
         message: '"bug" needs "title": the line a developer would know the bug by.',
         description: 'The line a developer would know the bug by.',
       }),
-      severity: z.enum(['high', 'medium', 'low'], {
-        error: '"severity" is high, medium or low.',
-      }),
+      severity: z
+        .enum(['high', 'medium', 'low'], {
+          error: '"severity" is high, medium or low.',
+        })
+        .describe(SEVERITY_SCALE),
       expected: textNamed({
         message: '"bug" needs "expected": what the app should show.',
         description: 'What the app should show.',

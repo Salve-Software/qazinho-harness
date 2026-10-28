@@ -371,7 +371,8 @@
             "high",
             "medium",
             "low"
-          ]
+          ],
+          "description": "When it failed: high: a main flow breaks, or money, data or access goes wrong, such as a wrong charge or an order not placed; medium: a feature does the wrong thing and the person has a way round it; low: only how it looks or reads."
         },
         "note": {
           "type": "string",
@@ -420,7 +421,8 @@
             "high",
             "medium",
             "low"
-          ]
+          ],
+          "description": "high: a main flow breaks, or money, data or access goes wrong, such as a wrong charge or an order not placed; medium: a feature does the wrong thing and the person has a way round it; low: only how it looks or reads."
         },
         "expected": {
           "type": "string",
