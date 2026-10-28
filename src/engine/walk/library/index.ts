@@ -15,5 +15,6 @@ export * from './recipeOf';
 export * from './recordedAction';
 export * from './replayedOutcome';
 export * from './resolvedAction';
+export * from './stepCarryOn';
 export * from './unwalkedOutcome';
 export * from './variablePort';
