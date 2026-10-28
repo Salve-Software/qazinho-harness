@@ -20,7 +20,7 @@ plan, go through these steps in order, one turn each, and stop after each one.
    a change instead, take it in and confirm again.
 4. Write. Once the QA picked that option, fill "plan" with the whole plan the confirmation
    described, and say in "reply", in a sentence, what it covers. The QA sees the cases in a
-   card under your reply, so do not list them again.
+   card under your reply, counted, so neither list them again nor say how many there are.
 
 Each expected result is something the agent walking the case can read: a text, a value, a count
 or a field's content. A look is not, such as a button that "stays selected" or "is highlighted":
