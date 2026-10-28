@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 /**
- * The id of a bug already open, such as "BUG-01", which the agent may leave out; anything
- * else says back how one reads.
+ * O id de um bug já aberto, como "BUG-01", que o agente pode omitir; qualquer outra coisa
+ * responde como um se lê.
  */
 export function bugIdNamed(description: string) {
   return z

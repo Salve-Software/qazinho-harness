@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { registerPermissionTool } from '@/tools/library';
 
 describe('registerPermissionTool', () => {
-  /** Called the way Claude Code calls it, over an in-memory pipe: no network. */
+  /** Chamada do jeito que o Claude Code chama, sobre um canal em memória: sem rede. */
   it('answers a permission at once, in the shape Claude Code reads', async () => {
     const mcp = new McpServer({ name: 'qazinho', version: '0' });
     const client = new Client({ name: 'test', version: '0' });

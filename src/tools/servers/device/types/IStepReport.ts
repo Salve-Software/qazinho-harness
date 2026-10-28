@@ -1,8 +1,8 @@
 import type { Severity } from '@/contract';
 
 /**
- * A step the agent judged through `report`, with the words that prove a pass and the bug
- * that failed it.
+ * Um passo que o agente julgou pelo `report`, com as palavras que provam que passou e o
+ * bug que o reprovou.
  */
 export interface IStepReport {
   step: number;

@@ -3,8 +3,8 @@ import type { ToolAnswer } from '@/tools/types';
 import { readSuiteToolCall } from './readSuiteToolCall';
 
 /**
- * Carries out one suite tool call through whoever runs the tests, and answers with how
- * they went or why they did not run.
+ * Executa uma chamada de ferramenta da suíte por quem roda os testes, e responde com como
+ * foram ou por que não rodaram.
  */
 export async function callSuiteTool(props: {
   suite: IAttachSuite;

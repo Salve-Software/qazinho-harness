@@ -1,4 +1,6 @@
-/** A screen of the app the explorer reached, as it named it and said what it is for. */
+/**
+ * Uma tela do app que o explorador alcançou, como ele a nomeou e disse para que serve.
+ */
 export interface IExploredScreen {
   name: string;
   about: string;

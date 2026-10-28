@@ -1,6 +1,6 @@
 /**
- * A stream path is /<token>/<workspace>; a request without this launch's token gets
- * nothing.
+ * Um caminho de transmissão é /<token>/<workspace>; uma requisição sem o token desta
+ * inicialização não recebe nada.
  */
 export function workspaceOfPath(props: { path: string; token: string }): string | null {
   const [, token, workspace, ...rest] = props.path.split('/');

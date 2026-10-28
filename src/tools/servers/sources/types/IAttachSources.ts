@@ -1,8 +1,8 @@
 import type { SourceCall } from './SourceCall';
 
 /**
- * Who fetches a Jira story or a Confluence page for the chat, under the scope its address
- * carries, through the QA's own account, and answers in words.
+ * Quem busca uma story do Jira ou uma página do Confluence para o chat, no escopo que o
+ * endereço traz, pela conta do próprio QA, e responde em palavras.
  */
 export interface IAttachSources {
   scope: string;

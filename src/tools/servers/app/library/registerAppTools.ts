@@ -3,8 +3,8 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { APP_TOOLS } from '@/tools/servers/app/constants';
 
 /**
- * Puts every app tool on an MCP server, with its schema; a call that passes it goes to
- * `call`.
+ * Põe cada ferramenta do app num servidor MCP, com o schema; uma chamada que passa por
+ * ele vai para o `call`.
  */
 export function registerAppTools(props: {
   mcp: McpServer;

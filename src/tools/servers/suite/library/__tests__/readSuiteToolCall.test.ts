@@ -36,7 +36,10 @@ describe('readSuiteToolCall', () => {
     });
   });
 
-  /** The tool runs Playwright from the suite's folder: a path that climbs out of it would reach the QA's own files. */
+  /**
+   * A ferramenta roda o Playwright a partir da pasta da suíte: um caminho que sobe para
+   * fora dela chegaria aos arquivos do próprio QA.
+   */
   it('refuses a test outside the suite folder', () => {
     for (const test of [
       '../app/a.spec.ts',

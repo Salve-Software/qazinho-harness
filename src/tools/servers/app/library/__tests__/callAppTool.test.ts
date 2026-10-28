@@ -2,7 +2,7 @@ import type { AppToolCall } from '@/contract';
 import { describe, expect, it } from 'vitest';
 import { callAppTool } from '@/tools/servers/app/library';
 
-/** Whoever performs the calls, here a list that remembers them and answers what it is told to. */
+/** Quem executa as chamadas, aqui uma lista que as lembra e responde o que mandam. */
 function fakeApp(
   perform: (call: AppToolCall) => Promise<{ text: string; isError: boolean }>,
 ) {

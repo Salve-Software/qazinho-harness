@@ -1,8 +1,8 @@
 import type { AppToolCall } from '@/contract';
 
 /**
- * An app tool call read against its schema: the call for the page to carry out, or what
- * to say back to the agent.
+ * Uma chamada de ferramenta do app lida contra o schema: a chamada para a página
+ * executar, ou o que responder ao agente.
  */
 export type AppToolRead =
   { kind: 'call'; call: AppToolCall } | { kind: 'refused'; error: string };

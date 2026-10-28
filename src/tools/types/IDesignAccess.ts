@@ -1,8 +1,8 @@
 import type { IAgentServer } from './IAgentServer';
 
 /**
- * What a call needs to read the workspace's Figma design: the QA's Figma server, and only
- * the tools of it that read.
+ * O que uma chamada precisa para ler o design do Figma do workspace: o servidor Figma do
+ * QA, e só as ferramentas dele que leem.
  */
 export interface IDesignAccess {
   servers: IAgentServer[];

@@ -6,8 +6,8 @@ import { readToolCall } from './readToolCall';
 import { timeLeftOf } from './timeLeftOf';
 
 /**
- * Carries out one device tool call and answers with the screen as text and as a picture,
- * or why it could not.
+ * Executa uma chamada de ferramenta do dispositivo e responde com a tela como texto e
+ * como imagem, ou por que não conseguiu.
  */
 export async function callDeviceTool(props: {
   device: IAttachDevice;

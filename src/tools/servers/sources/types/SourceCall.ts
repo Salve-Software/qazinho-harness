@@ -1,6 +1,6 @@
 /**
- * A source tool call as QAzinho carries it out: a story by its key, a search of
- * Confluence by words, or a page by its id.
+ * Uma chamada de ferramenta de fonte como o QAzinho a executa: uma story pela chave, uma
+ * busca no Confluence por palavras, ou uma página pelo id.
  */
 export type SourceCall =
   | { name: 'read_jira_story'; key: string }

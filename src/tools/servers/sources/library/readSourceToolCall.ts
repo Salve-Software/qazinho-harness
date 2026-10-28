@@ -4,8 +4,8 @@ import { confluencePageIdOf } from './confluencePageIdOf';
 import { jiraKeyOf } from './jiraKeyOf';
 
 /**
- * Reads a source tool call against its schema, a story by its key and a page by its id; a
- * call that names neither is refused with the reason.
+ * Lê uma chamada de ferramenta de fonte contra o schema, uma story pela chave e uma
+ * página pelo id; uma chamada que não nomeia nenhuma é recusada com o motivo.
  */
 export function readSourceToolCall(props: {
   name: string;

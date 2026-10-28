@@ -20,7 +20,7 @@ describe('readSourceToolCall', () => {
     ).toEqual({ kind: 'call', call: { name: 'read_confluence_page', pageId: '42' } });
   });
 
-  /** A page's title passed where its id goes would read some other page, or none. */
+  /** O título de uma página passado onde vai o id leria outra página, ou nenhuma. */
   it('refuses a page named by its title, and points to the search', () => {
     const read = readSourceToolCall({
       name: 'read_confluence_page',

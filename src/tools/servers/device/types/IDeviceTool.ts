@@ -1,8 +1,8 @@
 import type { z } from 'zod';
 
 /**
- * One tool on the device: its name, what the agent reads about it, and the arguments it
- * takes.
+ * Uma ferramenta do dispositivo: o nome, o que o agente lê sobre ela, e os argumentos que
+ * recebe.
  */
 export interface IDeviceTool {
   name: string;

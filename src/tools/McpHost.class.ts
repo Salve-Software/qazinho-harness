@@ -16,8 +16,8 @@ import { callSuiteTool, registerSuiteTools } from '@/tools/servers/suite';
 import { registerPermissionTool, workspaceOfPath } from './library';
 
 /**
- * Serves QAzinho's MCP tools on loopback, one scope per run, assistant, suite change or
- * chat turn.
+ * Serve as ferramentas MCP do QAzinho no loopback, um escopo por run, assistente, mudança
+ * de suíte ou turno de chat.
  */
 export class McpHost {
   private readonly token = randomUUID();
@@ -54,7 +54,7 @@ export class McpHost {
   }
 
   /**
-   * Serves the app tools under the app's scope, each call carried out by it, until
+   * Serve as ferramentas do app no escopo do app, cada chamada executada por ele, até o
    * `detachApp`.
    */
   public attachApp(app: IAttachApp): void {
@@ -67,8 +67,8 @@ export class McpHost {
   }
 
   /**
-   * Serves the suite tools under the scope of an agent changing a suite, each run carried
-   * out by it, until `detachSuite`.
+   * Serve as ferramentas da suíte no escopo de um agente que muda uma suíte, cada
+   * execução feita por ele, até o `detachSuite`.
    */
   public attachSuite(suite: IAttachSuite): void {
     this.suites.set(suite.scope, suite);
@@ -80,8 +80,8 @@ export class McpHost {
   }
 
   /**
-   * Serves the source tools under the scope of a chat that answers, each fetch carried
-   * out by it, until `detachSources`.
+   * Serve as ferramentas de fonte no escopo de um chat que responde, cada busca feita por
+   * ele, até o `detachSources`.
    */
   public attachSources(sources: IAttachSources): void {
     this.sources.set(sources.scope, sources);
@@ -93,8 +93,8 @@ export class McpHost {
   }
 
   /**
-   * The `--mcp-config` an agent needs to reach the tools attached under a scope, and how
-   * long one call may take; null before start.
+   * O `--mcp-config` de que um agente precisa para alcançar as ferramentas anexadas num
+   * escopo, e quanto tempo uma chamada pode levar; null antes do start.
    */
   public mcpConfigFor(scope: string, toolTimeoutMs?: number): string | null {
     if (!this.server) return null;

@@ -3,8 +3,8 @@ import type { DeviceToolCall } from '@/tools/servers/device/types';
 import { DEVICE_TOOLS } from '@/tools/servers/device/constants';
 
 /**
- * Reads a tool call against the tool's own schema; a call that breaks it is refused with
- * the reason.
+ * Lê uma chamada de ferramenta contra o schema da própria ferramenta; uma chamada que o
+ * quebra é recusada com o motivo.
  */
 export function readToolCall(props: {
   name: string;

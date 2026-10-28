@@ -5,7 +5,10 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { afterEach, describe, expect, it } from 'vitest';
 import { registerDeviceTools } from '@/tools/servers/device/library';
 
-/** The device tools on an MCP server, reached by a client over an in-memory pipe: no network. */
+/**
+ * As ferramentas do dispositivo num servidor MCP, alcançadas por um cliente sobre um
+ * canal em memória: sem rede.
+ */
 async function serve(purpose: DevicePurpose = 'walk') {
   const calls: { name: string; args: Record<string, unknown> }[] = [];
   const mcp = new McpServer({ name: 'qazinho', version: '0' });

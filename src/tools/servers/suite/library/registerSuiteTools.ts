@@ -3,8 +3,8 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { SUITE_TOOLS } from '@/tools/servers/suite/constants';
 
 /**
- * Puts every suite tool on an MCP server, with its schema; a call that passes it goes to
- * `call`.
+ * Põe cada ferramenta da suíte num servidor MCP, com o schema; uma chamada que passa por
+ * ele vai para o `call`.
  */
 export function registerSuiteTools(props: {
   mcp: McpServer;

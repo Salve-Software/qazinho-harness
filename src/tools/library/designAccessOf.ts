@@ -3,8 +3,8 @@ import type { IDesignAccess } from '@/tools/types';
 import { DESIGN_TOOLS, FIGMA_MCP } from '@/tools/constants';
 
 /**
- * The QA's Figma server and its reading tools when the workspace has a design, and
- * nothing when it has none.
+ * O servidor Figma do QA e as ferramentas de leitura dele quando o workspace tem design,
+ * e nada quando não tem.
  */
 export function designAccessOf(design: IDesignLink | null): IDesignAccess {
   return design === null

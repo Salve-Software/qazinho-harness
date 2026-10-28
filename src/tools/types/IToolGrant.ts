@@ -1,7 +1,10 @@
 import type { ToolGroup } from './ToolGroup';
 import type { HarnessRole } from '@/types';
 
-/** Which roles may use a tool group; a role no grant names gets no tool at all. */
+/**
+ * Quais papéis podem usar um grupo de ferramentas; um papel que nenhuma permissão nomeia
+ * não recebe ferramenta nenhuma.
+ */
 export interface IToolGrant {
   group: ToolGroup;
   roles: HarnessRole[];

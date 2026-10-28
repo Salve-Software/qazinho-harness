@@ -6,8 +6,8 @@ import type { IStepReport } from './IStepReport';
 import type { IStepAction } from '@/contract';
 
 /**
- * A tool call read against its schema: what to do with it, or what to say back to the
- * agent.
+ * Uma chamada de ferramenta lida contra o schema: o que fazer com ela, ou o que responder
+ * ao agente.
  */
 export type DeviceToolCall =
   | { kind: 'look' }

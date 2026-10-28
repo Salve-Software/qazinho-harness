@@ -7,8 +7,8 @@ import type { IStepFinding } from './IStepFinding';
 import type { IStepReport } from './IStepReport';
 
 /**
- * A workspace's device for the length of a run or an exploration, until when it may act,
- * and who hears what its agent reports, notes, files and asks the QA.
+ * O dispositivo de um workspace durante uma run ou exploração, até quando pode agir, e
+ * quem ouve o que o agente relata, anota, abre e pergunta ao QA.
  */
 export interface IAttachDevice {
   workspaceId: string;

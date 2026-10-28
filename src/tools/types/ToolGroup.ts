@@ -1,5 +1,5 @@
 /**
- * A set of MCP tools served together: a run's device, the assistant's app, a suite, or
- * Jira and Confluence.
+ * Um conjunto de ferramentas MCP servidas juntas: o dispositivo de uma run, o app do
+ * assistente, uma suíte, ou o Jira e o Confluence.
  */
 export type ToolGroup = 'device' | 'app' | 'suite' | 'sources';

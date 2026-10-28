@@ -2,8 +2,8 @@ import type { IActionMotion } from '@/contract';
 import { MOTION_LIMITS } from '@/tools/servers/device/constants/MOTION_LIMITS';
 
 /**
- * How the page moved during an action, in a sentence the agent can weigh; null when there
- * is no reading.
+ * Como a página se mexeu durante uma ação, numa frase que o agente consegue pesar; null
+ * quando não há leitura.
  */
 export function describeMotion(motion: IActionMotion | null): string | null {
   if (motion === null) return null;

@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { permissionOf } from '@/tools/library';
 
 describe('permissionOf', () => {
-  /** The QA's company MCP is hers to answer for: the chat uses it with no question. */
+  /**
+   * O MCP da empresa do QA é responsabilidade do próprio QA: o chat o usa sem perguntar.
+   */
   it("lets the chat use any tool of an MCP server, the QA's own included, as it was called", () => {
     expect(
       permissionOf({

@@ -2,7 +2,9 @@ import type { ISuiteTestsCall } from '@/tools/servers/suite/types';
 import { describe, expect, it } from 'vitest';
 import { callSuiteTool } from '@/tools/servers/suite/library';
 
-/** Whoever runs the tests, here a list that remembers each call and answers what it is told to. */
+/**
+ * Quem roda os testes, aqui uma lista que lembra cada chamada e responde o que mandam.
+ */
 function fakeSuite(runTests: () => Promise<{ text: string; isError: boolean }>) {
   const calls: ISuiteTestsCall[] = [];
 

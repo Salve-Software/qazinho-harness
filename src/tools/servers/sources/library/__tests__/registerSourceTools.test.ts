@@ -6,7 +6,10 @@ import { registerSourceTools } from '@/tools/servers/sources/library';
 
 const open: Client[] = [];
 
-/** The source tools on an MCP server, reached by a client over an in-memory pipe: no network. */
+/**
+ * As ferramentas de fonte num servidor MCP, alcançadas por um cliente sobre um canal em
+ * memória: sem rede.
+ */
 async function serve() {
   const calls: { name: string; args: Record<string, unknown> }[] = [];
   const mcp = new McpServer({ name: 'qazinho', version: '0' });

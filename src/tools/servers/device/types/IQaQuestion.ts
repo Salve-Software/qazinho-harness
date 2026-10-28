@@ -1,8 +1,8 @@
 import type { IVariableBrief } from '@/contract';
 
 /**
- * A question the agent asks the QA mid-run: what it needs, the answers it offers, and the
- * variable a secret answer is kept as.
+ * Uma pergunta que o agente faz ao QA no meio da run: o que ele precisa, as respostas que
+ * oferece, e a variável em que uma resposta secreta fica guardada.
  */
 export interface IQaQuestion {
   question: string;

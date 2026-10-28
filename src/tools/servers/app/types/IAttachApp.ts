@@ -1,8 +1,8 @@
 import type { AppToolCall } from '@/contract';
 
 /**
- * Who carries the app tools out for the length of an assistant turn, under the scope its
- * address carries.
+ * Quem executa as ferramentas do app durante um turno do assistente, no escopo que o
+ * endereço traz.
  */
 export interface IAttachApp {
   scope: string;

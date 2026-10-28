@@ -2,7 +2,8 @@ import type { IHarnessTools, IToolGrant } from '@/tools/types';
 import type { HarnessRole } from '@/types';
 
 /**
- * The least a role needs: the groups granted to it, all behind QAzinho's one MCP server.
+ * O mínimo de que um papel precisa: os grupos liberados para ele, todos atrás do único
+ * servidor MCP do QAzinho.
  */
 export function toolsOfRole(props: {
   grants: readonly IToolGrant[];

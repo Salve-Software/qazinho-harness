@@ -4,8 +4,8 @@ import { SUITE_TOOLS } from '@/tools/servers/suite/constants';
 const OUTSIDE = /(^|[\\/])\.\.([\\/]|$)/;
 
 /**
- * Reads a suite tool call against its schema; a call that breaks it, or names a test
- * outside the suite's folder, is refused with the reason.
+ * Lê uma chamada de ferramenta da suíte contra o schema; uma chamada que o quebra, ou que
+ * nomeia um teste fora da pasta da suíte, é recusada com o motivo.
  */
 export function readSuiteToolCall(props: {
   name: string;

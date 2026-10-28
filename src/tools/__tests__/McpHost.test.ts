@@ -5,8 +5,9 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { MCP_HOST, McpHost, PERMISSION_TOOL } from '@/tools';
 
 /**
- * McpHost serves the tools on loopback, the way the desktop and the API hand them to an agent's
- * CLI: these tests read the address back from the config it writes, as the CLI does.
+ * O McpHost serve as ferramentas no loopback, do jeito que o desktop e a API as entregam
+ * à CLI de um agente: estes testes leem o endereço de volta da config que ele escreve,
+ * como a CLI faz.
  */
 const hosts: McpHost[] = [];
 

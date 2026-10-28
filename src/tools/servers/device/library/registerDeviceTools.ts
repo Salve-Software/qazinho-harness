@@ -4,8 +4,8 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { DEVICE_TOOLS, TOOLS_LEFT_OUT } from '@/tools/servers/device/constants';
 
 /**
- * Puts the device tools a purpose needs on an MCP server, with their schemas; a call that
- * passes one goes to `call`.
+ * Põe num servidor MCP as ferramentas de dispositivo de que um propósito precisa, com os
+ * schemas; uma chamada que passa por um vai para o `call`.
  */
 export function registerDeviceTools(props: {
   mcp: McpServer;

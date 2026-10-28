@@ -59,8 +59,9 @@ describe('readToolCall', () => {
     });
 
     /**
-     * Asked to close the app and open it again, the runner had only goto, which brings a phone
-     * app back as it was, and back, which leaves it running: the app never really closed.
+     * Pedido para fechar o app e abri-lo de novo, o runner só tinha o goto, que traz um
+     * app de celular de volta como estava, e o back, que o deixa rodando: o app nunca
+     * fechava de verdade.
      */
     it('reads reopen, which closes the app completely and opens it again, with nothing to aim at', () => {
       expect(readToolCall({ name: 'reopen', args: undefined })).toEqual({
@@ -280,7 +281,10 @@ describe('readToolCall', () => {
       });
     });
 
-    /** A secret is typed, never picked: options beside it would put a value on screen for the agent. */
+    /**
+     * Um segredo é digitado, nunca escolhido: opções ao lado dele poriam um valor na tela
+     * para o agente.
+     */
     it('leaves the options out of a secret', () => {
       const read = readToolCall({
         name: 'ask_qa',

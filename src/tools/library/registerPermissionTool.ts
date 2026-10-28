@@ -3,8 +3,8 @@ import { PERMISSION_TOOL } from '@/tools/constants';
 import { permissionOf } from './permissionOf';
 
 /**
- * Puts on an MCP server the tool Claude Code asks for each permission its agent needs,
- * answered at once by `permissionOf`.
+ * Põe num servidor MCP a ferramenta que o Claude Code chama para cada permissão de que o
+ * agente precisa, respondida na hora pelo `permissionOf`.
  */
 export function registerPermissionTool(mcp: McpServer): void {
   mcp.registerTool(

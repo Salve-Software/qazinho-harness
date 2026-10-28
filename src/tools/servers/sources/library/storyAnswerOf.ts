@@ -1,7 +1,10 @@
 import type { IJiraStoryCopy } from '@/contract';
 import { describeStory, renderSections } from '@/context/library';
 
-/** A story read by the agent's own call, in the very words /jira hands it over. */
+/**
+ * Uma story lida pela própria chamada do agente, com as mesmas palavras com que o /jira a
+ * entrega.
+ */
 export function storyAnswerOf(story: IJiraStoryCopy): string {
   return renderSections([describeStory({ story, wasTold: false })]);
 }

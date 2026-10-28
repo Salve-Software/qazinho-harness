@@ -1,4 +1,5 @@
 /**
- * What an agent does with a device: walk a plan's cases, or explore the app with no plan.
+ * O que um agente faz com um dispositivo: andar os casos de um plano, ou explorar o app
+ * sem plano.
  */
 export type DevicePurpose = 'walk' | 'explore';

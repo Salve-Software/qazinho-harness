@@ -3,8 +3,8 @@ import type { ToolAnswer } from '@/tools/types';
 import { readAppToolCall } from './readAppToolCall';
 
 /**
- * Carries out one app tool call through whoever performs them, and answers with what was
- * done or why it was not.
+ * Executa uma chamada de ferramenta do app por quem as executa, e responde com o que foi
+ * feito ou por que não foi.
  */
 export async function callAppTool(props: {
   app: IAttachApp;

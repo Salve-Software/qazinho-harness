@@ -1,8 +1,8 @@
 import type { ISuiteTestsCall } from './ISuiteTestsCall';
 
 /**
- * Who runs a suite's tests for an agent changing it, under the scope its address carries,
- * and answers with how they went.
+ * Quem roda os testes de uma suíte para um agente que a muda, no escopo que o endereço
+ * traz, e responde com como foram.
  */
 export interface IAttachSuite {
   scope: string;

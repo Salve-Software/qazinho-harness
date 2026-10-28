@@ -3,8 +3,8 @@ import type { ToolAnswer } from '@/tools/types';
 import { readSourceToolCall } from './readSourceToolCall';
 
 /**
- * Carries out one source tool call through whoever fetches it, and answers with what it
- * read or why it could not.
+ * Executa uma chamada de ferramenta de fonte por quem a busca, e responde com o que leu
+ * ou por que não conseguiu.
  */
 export async function callSourceTool(props: {
   sources: IAttachSources;

@@ -1,6 +1,6 @@
 /**
- * Answers Claude Code's permission asks: any MCP tool, the QA's own included, and nothing
- * else.
+ * Responde aos pedidos de permissão do Claude Code: qualquer ferramenta MCP, as do
+ * próprio QA incluídas, e nada mais.
  */
 export function permissionOf(props: {
   toolName: string;

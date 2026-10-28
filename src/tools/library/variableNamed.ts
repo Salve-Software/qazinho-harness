@@ -2,8 +2,8 @@ import { z } from 'zod';
 import { VARIABLE_NAME } from '@/contract';
 
 /**
- * The name of a variable, such as OTP_CODE, read in capitals; anything that cannot be one
- * says back `message`.
+ * O nome de uma variável, como OTP_CODE, lido em maiúsculas; qualquer coisa que não possa
+ * ser um responde `message`.
  */
 export function variableNamed(message: string) {
   return z

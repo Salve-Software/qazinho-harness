@@ -4,7 +4,10 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { afterEach, describe, expect, it } from 'vitest';
 import { registerAppTools } from '@/tools/servers/app/library';
 
-/** The app tools on an MCP server, reached by a client over an in-memory pipe: no network. */
+/**
+ * As ferramentas do app num servidor MCP, alcançadas por um cliente sobre um canal em
+ * memória: sem rede.
+ */
 async function serve() {
   const calls: { name: string; args: Record<string, unknown> }[] = [];
   const mcp = new McpServer({ name: 'qazinho', version: '0' });

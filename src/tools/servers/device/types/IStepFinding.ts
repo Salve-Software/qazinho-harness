@@ -1,8 +1,7 @@
 import type { Severity } from '@/contract';
 
 /**
- * A bug seen while walking a step that the step does not ask about; `sameAs` names an
- * open bug.
+ * Um bug visto ao andar um passo que o passo não pergunta; `sameAs` nomeia um bug aberto.
  */
 export interface IStepFinding {
   title: string;

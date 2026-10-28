@@ -9,7 +9,9 @@ import { callDeviceTool } from '@/tools/servers/device/library';
 
 const PICTURE: IDeviceImage = { data: 'aGVsbG8=', mimeType: 'image/jpeg' };
 
-/** A device that remembers what it was asked to do, and shows one fixed screen and picture. */
+/**
+ * Um dispositivo que lembra o que pediram a ele, e mostra uma tela e uma imagem fixas.
+ */
 function fakeDevice(
   props: {
     fails?: string;
@@ -159,7 +161,10 @@ describe('callDeviceTool', () => {
     expect(text(answer)).toContain('The device now shows:\nCart');
   });
 
-  /** A run's record said a step closed and reopened the app, with nothing on how it was done. */
+  /**
+   * O registro de uma run dizia que um passo fechou e reabriu o app, sem nada sobre como
+   * foi feito.
+   */
   it('says the app closed completely and opened again after reopen', async () => {
     const { device, acted } = fakeDevice();
 

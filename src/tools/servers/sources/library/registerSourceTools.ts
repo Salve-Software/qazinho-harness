@@ -3,8 +3,8 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { SOURCE_TOOLS } from '@/tools/servers/sources/constants';
 
 /**
- * Puts every source tool on an MCP server, with its schema; a call that passes it goes to
- * `call`.
+ * Põe cada ferramenta de fonte num servidor MCP, com o schema; uma chamada que passa por
+ * ele vai para o `call`.
  */
 export function registerSourceTools(props: {
   mcp: McpServer;

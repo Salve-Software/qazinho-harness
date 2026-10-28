@@ -1,8 +1,8 @@
 import type { SourceCall } from './SourceCall';
 
 /**
- * A source tool call read against its schema: what to fetch, or what to say back to the
- * agent.
+ * Uma chamada de ferramenta de fonte lida contra o schema: o que buscar, ou o que
+ * responder ao agente.
  */
 export type SourceToolRead =
   { kind: 'call'; call: SourceCall } | { kind: 'refused'; error: string };

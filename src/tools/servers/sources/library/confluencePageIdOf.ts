@@ -1,6 +1,6 @@
 /**
- * The id of a Confluence page in what the agent was given, a bare id or a link to the
- * page; null when there is none.
+ * O id de uma página do Confluence no que o agente recebeu, um id puro ou um link para a
+ * página; null quando não há nenhum.
  */
 export function confluencePageIdOf(text: string): string | null {
   const trimmed = text.trim();

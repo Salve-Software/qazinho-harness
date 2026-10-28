@@ -15,7 +15,10 @@ describe('variableNamed', () => {
       );
   });
 
-  /** The vault refuses a name longer than this, so the agent must hear it before the QA types a value. */
+  /**
+   * O cofre recusa um nome mais longo que isto, então o agente precisa ouvir antes de o
+   * QA digitar um valor.
+   */
   it('does NOT take a name longer than the vault keeps', () => {
     expect(NAME.safeParse(`A${'B'.repeat(63)}`).success).toBe(true);
     expect(NAME.safeParse(`A${'B'.repeat(64)}`).success).toBe(false);
