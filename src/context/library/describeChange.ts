@@ -2,8 +2,8 @@ import type { IHarnessSection } from '@/context/types';
 import type { IBrokenTest, IChangeBrief, IWantedTest } from '@/types';
 
 /**
- * The team's suite and what the agent is there to do in it, a test that broke or one to
- * write, as the sections it reads before it starts.
+ * A suíte do time e o que o agente vai fazer nela, um teste que quebrou ou um a escrever,
+ * como as seções que ele lê antes de começar.
  */
 export function describeChange(
   props: Omit<IChangeBrief, 'readDirs' | 'language'>,

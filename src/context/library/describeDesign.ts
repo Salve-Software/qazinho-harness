@@ -3,8 +3,8 @@ import type { IDesignLink } from '@/contract';
 import { DESIGN_SECTION } from '@/constants';
 
 /**
- * The Figma design a workspace is checked against, as the agent reads it: the file and
- * the node its link points at.
+ * O design do Figma contra o qual um workspace é conferido, como o agente o lê: o arquivo
+ * e o nó para que o link aponta.
  */
 export function describeDesign(props: {
   design: IDesignLink | null;

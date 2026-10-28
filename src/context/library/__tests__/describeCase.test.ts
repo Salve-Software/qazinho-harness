@@ -83,9 +83,10 @@ describe('describeCase', () => {
   });
 
   /**
-   * A Portuguese case came back with an English note while the rule sat only in the system prompt,
-   * and a Portuguese case full of an English site's labels came back in English while this line
-   * asked for the language of the steps: it now names the language the QA reads.
+   * Um caso em português voltou com uma nota em inglês enquanto a regra ficava só no
+   * system prompt, e um caso em português cheio de rótulos de um site em inglês voltou em
+   * inglês enquanto esta linha pedia o idioma dos passos: agora ela nomeia o idioma que o
+   * QA lê.
    */
   it('asks for the report in the language the QA reads, next to the steps', () => {
     expect(
@@ -117,7 +118,10 @@ describe('describeCase', () => {
     ).toContain('The device shows right now:\nSign in · [button] Continue');
   });
 
-  /** Each case is a fresh agent: without this, the QA was asked the test account's e-mail once per case. */
+  /**
+   * Cada caso é um agente novo: sem isto, o QA era perguntado o e-mail da conta de teste
+   * uma vez por caso.
+   */
   it('hands over what the QA already answered in this run, so the case does not ask again', () => {
     const message = describeCase({
       steps: [STEP],
@@ -162,7 +166,7 @@ describe('describeCase', () => {
     ).toBe('This case has no steps. End your turn.');
   });
 
-  /** The same layout jump was filed three times, once by each case's own agent. */
+  /** O mesmo salto de layout foi aberto três vezes, uma pelo agente de cada caso. */
   it('lists the bugs the run already filed, so a later case does not file them again', () => {
     expect(
       describeCase({
@@ -179,7 +183,10 @@ describe('describeCase', () => {
     );
   });
 
-  /** The same coupon bug came back as BUG-03 in a run that did not know BUG-01 was open. */
+  /**
+   * O mesmo bug do cupom voltou como BUG-03 numa run que não sabia que o BUG-01 estava
+   * aberto.
+   */
   it('lists the bugs already open in the workspace, with how to count one seen again', () => {
     expect(
       describeCase({

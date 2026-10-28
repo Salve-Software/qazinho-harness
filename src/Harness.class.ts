@@ -79,8 +79,8 @@ import {
 import { designAccessOf, toolsOfRole } from '@/tools/library';
 
 /**
- * QAzinho's product harness: what the QA's agent is told, and which of QAzinho's tools it
- * gets.
+ * O harness de produto do QAzinho: o que o agente do QA ouve, e quais ferramentas do
+ * QAzinho ele recebe.
  */
 export class Harness {
   private readonly corpus: readonly ICorpusFile[];
@@ -90,8 +90,8 @@ export class Harness {
   }
 
   /**
-   * The system prompt for a target: the corpus it reads, with this call's values filled
-   * in.
+   * O system prompt de um alvo: o corpus que ele lê, com os valores desta chamada
+   * preenchidos.
    */
   public contextFor(props: {
     target: IHarnessTarget;
@@ -102,22 +102,24 @@ export class Harness {
     return renderSections(fillSections({ sections, values: props.values ?? {} }));
   }
 
-  /** The tools a role may call; a role with none runs with every tool taken away. */
+  /**
+   * As ferramentas que um papel pode chamar; um papel sem nenhuma roda com todas tiradas.
+   */
   public toolsFor(role: HarnessRole): IHarnessTools {
     return toolsOfRole({ grants: TOOL_GRANTS, role, server: MCP_HOST.name });
   }
 
   /**
-   * The QA's own Figma server and the tools of it that read, for a call on a workspace
-   * with a design.
+   * O servidor Figma do próprio QA e as ferramentas dele que leem, para uma chamada num
+   * workspace com design.
    */
   public designAccess(design: IDesignLink | null): IDesignAccess {
     return designAccessOf(design);
   }
 
   /**
-   * One chat message: the corpus as system prompt, what the agent was not told yet, and
-   * what it may read or open.
+   * Uma mensagem do chat: o corpus como system prompt, o que o agente ainda não ouviu, e
+   * o que ele pode ler ou abrir.
    */
   public chat(props: {
     text: string;
@@ -196,8 +198,8 @@ export class Harness {
   }
 
   /**
-   * What a chat session has read once its agent fetched a story or a page on its own, so
-   * the next message does not hand them over again.
+   * O que uma sessão de chat já leu quando o agente buscou uma story ou uma página por
+   * conta própria, para a próxima mensagem não entregá-las de novo.
    */
   public toldAfterReading(props: {
     told: Record<string, string>;
@@ -216,8 +218,8 @@ export class Harness {
   }
 
   /**
-   * One message to the assistant: the corpus as its system prompt, the QA's words opened
-   * by what changed on screen and in the app, and the app tools.
+   * Uma mensagem ao assistente: o corpus como system prompt, as palavras do QA abertas
+   * pelo que mudou na tela e no app, e as ferramentas do app.
    */
   public assistant(props: {
     text: string;
@@ -243,8 +245,8 @@ export class Harness {
   }
 
   /**
-   * One build of the app, by an agent of its own: what to build and on what machine, the
-   * commands it may run alone, and the folder it works in.
+   * Um build do app, por um agente próprio: o que construir e em que máquina, os comandos
+   * que ele pode rodar sozinho, e a pasta em que trabalha.
    */
   public build(props: {
     platform: 'android' | 'ios';
@@ -276,8 +278,8 @@ export class Harness {
   }
 
   /**
-   * One change to the team's suite: its copy, the test to fix or write, the file tools
-   * and the tool that runs tests.
+   * Uma mudança na suíte do time: a cópia, o teste a consertar ou escrever, as
+   * ferramentas de arquivo e a que roda testes.
    */
   public change(props: IChangeBrief): {
     systemPrompt: string;
@@ -307,8 +309,8 @@ export class Harness {
   }
 
   /**
-   * One look at a bug that came back: the issue as the team keeps it, each sighting and
-   * its screens, read only.
+   * Um olhar sobre um bug que voltou: a issue como o time a mantém, cada ocorrência e as
+   * telas dela, só leitura.
    */
   public review(brief: IReviewBrief): {
     systemPrompt: string;
@@ -331,8 +333,8 @@ export class Harness {
   }
 
   /**
-   * One read of a pull request by a tool-less agent: the PR, its changes, the issue it
-   * closes and the plans.
+   * Uma leitura de pull request por um agente sem ferramentas: o PR, as mudanças, a issue
+   * que ele fecha e os planos.
    */
   public readPull(brief: IPullBrief): {
     systemPrompt: string;
@@ -353,39 +355,41 @@ export class Harness {
   }
 
   /**
-   * What the reader answered, checked against its schema and the plans it read; null when
-   * it is not an answer.
+   * O que o leitor respondeu, conferido contra o schema e os planos que leu; null quando
+   * não é uma resposta.
    */
   public readPullAnswer(props: { text: string; brief: IPullBrief }): IPullAnswer | null {
     return readPullAnswer(props);
   }
 
-  /** The review out of what the agent printed; null when it answered something else. */
+  /**
+   * A revisão a partir do que o agente imprimiu; null quando ele respondeu outra coisa.
+   */
   public readReview(text: string): IReviewAnswer | null {
     return readReviewAnswer(text);
   }
 
-  /** The change answer out of what the agent printed. */
+  /** A resposta da mudança a partir do que o agente imprimiu. */
   public readChange(text: string): IChangeAnswer {
     return readChangeAnswer(text);
   }
 
-  /** The build answer out of what the agent printed. */
+  /** A resposta do build a partir do que o agente imprimiu. */
   public readBuild(text: string): IBuildAnswer {
     return readBuildAnswer(text);
   }
 
   /**
-   * The chat answer out of what the agent printed, checked against the schema it was
-   * asked for.
+   * A resposta do chat a partir do que o agente imprimiu, conferida contra o schema
+   * pedido.
    */
   public readChat(text: string): IChatAnswer | null {
     return readChatAnswer(text);
   }
 
   /**
-   * The system prompt of a run on one device, in the language the QA reads; a browser
-   * also gets the window size.
+   * O system prompt de uma run num dispositivo, no idioma que o QA lê; um navegador
+   * também recebe o tamanho da janela.
    */
   public run(props: {
     target: ITargetUnderTest;
@@ -403,8 +407,8 @@ export class Harness {
   }
 
   /**
-   * The system prompt of an exploration of the app on one device, with no plan: how long
-   * it goes, in the language the QA reads.
+   * O system prompt de uma exploração do app num dispositivo, sem plano: quanto tempo
+   * dura, no idioma que o QA lê.
    */
   public explore(props: {
     target: ITargetUnderTest;
@@ -424,8 +428,8 @@ export class Harness {
   }
 
   /**
-   * The message that starts an exploration: how long it goes, the variables it may type,
-   * the bugs already open, and the screen it starts on.
+   * A mensagem que começa uma exploração: quanto tempo dura, as variáveis que pode
+   * digitar, os bugs já abertos e a tela em que começa.
    */
   public startExploring(props: {
     minutes: number;
@@ -438,8 +442,8 @@ export class Harness {
   }
 
   /**
-   * The message that starts a case's turn: the QA's language, the variables, the answers
-   * given and the open bugs.
+   * A mensagem que começa o turno de um caso: o idioma do QA, as variáveis, as respostas
+   * dadas e os bugs abertos.
    */
   public walk(props: {
     steps: IFlatStep[];

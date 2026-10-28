@@ -3,8 +3,8 @@ import type { ICodeCopy } from '@/contract';
 import { CODE_SECTION } from '@/constants';
 
 /**
- * A branch's code as the agent reads it: the repository at its commit, where it sits, and
- * what it changed against the base.
+ * O código de uma branch como o agente o lê: o repositório no commit, onde ele está, e o
+ * que mudou contra a base.
  */
 export function describeCode(props: {
   code: ICodeCopy | null;

@@ -3,8 +3,8 @@ import type { IPullBrief } from '@/types';
 import { PULL_SECTION } from '@/constants';
 
 /**
- * A pull request as the reader weighs it: the PR and its issue as data, patches cut to a
- * budget, and the plans.
+ * Um pull request como o leitor o pesa: o PR e a issue como dados, os patches cortados a
+ * um orçamento, e os planos.
  */
 export function describePull(brief: IPullBrief): IHarnessSection[] {
   const { pull } = brief;

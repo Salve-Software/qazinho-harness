@@ -12,8 +12,8 @@ const ENDINGS: Record<IAppRunBrief['endedBy'], string> = {
 const INTEGRATION_NAMES = { github: 'GitHub', jira: 'Jira' } as const;
 
 /**
- * QAzinho as it is now: how the QA set it up, the trackers, every project with its
- * variables by name, and every workspace by id.
+ * O QAzinho como está agora: como o QA o configurou, os trackers, cada projeto com as
+ * variáveis pelo nome, e cada workspace pelo id.
  */
 export function describeApp(app: IAppSnapshot): IHarnessSection {
   const integrations = app.integrations.map(({ id, account }) =>

@@ -3,8 +3,8 @@ import { describeKnownBugs } from './describeKnownBugs';
 import { describeVariables } from './describeVariables';
 
 /**
- * The message that starts an exploration: its time, the Figma design, the variables, the
- * open bugs and the screen.
+ * A mensagem que começa uma exploração: o tempo, o design do Figma, as variáveis, os bugs
+ * abertos e a tela.
  */
 export function describeExploration(props: {
   minutes: number;

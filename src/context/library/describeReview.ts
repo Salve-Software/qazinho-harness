@@ -2,8 +2,8 @@ import type { IHarnessSection } from '@/context/types';
 import type { IReviewBrief } from '@/types';
 
 /**
- * A bug seen again as the reviewing agent reads it: the issue as the team keeps it now,
- * the bug as QAzinho first filed it, and each time a run caught it again.
+ * Um bug visto de novo como o agente revisor o lê: a issue como o time a mantém agora, o
+ * bug como o QAzinho o abriu, e cada vez que uma run o pegou de novo.
  */
 export function describeReview(brief: IReviewBrief): IHarnessSection[] {
   const { issue, bug } = brief;

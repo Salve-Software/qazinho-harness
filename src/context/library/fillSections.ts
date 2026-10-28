@@ -1,8 +1,8 @@
 import type { IHarnessSection } from '@/context/types';
 
 /**
- * Puts each `{{name}}` of the corpus in its value; a placeholder with no value is a
- * corpus typo, and throws.
+ * Troca cada `{{name}}` do corpus pelo seu valor; um placeholder sem valor é erro de
+ * digitação do corpus, e lança erro.
  */
 export function fillSections(props: {
   sections: IHarnessSection[];

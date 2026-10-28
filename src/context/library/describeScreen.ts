@@ -2,8 +2,8 @@ import type { IHarnessSection } from '@/context/types';
 import type { IAppSnapshot } from '@/contract';
 
 /**
- * Where the QA is in QAzinho as they write: home, settings, or a workspace's chat with
- * the panel beside it on one of its tabs, and what is open there.
+ * Onde o QA está no QAzinho enquanto escreve: início, configurações, ou o chat de um
+ * workspace com o painel ao lado numa das abas, e o que está aberto ali.
  */
 export function describeScreen(app: IAppSnapshot): IHarnessSection {
   const title = 'On screen';

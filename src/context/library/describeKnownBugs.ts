@@ -2,8 +2,8 @@ import type { IKnownBug } from '@/contract';
 import { KNOWN_BUGS } from '@/constants';
 
 /**
- * The bugs already open, the latest ones, as the lines that list them under a blank line
- * with how to say one is seen again; none when there are none.
+ * Os bugs já abertos, os mais recentes, nas linhas que os listam sob uma linha em branco,
+ * com como dizer que um voltou; nada quando não há.
  */
 export function describeKnownBugs(known: IKnownBug[]): string[] {
   if (known.length === 0) return [];

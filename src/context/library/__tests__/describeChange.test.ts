@@ -69,7 +69,7 @@ describe('describeChange', () => {
     );
   });
 
-  /** The notes hold fenced blocks of their own; a fence of four keeps them inside. */
+  /** As notas têm blocos cercados próprios; uma cerca de quatro os mantém dentro. */
   it('fences what Playwright noted with four backticks, so its own blocks stay inside', () => {
     const lines = describeChange(BRIEF)[1]?.lines ?? [];
     const notes = lines.indexOf(BROKEN.notes);

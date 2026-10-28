@@ -1,4 +1,4 @@
-/** One titled block of the system prompt; the harness is these, in order. */
+/** Um bloco com título do system prompt; o harness é feito destes, em ordem. */
 export interface IHarnessSection {
   title: string;
   lines: string[];

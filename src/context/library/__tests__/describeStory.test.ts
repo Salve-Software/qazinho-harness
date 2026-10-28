@@ -79,7 +79,10 @@ describe('describeStory', () => {
     });
   });
 
-  /** The story is written by anyone with access to Jira: it must not close QAzinho's block. */
+  /**
+   * A story é escrita por qualquer um com acesso ao Jira: ela não pode fechar o bloco do
+   * QAzinho.
+   */
   it('does NOT let the story close the block QAzinho tells it in', () => {
     const lines = describeStory({
       story: {

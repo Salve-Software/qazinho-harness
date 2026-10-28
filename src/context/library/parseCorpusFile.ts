@@ -4,8 +4,8 @@ import { parse } from 'yaml';
 const FRONTMATTER = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
 
 /**
- * Reads a corpus `.md`: where it lives says who reads it, its frontmatter which roles
- * never do, and its body is one `## Title` section.
+ * Lê um `.md` do corpus: onde ele mora diz quem o lê, o frontmatter quais papéis nunca o
+ * leem, e o corpo é uma seção `## Título`.
  */
 export function parseCorpusFile(props: { path: string; text: string }): ICorpusFile {
   const { path, text } = props;

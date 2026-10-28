@@ -2,8 +2,8 @@ import type { IHarnessSection } from '@/context/types';
 import type { IVariableBrief } from '@/contract';
 
 /**
- * The variables the project keeps, by name and what each holds, as a section the chat
- * plans with; never a value.
+ * As variáveis que o projeto guarda, pelo nome e pelo que cada uma guarda, como uma seção
+ * com que o chat planeja; nunca um valor.
  */
 export function describeKeptVariables(variables: IVariableBrief[]): IHarnessSection {
   return {

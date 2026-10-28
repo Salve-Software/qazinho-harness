@@ -1,8 +1,8 @@
 import type { IHarnessSection } from '@/context/types';
 
 /**
- * The sections the agent has not read as they are now, and what it will have read, by
- * title, once it gets them.
+ * As seções que o agente não leu como estão agora, e o que ele terá lido, por título,
+ * quando recebê-las.
  */
 export function changedSections(props: {
   sections: IHarnessSection[];

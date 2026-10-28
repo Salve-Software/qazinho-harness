@@ -18,8 +18,9 @@ import {
 } from '@/index';
 
 /**
- * The files in __prompts__ are what the agent read before the harness moved to src/harness/.
- * Any change to what the agent is told shows up here as a diff of one of them, on purpose.
+ * Os arquivos em __prompts__ são o que o agente lia antes de o harness ir para
+ * src/harness/. Qualquer mudança no que o agente ouve aparece aqui como diff de um deles,
+ * de propósito.
  */
 const COUPON = {
   caseId: 'TC-01',
@@ -358,14 +359,19 @@ describe('Harness', () => {
       expect(harness.chat(EMPTY_CHAT).prompt).not.toContain('## Runs in this workspace');
     });
 
-    /** The QA's company MCP is hers to answer for: the chat may use it, and QAzinho grants it. */
+    /**
+     * O MCP da empresa do QA é responsabilidade do próprio QA: o chat pode usá-lo, e o
+     * QAzinho o libera.
+     */
     it("names the tool that lets the chat use the QA's own MCP servers", () => {
       expect(harness.chat(EMPTY_CHAT).permissionTool).toBe(
         'mcp__qazinho__approve_permission',
       );
     });
 
-    /** The QA named a Confluence page in words, and the chat had no way to read it. */
+    /**
+     * O QA nomeou uma página do Confluence em palavras, e o chat não tinha como lê-la.
+     */
     it("gives the chat the QA's Jira and Confluence to read, and no other tool of QAzinho", () => {
       expect(harness.chat(EMPTY_CHAT).tools).toEqual({
         groups: ['sources'],
@@ -375,7 +381,10 @@ describe('Harness', () => {
   });
 
   describe('toldAfterReading', () => {
-    /** The agent read the story through its own tool: the next message would have handed it over whole again. */
+    /**
+     * O agente leu a story pela própria ferramenta: a próxima mensagem a teria entregado
+     * inteira de novo.
+     */
     it('counts a story the agent read on its own as told, so the next message leaves it out', () => {
       const told = harness.toldAfterReading({ told: {}, story: STORY, page: null });
       const next = harness.chat({ ...EMPTY_CHAT, story: STORY, told });
@@ -858,7 +867,10 @@ describe('Harness', () => {
       );
     });
 
-    /** The tests run through QAzinho, which knows the secrets the agent never sees: the agent gets no shell at all. */
+    /**
+     * Os testes rodam pelo QAzinho, que conhece os segredos que o agente nunca vê: o
+     * agente não recebe shell nenhum.
+     */
     it('asks for a new test with the QA words, the plan case and where to put it', async () => {
       await expect(
         harness.change({
@@ -929,7 +941,10 @@ describe('Harness', () => {
   });
 
   describe('the device tools', () => {
-    /** Listed the way the agent lists them: an MCP client over an in-memory pipe, no network. */
+    /**
+     * Listadas do jeito que o agente as lista: um cliente MCP sobre um canal em memória,
+     * sem rede.
+     */
     it('lists them to the agent exactly as pinned', async () => {
       const mcp = new McpServer({ name: 'qazinho', version: '0' });
       const client = new Client({ name: 'pin', version: '0' });
@@ -974,7 +989,10 @@ describe('Harness', () => {
   });
 
   describe('the suite tools', () => {
-    /** Listed the way the automator lists them: an MCP client over an in-memory pipe, no network. */
+    /**
+     * Listadas do jeito que o automator as lista: um cliente MCP sobre um canal em
+     * memória, sem rede.
+     */
     it('lists them to the agent exactly as pinned', async () => {
       const mcp = new McpServer({ name: 'qazinho', version: '0' });
       const client = new Client({ name: 'pin', version: '0' });
@@ -994,7 +1012,10 @@ describe('Harness', () => {
   });
 
   describe('the source tools', () => {
-    /** Listed the way the chat lists them: an MCP client over an in-memory pipe, no network. */
+    /**
+     * Listadas do jeito que o chat as lista: um cliente MCP sobre um canal em memória,
+     * sem rede.
+     */
     it('lists them to the agent exactly as pinned', async () => {
       const mcp = new McpServer({ name: 'qazinho', version: '0' });
       const client = new Client({ name: 'pin', version: '0' });
@@ -1014,7 +1035,10 @@ describe('Harness', () => {
   });
 
   describe('the app tools', () => {
-    /** Listed the way the assistant lists them: an MCP client over an in-memory pipe, no network. */
+    /**
+     * Listadas do jeito que o assistente as lista: um cliente MCP sobre um canal em
+     * memória, sem rede.
+     */
     it('lists them to the agent exactly as pinned', async () => {
       const mcp = new McpServer({ name: 'qazinho', version: '0' });
       const client = new Client({ name: 'pin', version: '0' });

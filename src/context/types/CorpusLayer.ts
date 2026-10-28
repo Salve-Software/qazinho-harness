@@ -1,2 +1,4 @@
-/** How widely a corpus file applies, from every call down to one device platform. */
+/**
+ * Até onde um arquivo do corpus vale, de toda chamada até uma plataforma de dispositivo.
+ */
 export type CorpusLayer = 'universal' | 'role' | 'platform';

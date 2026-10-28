@@ -30,7 +30,10 @@ describe('describeKnownBugs', () => {
     ]);
   });
 
-  /** A workspace that has run for months keeps every bug it caught; each case's agent hears only the latest. */
+  /**
+   * Um workspace que roda há meses guarda todo bug que pegou; o agente de cada caso ouve
+   * só os mais recentes.
+   */
   it('lists only the latest bugs, and counts the older ones it leaves out', () => {
     const known = Array.from({ length: KNOWN_BUGS.shown + 2 }, (_, index) => ({
       ...COUPON,

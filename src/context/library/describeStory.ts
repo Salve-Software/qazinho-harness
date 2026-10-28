@@ -5,8 +5,8 @@ import { STORY_SECTION } from '@/constants';
 const KILOBYTE = 1_024;
 
 /**
- * A Jira story as the planning agent reads it: what it asks for, how it is accepted, what
- * the team said, what it links to, and where its files were downloaded.
+ * Uma story do Jira como o agente que planeja a lê: o que ela pede, como é aceita, o que
+ * o time disse, a que ela se liga, e onde os arquivos foram baixados.
  */
 export function describeStory(props: {
   story: IJiraStoryCopy | null;

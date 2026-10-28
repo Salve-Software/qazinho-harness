@@ -57,7 +57,10 @@ describe('describeReview', () => {
     ]);
   });
 
-  /** The issue is the team's words: it may close QAzinho's own tags, but never as one. */
+  /**
+   * A issue é a palavra do time: ela pode fechar as tags do próprio QAzinho, mas nunca
+   * como uma delas.
+   */
   it('quotes what the team wrote so it can never close a section', () => {
     const [issue] = describeReview(BRIEF);
 

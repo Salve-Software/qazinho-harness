@@ -3,8 +3,8 @@ import type { IConfluencePage } from '@/contract';
 import { PAGE_SECTION } from '@/constants';
 
 /**
- * A Confluence page as the planning agent reads it: its title, space and address, then
- * its text indented, so it can neither start a section nor close QAzinho's block.
+ * Uma página do Confluence como o agente que planeja a lê: título, espaço e endereço,
+ * depois o texto indentado, para não abrir uma seção nem fechar o bloco do QAzinho.
  */
 export function describePage(read: IConfluencePage | null): IHarnessSection {
   if (read === null) return { title: PAGE_SECTION.title, lines: [] };

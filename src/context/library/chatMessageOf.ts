@@ -2,8 +2,8 @@ import type { IHarnessSection } from '@/context/types';
 import { renderSections } from './renderSections';
 
 /**
- * The QA's message as the agent reads it: what QAzinho has to tell, inside <qazinho>,
- * then the QA's own words.
+ * A mensagem do QA como o agente a lê: o que o QAzinho tem a dizer, dentro de <qazinho>,
+ * depois as palavras do próprio QA.
  */
 export function chatMessageOf(props: {
   sections: IHarnessSection[];

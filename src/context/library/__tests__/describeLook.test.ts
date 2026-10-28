@@ -31,7 +31,10 @@ describe('describeLook', () => {
     ]);
   });
 
-  /** On a phone the agent planned blind and asked about logins and fields the app did not have. */
+  /**
+   * Num celular o agente planejava às cegas e perguntava de logins e campos que o app não
+   * tinha.
+   */
   it("hands the agent a phone app's first screen, and says nothing beyond it was tapped", () => {
     expect(
       describeLook({

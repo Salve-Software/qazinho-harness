@@ -2,8 +2,8 @@ import type { CorpusLayer } from './CorpusLayer';
 import type { IHarnessSection } from './IHarnessSection';
 
 /**
- * One `.md` of the corpus: its layer and scope come from its path, its order and the
- * roles that never read it from its frontmatter.
+ * Um `.md` do corpus: a camada e o escopo vêm do caminho, a ordem e os papéis que nunca o
+ * leem vêm do frontmatter.
  */
 export interface ICorpusFile {
   path: string;

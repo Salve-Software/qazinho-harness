@@ -10,8 +10,8 @@ import { describeKnownBugs } from './describeKnownBugs';
 import { describeVariables } from './describeVariables';
 
 /**
- * The message that starts a case: its steps and frames, the language, variables, answers
- * given and open bugs.
+ * A mensagem que começa um caso: os passos e frames, o idioma, as variáveis, as respostas
+ * dadas e os bugs abertos.
  */
 export function describeCase(props: {
   steps: IFlatStep[];

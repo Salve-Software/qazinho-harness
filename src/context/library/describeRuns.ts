@@ -2,8 +2,8 @@ import type { IHarnessSection } from '@/context/types';
 import type { IChatReference } from '@/contract';
 
 /**
- * How the workspace's latest runs went, as a section the agent answers from; nothing
- * before the first run.
+ * Como foram as últimas runs do workspace, como uma seção a partir da qual o agente
+ * responde; nada antes da primeira run.
  */
 export function describeRuns(runs: IChatReference[]): IHarnessSection {
   return {
