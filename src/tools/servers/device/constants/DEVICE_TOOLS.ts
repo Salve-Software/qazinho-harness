@@ -318,6 +318,14 @@ export const DEVICE_TOOLS = [
           'When the answer is one of a few: up to four short answers the QA picks from. They can always answer in their own words.',
         )
         .optional(),
+      screen: z
+        .string()
+        .trim()
+        .max(60)
+        .describe(
+          'The screen you are on, in the words the app uses for it, such as "Carrinho": the QA sees the question under it.',
+        )
+        .optional(),
       secret: z
         .object(
           {

@@ -52,12 +52,13 @@ export function readToolCall(props: {
     if (!read.success)
       return { kind: 'refused', error: read.error.issues[0]?.message ?? 'Ask again.' };
 
-    const { question, options, secret } = read.data;
+    const { question, screen, options, secret } = read.data;
 
     return {
       kind: 'ask',
       question: {
         question,
+        screen: screen === undefined || screen === '' ? null : screen,
         options: secret === undefined ? [...new Set(options ?? [])] : [],
         secret: secret ?? null,
       },

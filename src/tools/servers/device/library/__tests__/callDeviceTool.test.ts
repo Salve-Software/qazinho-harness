@@ -338,7 +338,12 @@ describe('callDeviceTool', () => {
       });
 
       expect(asked).toEqual([
-        { question: 'Which plan?', options: ['Premium', 'Premium+'], secret: null },
+        {
+          question: 'Which plan?',
+          screen: null,
+          options: ['Premium', 'Premium+'],
+          secret: null,
+        },
       ]);
       expect(answer.isError).toBe(false);
       expect(text(answer)).toBe('The QA answered: Premium+');

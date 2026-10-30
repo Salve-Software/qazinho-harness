@@ -263,10 +263,20 @@ describe('readToolCall', () => {
         kind: 'ask',
         question: {
           question: 'Which plan should I pick?',
+          screen: null,
           options: ['Premium', 'Premium+'],
           secret: null,
         },
       });
+    });
+
+    it('keeps the screen the agent says it is on, for the QA to see the question under', () => {
+      expect(
+        readToolCall({
+          name: 'ask_qa',
+          args: { question: 'Is there a coupon?', screen: ' Carrinho ' },
+        }),
+      ).toMatchObject({ kind: 'ask', question: { screen: 'Carrinho' } });
     });
 
     it('reads a secret with the variable it is kept as, its name in capitals', () => {
@@ -282,6 +292,7 @@ describe('readToolCall', () => {
         kind: 'ask',
         question: {
           question: 'What is the code texted to your phone?',
+          screen: null,
           options: [],
           secret: { name: 'OTP_CODE', description: 'The code texted to the QA' },
         },

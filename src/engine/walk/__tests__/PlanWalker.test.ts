@@ -425,6 +425,7 @@ describe('PlanWalker', () => {
     const agent = fakeAgent(async (turn) => {
       const said = await turn.device.onAsk?.({
         question: 'Which code did the phone get?',
+        screen: null,
         options: [],
         secret: null,
       });
