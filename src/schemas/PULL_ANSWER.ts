@@ -6,6 +6,23 @@ const STEP = z.object({
 });
 
 export const PULL_ANSWER = z.object({
+  risks: z
+    .array(
+      z.object({
+        why: z
+          .string()
+          .min(1)
+          .max(300)
+          .describe(
+            'What the PR most likely breaks, in one sentence a developer reads first, such as "The total no longer adds the shipping".',
+          ),
+        file: z.string().max(400).describe('The file that breaks it.'),
+      }),
+    )
+    .max(5)
+    .describe(
+      'What the code shows the PR most likely breaks for someone using the app; empty when it shows nothing, never a guess.',
+    ),
   breaks: z
     .array(
       z.object({

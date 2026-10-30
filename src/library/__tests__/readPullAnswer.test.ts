@@ -53,7 +53,7 @@ const BRIEF: IPullBrief = {
 };
 
 const answerOf = (change: object) =>
-  JSON.stringify({ breaks: [], reruns: [], newCases: [], ...change });
+  JSON.stringify({ risks: [], breaks: [], reruns: [], newCases: [], ...change });
 
 describe('readPullAnswer', () => {
   it('reads the steps a PR breaks, the cases it touches and the ones it asks for', () => {
@@ -130,11 +130,28 @@ describe('readPullAnswer', () => {
       }),
     });
 
-    expect(read).toEqual({ breaks: [], reruns: [], newCases: [] });
+    expect(read).toEqual({ risks: [], breaks: [], reruns: [], newCases: [] });
   });
 
   it('reads nothing out of what is not an answer', () => {
     expect(readPullAnswer({ brief: BRIEF, text: 'not json' })).toBeNull();
     expect(readPullAnswer({ brief: BRIEF, text: '{"breaks": "all"}' })).toBeNull();
+  });
+
+  /**
+   * O bug do refactor estava espalhado em onze casos para rodar de novo: o que o PR
+   * provavelmente quebra vem à parte, para o comentário pô-lo no topo.
+   */
+  it('reads what the PR most likely breaks apart from the cases it touches', () => {
+    const read = readPullAnswer({
+      text: answerOf({
+        risks: [{ why: ' O total deixou de somar o frete. ', file: 'app.js' }],
+      }),
+      brief: BRIEF,
+    });
+
+    expect(read?.risks).toEqual([
+      { why: 'O total deixou de somar o frete.', file: 'app.js' },
+    ]);
   });
 });

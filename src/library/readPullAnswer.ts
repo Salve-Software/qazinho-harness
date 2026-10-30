@@ -21,6 +21,7 @@ export function readPullAnswer(props: {
     const hasPlan = (planId: string) => props.brief.plans.some(({ id }) => id === planId);
 
     return {
+      risks: read.data.risks.map((one) => ({ why: one.why.trim(), file: one.file })),
       breaks: read.data.breaks
         .filter((one) => (caseOf(one.planId, one.caseId)?.steps.length ?? 0) >= one.step)
         .map((one) => ({

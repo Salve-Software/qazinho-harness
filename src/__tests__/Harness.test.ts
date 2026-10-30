@@ -818,6 +818,7 @@ describe('Harness', () => {
             ],
             reruns: [],
             newCases: [],
+            risks: [],
           }),
         })?.breaks,
       ).toHaveLength(1);

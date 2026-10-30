@@ -1,8 +1,9 @@
 /**
- * O que o leitor achou num pull request: os passos que ele quebra como ficarão, os casos
- * que toca e os casos que pede; cada um nomeado pelo arquivo que o muda.
+ * O que o leitor de um pull request respondeu: o que ele provavelmente quebra, os passos
+ * que muda, os casos que toca e os que pede.
  */
 export interface IPullAnswer {
+  risks: { why: string; file: string }[];
   breaks: {
     planId: string;
     caseId: string;
