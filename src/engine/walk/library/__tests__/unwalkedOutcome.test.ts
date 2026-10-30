@@ -21,6 +21,7 @@ describe('unwalkedOutcome', () => {
       workspaceId: 'w-1',
       verdict: 'skipped',
       why: UNWALKED.skipped,
+      reason: 'skipped',
       at: 1_760_000_000_000,
     });
 
@@ -37,6 +38,7 @@ describe('unwalkedOutcome', () => {
         workspaceId: 'w-1',
         verdict: 'blocked',
         why: UNWALKED.unreported,
+        reason: 'unreported',
         at: 1_760_000_000_000,
       }).verdict,
     ).toBe('blocked');
@@ -50,6 +52,7 @@ describe('unwalkedOutcome', () => {
         workspaceId: 'w-1',
         verdict: 'skipped',
         why: '',
+        reason: null,
         at: 1_760_000_000_000,
       }),
     ).toMatchObject({
@@ -62,5 +65,21 @@ describe('unwalkedOutcome', () => {
       screenshot: null,
       shotFile: null,
     });
+  });
+
+  it('carries the code of why a step never ran, and none when the why is its own', () => {
+    const outcome = (reason: 'skipped' | null) =>
+      unwalkedOutcome({
+        step: STEP,
+        index: 4,
+        workspaceId: 'w-1',
+        verdict: 'skipped',
+        why: 'Something else',
+        reason,
+        at: 1_760_000_000_000,
+      });
+
+    expect(outcome('skipped').unwalked).toBe('skipped');
+    expect(outcome(null)).not.toHaveProperty('unwalked');
   });
 });

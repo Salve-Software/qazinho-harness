@@ -309,6 +309,31 @@ describe('PlanWalker', () => {
     expect(agent.turns[1]?.prompt).toContain('Empty cart');
   });
 
+  it('says why each step after a failure never ran, so the page can say it in the QA language', async () => {
+    const agent = fakeAgent(async (turn) => {
+      await turn.device.onReport?.(
+        turn.prompt.includes('Open the cart')
+          ? report(1, {
+              verdict: 'failed',
+              why: 'The cart is empty',
+              title: 'Empty cart',
+            })
+          : report(1),
+      );
+
+      return undefined;
+    });
+    const { events } = await walkWith({ agent });
+    const skipped = events.flatMap((event) =>
+      event.kind === 'step' && event.outcome.verdict === 'skipped' ? [event.outcome] : [],
+    );
+
+    expect(skipped.map((outcome) => [outcome.caseId, outcome.unwalked])).toContainEqual([
+      'cart',
+      'skipped',
+    ]);
+  });
+
   it('skips what is left once the run spent all it may on the model, walking recordings still', async () => {
     const agent = fakeAgent(() => Promise.resolve({ kind: 'capped', costUsd: 0.2 }));
     const { steps, events } = await walkWith({ agent, book: NO_RECORDINGS });

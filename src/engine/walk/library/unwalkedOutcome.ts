@@ -1,8 +1,8 @@
-import type { IFlatStep, IStepOutcome } from '@/contract';
+import type { IFlatStep, IStepOutcome, UnwalkedReason } from '@/contract';
 
 /**
  * Um passo sem veredito próprio do agente: pulado depois de um passo que falhou, ou nunca
- * relatado.
+ * relatado, com o porquê em palavras e, quando é um dos conhecidos, o código dele.
  */
 export function unwalkedOutcome(props: {
   step: IFlatStep;
@@ -10,9 +10,10 @@ export function unwalkedOutcome(props: {
   workspaceId: string;
   verdict: 'skipped' | 'blocked';
   why: string;
+  reason: UnwalkedReason | null;
   at: number;
 }): IStepOutcome {
-  const { step, index, workspaceId, verdict, why, at } = props;
+  const { step, index, workspaceId, verdict, why, reason, at } = props;
 
   return {
     workspaceId,
@@ -30,5 +31,6 @@ export function unwalkedOutcome(props: {
     at,
     screenshot: null,
     shotFile: null,
+    ...(reason === null ? {} : { unwalked: reason }),
   };
 }

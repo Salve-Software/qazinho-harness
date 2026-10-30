@@ -17,6 +17,7 @@ import type {
   ITargetUnderTest,
   IViewport,
   Language,
+  UnwalkedReason,
 } from '@/contract';
 import type { IDeviceDriver } from '@/engine/devices/types';
 import type { IVariableValue } from '@/engine/types';
@@ -122,7 +123,7 @@ export class PlanWalker {
         this.unwalked({
           pending: [...steps],
           verdict: 'skipped',
-          why: this.isCapped ? UNWALKED.capped : UNWALKED.noAgent,
+          reason: this.isCapped ? 'capped' : 'noAgent',
         });
         continue;
       }
@@ -242,7 +243,7 @@ export class PlanWalker {
         props.filed.push(report.title);
 
       if (report.verdict !== 'passed') {
-        this.unwalked({ pending, verdict: 'skipped', why: UNWALKED.skipped });
+        this.unwalked({ pending, verdict: 'skipped', reason: 'skipped' });
 
         return endCase('Filed. The case stops here because this step did not hold up.');
       }
@@ -319,6 +320,7 @@ export class PlanWalker {
       this.unwalked({
         pending,
         verdict: 'skipped',
+        reason: 'asked',
         why: `${UNWALKED.asked} ${question.question}`,
       });
 
@@ -395,18 +397,18 @@ export class PlanWalker {
 
     if (raced.kind === 'capped') {
       this.isCapped = true;
-      this.unwalked({ pending, verdict: 'skipped', why: UNWALKED.capped });
+      this.unwalked({ pending, verdict: 'skipped', reason: 'capped' });
 
       return { kind: 'walked' };
     }
 
     if (raced.kind === 'failed') {
-      this.unwalked({ pending, verdict: 'blocked', why: raced.reason });
+      this.unwalked({ pending, verdict: 'blocked', reason: null, why: raced.reason });
 
       return { kind: 'failed', reason: raced.reason };
     }
 
-    this.unwalked({ pending, verdict: 'blocked', why: UNWALKED.unreported });
+    this.unwalked({ pending, verdict: 'blocked', reason: 'unreported' });
 
     return { kind: 'walked' };
   }
@@ -488,9 +490,12 @@ export class PlanWalker {
   private unwalked(props: {
     pending: IIndexedStep[];
     verdict: 'skipped' | 'blocked';
-    why: string;
+    reason: UnwalkedReason | null;
+    why?: string;
   }): void {
     const at = Date.now();
+    const why =
+      props.why ?? (props.reason === null ? UNWALKED.skipped : UNWALKED[props.reason]);
 
     for (const [position, { step, index }] of props.pending.entries())
       this.onEvent({
@@ -500,7 +505,8 @@ export class PlanWalker {
           index,
           workspaceId: this.scope,
           verdict: position === 0 ? props.verdict : 'skipped',
-          why: position === 0 ? props.why : UNWALKED.skipped,
+          why: position === 0 ? why : UNWALKED.skipped,
+          reason: position === 0 ? props.reason : 'skipped',
           at,
         }),
       });

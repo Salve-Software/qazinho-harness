@@ -1,9 +1,10 @@
 import type { Severity } from './Severity';
 import type { StepVerdict } from './StepVerdict';
+import type { UnwalkedReason } from './UnwalkedReason';
 
 /**
- * Um passo que uma run relatou, com a tela embutida, o quando, quem o andou, e o bug ou
- * frame para que ele aponta.
+ * Um passo que uma run relatou: a tela, o quando, quem o andou, o bug ou frame para que
+ * aponta, e por que não rodou.
  */
 export interface IStepOutcome {
   workspaceId: string;
@@ -24,4 +25,5 @@ export interface IStepOutcome {
   by?: 'replay' | 'healed';
   sameAs?: string;
   frame?: string;
+  unwalked?: UnwalkedReason;
 }
