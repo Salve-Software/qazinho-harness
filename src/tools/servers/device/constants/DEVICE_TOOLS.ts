@@ -233,6 +233,12 @@ export const DEVICE_TOOLS = [
         })
         .describe(`When it failed: ${SEVERITY_SCALE}`)
         .optional(),
+      goesOn: z
+        .boolean()
+        .describe(
+          'When it failed: true when the action itself went through and the next step can start from this screen, and only what the step expects is wrong, such as a total, a price or a text. The bug is filed and the case goes on, so the steps after it are still tested. Leave it out when the next steps cannot start from here.',
+        )
+        .optional(),
       note: z
         .string()
         .trim()

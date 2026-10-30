@@ -152,10 +152,17 @@ describe('readToolCall', () => {
           got: 'R$ 0,00',
           title: '',
           severity: 'medium',
+          goesOn: false,
           note: '',
           proof: '',
         },
       });
+    });
+
+    it('goes on after a failure only when the agent says the action went through', () => {
+      expect(
+        readToolCall({ name: 'report', args: { ...REPORT, goesOn: true } }),
+      ).toMatchObject({ kind: 'report', report: { verdict: 'failed', goesOn: true } });
     });
 
     it('keeps the words that prove a step passed, for QAzinho to check without the agent', () => {

@@ -170,6 +170,7 @@ export class PlanWalker {
     const proofs = new Map<number, string>();
     const device = variablePort({ device: this.driver, values: this.values });
     let began = Date.now();
+    let hasFailed = false;
     let isOver = false;
     let over: () => void = () => undefined;
     const caseOver = new Promise<null>((resolve) => {
@@ -242,13 +243,21 @@ export class PlanWalker {
       if (report.verdict === 'failed' && report.title.length > 0)
         props.filed.push(report.title);
 
-      if (report.verdict !== 'passed') {
+      if (report.verdict !== 'passed') hasFailed = true;
+
+      if (
+        report.verdict === 'blocked' ||
+        (report.verdict === 'failed' && !report.goesOn)
+      ) {
         this.unwalked({ pending, verdict: 'skipped', reason: 'skipped' });
 
         return endCase('Filed. The case stops here because this step did not hold up.');
       }
 
       const next = pending[0];
+
+      if (next === undefined && hasFailed)
+        return endCase('Filed. That was the last step of this case.');
 
       if (next === undefined) {
         const recipe = recipeOf({
@@ -270,7 +279,9 @@ export class PlanWalker {
       began = Date.now();
       this.onEvent({ kind: 'doing', index: next.index, at: began });
 
-      return `Filed. Next is step ${String(next.step.numberInCase)}: ${next.step.action}`;
+      return report.verdict === 'failed'
+        ? `Filed as a bug. The action went through, so the case goes on. Next is step ${String(next.step.numberInCase)}: ${next.step.action}`
+        : `Filed. Next is step ${String(next.step.numberInCase)}: ${next.step.action}`;
     };
 
     let findings = 0;

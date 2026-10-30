@@ -19,6 +19,7 @@ const REPORT = {
   got: 'R$ 100,00',
   title: 'Coupon SAVE10 does not change the total',
   severity: 'high' as const,
+  goesOn: false,
   note: '',
   proof: '',
 };

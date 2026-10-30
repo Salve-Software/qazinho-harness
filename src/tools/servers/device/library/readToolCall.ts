@@ -27,6 +27,7 @@ export function readToolCall(props: {
         ...read.data,
         title: read.data.title ?? '',
         severity: read.data.severity ?? 'medium',
+        goesOn: read.data.goesOn ?? false,
         note: read.data.note ?? '',
         proof: read.data.proof ?? '',
       },

@@ -201,6 +201,7 @@ const report = (step: number, overrides: Partial<IStepReport> = {}): IStepReport
   got: 'As expected',
   title: '',
   severity: 'medium',
+  goesOn: false,
   note: '',
   proof: `Proof ${String(step)}`,
   ...overrides,

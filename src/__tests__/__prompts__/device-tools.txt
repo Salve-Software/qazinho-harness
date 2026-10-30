@@ -374,6 +374,10 @@
           ],
           "description": "When it failed: high: a main flow breaks, or money, data or access goes wrong, such as a wrong charge or an order not placed; medium: a feature does the wrong thing and the person has a way round it; low: only how it looks or reads."
         },
+        "goesOn": {
+          "type": "boolean",
+          "description": "When it failed: true when the action itself went through and the next step can start from this screen, and only what the step expects is wrong, such as a total, a price or a text. The bug is filed and the case goes on, so the steps after it are still tested. Leave it out when the next steps cannot start from here."
+        },
         "note": {
           "type": "string",
           "description": "When you worked around something: one sentence for the QA."

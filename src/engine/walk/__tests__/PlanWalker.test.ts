@@ -78,6 +78,7 @@ const report = (step: number, overrides: Partial<IStepReport> = {}): IStepReport
   got: '',
   title: '',
   severity: 'medium',
+  goesOn: false,
   note: '',
   proof: `Proof ${String(step)}`,
   ...overrides,
@@ -331,6 +332,56 @@ describe('PlanWalker', () => {
     expect(skipped.map((outcome) => [outcome.caseId, outcome.unwalked])).toContainEqual([
       'cart',
       'skipped',
+    ]);
+  });
+
+  it('goes on after a failed step whose action went through, and keeps no recording of it', async () => {
+    const answers: string[] = [];
+    const agent = fakeAgent(async (turn) => {
+      answers.push(
+        (await turn.device.onReport?.(
+          turn.prompt.includes('Open the cart')
+            ? report(1, {
+                verdict: 'failed',
+                why: 'The total is wrong',
+                title: 'Wrong total',
+                goesOn: true,
+              })
+            : report(1),
+        )) ?? '',
+      );
+      answers.push((await turn.device.onReport?.(report(2))) ?? '');
+
+      return undefined;
+    });
+    const { steps, ended } = await walkWith({ agent });
+
+    expect(steps).toEqual([
+      ['cart', 1, 'failed', 'agent'],
+      ['cart', 2, 'passed', 'agent'],
+      ['login', 1, 'passed', 'agent'],
+      ['login', 2, 'passed', 'agent'],
+    ]);
+    expect(answers[0]).toContain('the case goes on');
+    expect(ended.recorded.map((recipe) => recipe.caseId)).toEqual(['login']);
+  });
+
+  it('does NOT go on after a blocked step, even when the agent says it may', async () => {
+    const agent = fakeAgent(async (turn) => {
+      await turn.device.onReport?.(
+        turn.prompt.includes('Open the cart')
+          ? report(1, { verdict: 'blocked', why: 'No cart link', goesOn: true })
+          : report(1),
+      );
+      await turn.device.onReport?.(report(2));
+
+      return undefined;
+    });
+    const { steps } = await walkWith({ agent });
+
+    expect(steps.slice(0, 2)).toEqual([
+      ['cart', 1, 'blocked', 'agent'],
+      ['cart', 2, 'skipped', 'agent'],
     ]);
   });
 
