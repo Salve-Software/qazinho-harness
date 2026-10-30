@@ -141,6 +141,7 @@ describe('findLocator', () => {
           { role: 'input', label: 'E-mail', at: 4 },
           { role: 'button', label: 'Entrar', at: 6 },
         ]),
+      getByRole: (role: string) => fakeLocator({ name: `role:${role}`, count: 1 }),
       locator: () => ({
         nth: (index: number) =>
           fakeLocator({ name: `listed@${String(index)}`, count: 1 }),
@@ -149,10 +150,91 @@ describe('findLocator', () => {
 
     expect(
       locatorName(await findLocator({ page, target: 'Entrar #2', kind: 'click' })),
-    ).toBe('listed@6');
+    ).toBe('role:button');
     expect(
       locatorName(await findLocator({ page, target: 'entrar #1', kind: 'click' })),
-    ).toBe('listed@3');
+    ).toBe('role:link');
+  });
+
+  /**
+   * Seis botões "Adicionar ao carrinho": gravado como o 5º controle da página, um teste do
+   * Playwright exportado quebrava com um link novo no topo, e ninguém o lia.
+   */
+  it('names a numbered control by its role and its place among its namesakes', async () => {
+    const buttons = Array.from({ length: 6 }, (_, index) => ({
+      role: 'button',
+      label: 'Adicionar ao carrinho',
+      at: 4 + index,
+    }));
+    const page = fakePage({
+      $$eval: () => Promise.resolve(buttons),
+      getByRole: (role: string) => fakeLocator({ name: `role:${role}`, count: 6 }),
+      locator: () => ({
+        nth: (index: number) =>
+          fakeLocator({ name: `listed@${String(index)}`, count: 1 }),
+      }),
+    });
+
+    expect(
+      locatorName(
+        await findLocator({ page, target: 'Adicionar ao carrinho #6', kind: 'click' }),
+      ),
+    ).toBe('role:button#6');
+  });
+
+  it('falls back to the place among all controls when the role finds another count', async () => {
+    const page = fakePage({
+      $$eval: () =>
+        Promise.resolve([
+          { role: 'button', label: 'Comprar', at: 2 },
+          { role: 'button', label: 'Comprar', at: 5 },
+        ]),
+      getByRole: (role: string) => fakeLocator({ name: `role:${role}`, count: 3 }),
+      locator: () => ({
+        nth: (index: number) =>
+          fakeLocator({ name: `listed@${String(index)}`, count: 1 }),
+      }),
+    });
+
+    expect(
+      locatorName(await findLocator({ page, target: 'Comprar #2', kind: 'click' })),
+    ).toBe('listed@5');
+  });
+
+  /**
+   * Gravado como "Carrinho4" com quatro itens, o link do carrinho se chama "Carrinho0" num
+   * navegador limpo, e a gravação nunca se repetia.
+   */
+  it('finds a control whose counter changed, when only one has that name', async () => {
+    const page = fakePage({
+      getByRole: (_: string, options?: { name?: string | RegExp }) =>
+        fakeLocator({
+          name: options?.name instanceof RegExp ? 'role:counted' : 'role',
+          count: options?.name instanceof RegExp ? 1 : 0,
+        }),
+      getByLabel: () => fakeLocator({ name: 'label', count: 0 }),
+      getByPlaceholder: () => fakeLocator({ name: 'placeholder', count: 0 }),
+      getByText: () => fakeLocator({ name: 'text', count: 0 }),
+      locator: () => fakeLocator({ name: 'css', count: 0 }),
+    });
+
+    expect(
+      locatorName(await findLocator({ page, target: 'Carrinho4', kind: 'click' })),
+    ).toBe('role:counted');
+  });
+
+  it('does NOT guess between several controls whose counter changed', async () => {
+    const page = fakePage({
+      getByRole: (_: string, options?: { name?: string | RegExp }) =>
+        fakeLocator({ name: 'role', count: options?.name instanceof RegExp ? 2 : 0 }),
+      getByLabel: () => fakeLocator({ name: 'label', count: 0 }),
+      getByPlaceholder: () => fakeLocator({ name: 'placeholder', count: 0 }),
+      getByText: (name: string | RegExp) =>
+        fakeLocator({ name: 'text', count: name instanceof RegExp ? 2 : 0 }),
+      locator: () => fakeLocator({ name: 'css', count: 0 }),
+    });
+
+    expect(await findLocator({ page, target: 'Passo 2', kind: 'click' })).toBeNull();
   });
 
   it('falls back to the usual search when the list has no such number', async () => {

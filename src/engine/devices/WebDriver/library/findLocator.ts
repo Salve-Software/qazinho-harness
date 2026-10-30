@@ -1,11 +1,28 @@
 import type { Locator, Page } from 'playwright-core';
-import { ordinalOf, withoutRole } from '@/engine/devices/library';
+import { countedOf, ordinalOf, withoutRole } from '@/engine/devices/library';
 import { CONTROL_SELECTOR } from '@/engine/devices/WebDriver/constants';
 import { listControls } from './listControls';
 
+type AriaRole = Parameters<Page['getByRole']>[0];
+
+const ROLE_OF_TAG: Partial<Record<string, AriaRole>> = {
+  a: 'link',
+  button: 'button',
+  select: 'combobox',
+  textarea: 'textbox',
+  link: 'link',
+  tab: 'tab',
+  menuitem: 'menuitem',
+  option: 'option',
+  checkbox: 'checkbox',
+  radio: 'radio',
+  switch: 'switch',
+  combobox: 'combobox',
+};
+
 /**
  * Acha o que o agente nomeou do jeito que uma pessoa acharia: um campo para digitar ou um
- * controle para clicar, pelo nome.
+ * controle para clicar, pelo nome, mesmo quando um contador no fim dele mudou.
  */
 export async function findLocator(props: {
   page: Page;
@@ -14,8 +31,27 @@ export async function findLocator(props: {
 }): Promise<Locator | null> {
   const found = await locate(props);
   const listed = withoutRole(props.target);
+  const named =
+    found ?? (listed === null ? null : await locate({ ...props, target: listed }));
+  const counted = countedOf(ordinalOf(listed ?? props.target).name);
 
-  return found ?? (listed === null ? null : locate({ ...props, target: listed }));
+  return named ?? (counted === null ? null : onlyOne({ page: props.page, counted }));
+}
+
+async function onlyOne(props: { page: Page; counted: RegExp }): Promise<Locator | null> {
+  const { page, counted } = props;
+
+  for (const candidate of [
+    page.getByRole('link', { name: counted }),
+    page.getByRole('button', { name: counted }),
+    page.getByText(counted),
+  ]) {
+    const shown = candidate.filter({ visible: true });
+
+    if ((await shown.count().catch(() => 0)) === 1) return shown;
+  }
+
+  return null;
 }
 
 async function listed(props: {
@@ -24,12 +60,23 @@ async function listed(props: {
   nth: number;
 }): Promise<Locator | null> {
   const wanted = props.name.toLowerCase();
-  const control = (await listControls(props.page)).filter(
+  const named = (await listControls(props.page)).filter(
     ({ label }) => label.toLowerCase() === wanted,
-  )[props.nth];
+  );
+  const control = named[props.nth];
 
-  return control === undefined
-    ? null
+  if (control === undefined) return null;
+
+  const role = ROLE_OF_TAG[control.role];
+  const sameRole = named.filter((one) => one.role === control.role);
+  const semantic =
+    role === undefined
+      ? null
+      : props.page.getByRole(role, { name: control.label, exact: true });
+  const count = semantic === null ? 0 : await semantic.count().catch(() => 0);
+
+  return semantic !== null && count === sameRole.length
+    ? semantic.nth(sameRole.indexOf(control))
     : props.page.locator(CONTROL_SELECTOR).nth(control.at);
 }
 

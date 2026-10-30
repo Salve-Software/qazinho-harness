@@ -1,3 +1,4 @@
+export * from './countedOf';
 export * from './describeMeasure';
 export * from './fitPixels';
 export * from './gapsOf';
