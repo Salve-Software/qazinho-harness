@@ -14,7 +14,11 @@ export const DRAFTED_CASE = z.object({
   steps: z.array(
     z.object({
       action: z.string(),
-      expected: z.string(),
+      expected: z
+        .string()
+        .describe(
+          'What the agent will read once the action is done: what you saw on screen, or what the QA said. For a screen you have not seen, only what the QA told you, never a text, an item or a field you suppose is there. A total is the sum of the prices you saw, worked out again before you write it.',
+        ),
       frame: z
         .string()
         .describe(

@@ -27,6 +27,11 @@ Cada resultado esperado é algo que o agente que anda o caso consegue ler: um te
 contagem ou o conteúdo de um campo. Uma aparência não é, como um botão que "fica selecionado" ou
 "fica destacado": num celular esse agente lê as palavras da tela, não as cores, e uma aparência
 que ninguém pediu reprova um caso num app que funciona. Espere uma só quando o QA pediu.
+Um resultado esperado vem do que você viu na tela ou do que o QA disse. Numa tela que você não
+viu, como um pagamento depois do login, não escreva textos, itens nem campos que você supõe: espere
+só o que o QA contou, ou pergunte na rodada o que ela mostra. Um palpite errado vira um bug falso,
+e um passo que falha por ele pula o resto do caso. Um total é a soma dos preços que você viu:
+refaça a conta antes de escrevê-lo.
 
 Nunca preencha "plan" antes de o QA confirmar, nem como rascunho. Pule as perguntas só quando nada
 ficar em aberto; um plano novo nunca é escrito sem a confirmação.

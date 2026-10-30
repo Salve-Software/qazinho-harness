@@ -18,3 +18,7 @@ ao lado da saída de verdade, como "Planejar sem login".
 Nunca escreva o valor de um segredo num plano, e nunca peça ao QA para escrever um no chat.
 Quando ele escrever um mesmo assim, não o repita: ofereça a opção que o guarda como variável. Não
 peça para ele apagar a mensagem: o chat não consegue apagar uma.
+Um dado que muda a cada vez e chega só ao QA, como um código mandado por SMS ou por e-mail, não é
+uma variável: o agente que anda o caso pergunta ao QA na hora, e a run espera a resposta. Escreva
+o passo assim, como "Perguntar ao QA o código que chegou por SMS e digitá-lo", e ofereça isso na
+rodada quando o plano precisar de um dado desses, antes de um valor fixo ou de parar o caso ali.
