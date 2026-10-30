@@ -1,4 +1,5 @@
 import type { ICaseRecipe, IFlatStep, IStepAction, TargetKind } from '@/contract';
+import { ordinalOf } from '@/engine/devices/library';
 import { fingerprintOf } from './fingerprintOf';
 
 /**
@@ -20,7 +21,10 @@ export function recipeOf(props: {
   const steps = props.steps.map(({ numberInCase }) => ({
     number: numberInCase,
     actions: props.actions.get(numberInCase) ?? [],
-    proof: props.proofs.get(numberInCase) ?? '',
+    proof: (props.proofs.get(numberInCase) ?? '')
+      .split('\n')
+      .map((line) => ordinalOf(line).name)
+      .join('\n'),
   }));
 
   if (steps.some(({ proof }) => proof.trim().length === 0)) return null;

@@ -63,4 +63,27 @@ describe('recipeOf', () => {
       }),
     ).toBeNull();
   });
+
+  /**
+   * O look numera controles iguais ("Adicionar ao carrinho #6"), e o agente copiou isso
+   * como prova: o arquivo do Playwright exportado procurava um texto que a página não tem.
+   */
+  it('keeps a proof as the screen says it, without the number look gives a namesake', () => {
+    const recipe = recipeOf({
+      steps: STEPS,
+      targetKind: 'web',
+      actions: new Map([
+        [1, [TAP]],
+        [2, [REOPEN]],
+      ]),
+      proofs: new Map([
+        [1, 'Carrinho1\nAdicionar ao carrinho #6'],
+        [2, 'Visitas: 1'],
+      ]),
+      runId: 'r-03',
+      at: 1_760_000_000_000,
+    });
+
+    expect(recipe?.steps[0]?.proof).toBe('Carrinho1\nAdicionar ao carrinho');
+  });
 });
