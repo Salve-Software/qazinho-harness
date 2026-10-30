@@ -265,7 +265,7 @@ export const DEVICE_TOOLS = [
   {
     name: 'bug',
     description:
-      'File a bug you saw, such as a wrong price, a broken link or two texts that disagree, and carry on. In a case, file only what the step does not ask about: the step keeps its own verdict.',
+      'File a bug you saw, such as a wrong price, a broken link or two texts that disagree, and carry on. File it while the screen still shows it: QAzinho keeps the screen as it is when you call bug, and a reload or another screen first keeps one that may no longer show the bug. In a case, file only what the step does not ask about: the step keeps its own verdict.',
     input: z.object({
       title: textNamed({
         message: '"bug" needs "title": the line a developer would know the bug by.',
