@@ -428,8 +428,8 @@ export class Harness {
   }
 
   /**
-   * A mensagem que começa uma exploração: quanto tempo dura, as variáveis que pode
-   * digitar, os bugs já abertos e a tela em que começa.
+   * A mensagem que começa uma exploração: quanto tempo dura, as variáveis, o que o plano
+   * já cobre, os bugs conhecidos e a tela em que começa.
    */
   public startExploring(props: {
     minutes: number;
@@ -437,6 +437,7 @@ export class Harness {
     variables: IVariableBrief[];
     known: IKnownBug[];
     design: IDesignLink | null;
+    plan?: IFlatStep[];
   }): string {
     return describeExploration(props);
   }

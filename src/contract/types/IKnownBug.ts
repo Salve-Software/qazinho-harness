@@ -1,6 +1,6 @@
 /**
- * Um bug já aberto no workspace, como o agente de uma run o conhece: o id, a linha que o
- * nomeia e o passo em que foi pego, se foi pego num passo do plano.
+ * Um bug do workspace como o agente de uma run o conhece: o id, a linha que o nomeia, o
+ * passo em que foi pego, e se o QA disse que não é bug.
  */
 export interface IKnownBug {
   id: string;
@@ -8,4 +8,5 @@ export interface IKnownBug {
   caseId: string;
   stepNumber: number;
   isIncidental: boolean;
+  isDismissed?: boolean;
 }

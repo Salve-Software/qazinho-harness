@@ -53,4 +53,37 @@ describe('describeExploration', () => {
       'Variables the project keeps, to type as written:\n- ${SHOP_EMAIL}: The buyer',
     );
   });
+
+  /**
+   * Sem o plano, o explorador perguntou ao QA por um cupom e pela regra do frete grátis,
+   * que dois casos do plano já diziam.
+   */
+  it('names what the plan already covers, each case once, so the explorer asks less', () => {
+    const step = (caseId: string, numberInCase: number) => ({
+      caseId,
+      caseTitle:
+        caseId === 'TC-04'
+          ? 'Aplicar o cupom PROMO10'
+          : 'Frete grátis a partir de R$ 299',
+      casePriority: 'P1',
+      caseGoal: '',
+      casePreconditions: caseId === 'TC-04' ? 'Carrinho com R$ 139,80' : '',
+      numberInCase,
+      action: 'Abrir o Carrinho',
+      expected: '',
+    });
+
+    const said = describeExploration({
+      minutes: 10,
+      screen: '',
+      variables: [],
+      known: [],
+      design: null,
+      plan: [step('TC-04', 1), step('TC-04', 2), step('TC-07', 1)],
+    });
+
+    expect(said).toContain('- TC-04 · Aplicar o cupom PROMO10 (Carrinho com R$ 139,80)');
+    expect(said).toContain('- TC-07 · Frete grátis a partir de R$ 299');
+    expect(said.match(/TC-04/g)).toHaveLength(1);
+  });
 });

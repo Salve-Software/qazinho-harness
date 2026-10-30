@@ -44,4 +44,49 @@ describe('describeKnownBugs', () => {
     expect(lines[2]).toBe('- BUG-03 · An expired coupon is accepted (TC-02, step 1)');
     expect(lines.at(-1)).toBe('- and 2 older ones, not listed');
   });
+
+  /**
+   * O QA marcou "o cartão sem campos" como não-bug, e o explorador o perguntou de novo
+   * minutos depois.
+   */
+  it('lists what the QA said is not a bug apart, to be neither filed nor asked again', () => {
+    const lines = describeKnownBugs([
+      {
+        id: 'BUG-01',
+        title: 'Wrong price',
+        caseId: 'TC-03',
+        stepNumber: 1,
+        isIncidental: false,
+      },
+      {
+        id: 'BUG-06',
+        title: 'No card fields',
+        caseId: 'TC-12',
+        stepNumber: 2,
+        isIncidental: false,
+        isDismissed: true,
+      },
+    ]);
+
+    expect(lines).toContain('- BUG-01 · Wrong price (TC-03, step 1)');
+    expect(lines.join('\n')).toMatch(/not bugs[\s\S]*- BUG-06 · No card fields/);
+    expect(lines.indexOf('- BUG-06 · No card fields (TC-12, step 2)')).toBeGreaterThan(
+      lines.indexOf('- BUG-01 · Wrong price (TC-03, step 1)'),
+    );
+  });
+
+  it('says nothing about open bugs when every one was set aside', () => {
+    const lines = describeKnownBugs([
+      {
+        id: 'BUG-06',
+        title: 'No card fields',
+        caseId: 'TC-12',
+        stepNumber: 2,
+        isIncidental: false,
+        isDismissed: true,
+      },
+    ]);
+
+    expect(lines.join('\n')).not.toContain('already open');
+  });
 });
