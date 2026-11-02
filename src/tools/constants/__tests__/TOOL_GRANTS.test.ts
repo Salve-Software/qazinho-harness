@@ -13,10 +13,4 @@ describe('TOOL_GRANTS', () => {
 
     expect(app?.roles).toEqual(['assistant']);
   });
-
-  it("hands the team's suite to the automator only: no run, chat or assistant runs its tests", () => {
-    const suite = TOOL_GRANTS.find(({ group }) => group === 'suite');
-
-    expect(suite?.roles).toEqual(['automator']);
-  });
 });

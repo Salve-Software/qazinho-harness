@@ -13,7 +13,7 @@ O harness responde uma pergunta por canal, para um alvo `{ role, platform }`:
 
 ```
 src/
-├── Harness.class.ts   ← chat, run, walk, explore, assistant, build, change, review
+├── Harness.class.ts   ← chat, run, walk, explore, assistant, build, review
 ├── index.ts           ← a entrada de Node: Harness, McpHost, as ferramentas, o contrato
 ├── contract/          ← a entrada pura: tipos e constantes simples que o outro lado de um host divide
 ├── engine/            ← a entrada `/engine`: os dispositivos que uma run dirige, para o desktop e o CI
@@ -29,7 +29,7 @@ src/
 
 - **Prosa em `.md`, em português do Brasil, uma seção `## Título` por arquivo.** Onde um arquivo
   mora diz quem o lê: `universal/` toda chamada, `role/<role>/` um papel (`chat`, `runner`,
-  `explorer`, `assistant`, `builder`, `automator`, `reporter`), `platform/<x>.md` um dispositivo.
+  `explorer`, `assistant`, `builder`, `reporter`), `platform/<x>.md` um dispositivo.
   Nomes de ferramentas, campos de schema e trechos de código seguem em inglês, como o código.
 - As camadas vão da mais estável à menos: universal, papel, plataforma. O `order` do frontmatter
   ordena uma camada, e é único nela (`CORPUS.test.ts`).
@@ -45,7 +45,7 @@ src/
 ## As ferramentas
 
 - **Liberadas por papel** (`TOOL_GRANTS`). O runner e o explorer recebem o dispositivo, o
-  assistente recebe o app, o chat recebe as fontes dele, o automator recebe a suíte.
+  assistente recebe o app, o chat recebe as fontes dele.
 - **Cada grupo é um servidor** em `tools/servers/<group>/`: os schemas zod (`*_TOOLS`), um
   `register*Tools` que os coloca num `McpServer`, um `read*ToolCall` que lê os argumentos de volta,
   e um `call*Tool` que faz a chamada pela porta do host.
@@ -56,7 +56,6 @@ src/
   | `IAttachDevice`  | um workspace, um driver `IDevicePort` e os callbacks da run | device (runner, explorer) |
   | `IAttachApp`     | um escopo, e `perform(call: AppToolCall)`                   | app (assistente)          |
   | `IAttachSources` | um escopo, e `fetch(call: SourceCall)`                      | sources (chat)            |
-  | `IAttachSuite`   | um escopo, e `runTests(call: ISuiteTestsCall)`              | suite (automator)         |
 
 - O `McpHost` serve todo escopo anexado em `127.0.0.1` com um token por processo, e responde a
   ferramenta de permissão (`PERMISSION_TOOL`) ao lado de cada grupo. O `mcpConfigFor(scope)`

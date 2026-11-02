@@ -38,7 +38,6 @@ export type * from './IssueTracker';
 export type * from './IStepAction';
 export type * from './IStepOutcome';
 export type * from './IStepRecipe';
-export type * from './ISuitePlanCase';
 export type * from './ITargetUnderTest';
 export type * from './ITrackerIssue';
 export type * from './IVariableBrief';

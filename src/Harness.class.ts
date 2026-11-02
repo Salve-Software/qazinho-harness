@@ -21,8 +21,6 @@ import type {
   HarnessRole,
   IBuildAnswer,
   IBuildMachine,
-  IChangeAnswer,
-  IChangeBrief,
   IHarnessTarget,
   IPullAnswer,
   IPullBrief,
@@ -43,7 +41,6 @@ import {
   describeApp,
   describeBuild,
   describeCase,
-  describeChange,
   describeCode,
   describeImport,
   describeDesign,
@@ -65,25 +62,12 @@ import {
 } from '@/context/library';
 import {
   readBuildAnswer,
-  readChangeAnswer,
   readChatAnswer,
   readPullAnswer,
   readReviewAnswer,
 } from '@/library';
-import {
-  BUILD_SCHEMA,
-  CHANGE_SCHEMA,
-  CHAT_SCHEMA,
-  PULL_SCHEMA,
-  REVIEW_SCHEMA,
-} from '@/schemas';
-import {
-  BUILD_TOOLS,
-  CHANGE_TOOLS,
-  MCP_HOST,
-  PERMISSION_TOOL,
-  TOOL_GRANTS,
-} from '@/tools/constants';
+import { BUILD_SCHEMA, CHAT_SCHEMA, PULL_SCHEMA, REVIEW_SCHEMA } from '@/schemas';
+import { BUILD_TOOLS, MCP_HOST, PERMISSION_TOOL, TOOL_GRANTS } from '@/tools/constants';
 import { designAccessOf, toolsOfRole } from '@/tools/library';
 
 /**
@@ -292,37 +276,6 @@ export class Harness {
   }
 
   /**
-   * Uma mudança na suíte do time: a cópia, o teste a consertar ou escrever, as
-   * ferramentas de arquivo e a que roda testes.
-   */
-  public change(props: IChangeBrief): {
-    systemPrompt: string;
-    prompt: string;
-    schema: string;
-    tools: string[];
-    allowedTools: string[];
-    readDirs: string[];
-  } {
-    return {
-      systemPrompt: this.contextFor({
-        target: { role: 'automator' },
-        values: { language: LANGUAGE_NAMES[props.language] },
-      }),
-      prompt: chatMessageOf({
-        sections: describeChange(props),
-        text:
-          props.task.kind === 'fix'
-            ? 'Fix this test, or show that the app is wrong.'
-            : 'Write this test, or show that the app does not do it.',
-      }),
-      schema: CHANGE_SCHEMA,
-      tools: [...CHANGE_TOOLS.tools],
-      allowedTools: [...CHANGE_TOOLS.allowed, ...this.toolsFor('automator').allowedTools],
-      readDirs: props.readDirs,
-    };
-  }
-
-  /**
    * Um olhar sobre um bug que voltou: a issue como o time a mantém, cada ocorrência e as
    * telas dela, só leitura.
    */
@@ -381,11 +334,6 @@ export class Harness {
    */
   public readReview(text: string): IReviewAnswer | null {
     return readReviewAnswer(text);
-  }
-
-  /** A resposta da mudança a partir do que o agente imprimiu. */
-  public readChange(text: string): IChangeAnswer {
-    return readChangeAnswer(text);
   }
 
   /** A resposta do build a partir do que o agente imprimiu. */

@@ -16,7 +16,7 @@ prompt, um JSON Schema, as ferramentas que um papel pode chamar, uma config de M
 
 1. **O harness é uma biblioteca, não um host.** Sem Electron, sem Fastify, sem banco, sem pasta
    ou caminho de um host. O que ele precisa do mundo de fora é uma porta nos seus tipos
-   (`IDevicePort`, `IAttachApp`, `IAttachSources`, `IAttachSuite`), e o host a preenche. O ESLint
+   (`IDevicePort`, `IAttachApp`, `IAttachSources`), e o host a preenche. O ESLint
    recusa importar o framework de um host.
 2. **Os dois hosts leem as mesmas palavras.** `src/__tests__/__prompts__/` fixa o que o agente lê
    para cada papel e plataforma; mudar o que o agente ouve é um diff desses arquivos, feito de

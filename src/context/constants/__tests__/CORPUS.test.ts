@@ -23,7 +23,6 @@ describe('CORPUS', () => {
 
     expect([...roles].sort()).toEqual([
       'assistant',
-      'automator',
       'builder',
       'chat',
       'explorer',

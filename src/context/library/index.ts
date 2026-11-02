@@ -3,7 +3,6 @@ export * from './chatMessageOf';
 export * from './describeApp';
 export * from './describeBuild';
 export * from './describeCase';
-export * from './describeChange';
 export * from './describeCode';
 export * from './describeDesign';
 export * from './describeExploration';

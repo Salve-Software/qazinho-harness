@@ -1,14 +1,10 @@
 export type * from './AppLook';
-export type * from './ChangeTask';
 export type * from './HarnessRole';
 export type * from './IBrokenTest';
 export type * from './IBuildAnswer';
 export type * from './IBuildMachine';
-export type * from './IChangeAnswer';
-export type * from './IChangeBrief';
 export type * from './IHarnessTarget';
 export type * from './IPullAnswer';
 export type * from './IPullBrief';
 export type * from './IReviewAnswer';
 export type * from './IReviewBrief';
-export type * from './IWantedTest';

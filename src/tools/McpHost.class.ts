@@ -1,7 +1,6 @@
 import type { IAttachApp } from '@/tools/servers/app/types';
 import type { IAttachDevice } from '@/tools/servers/device/types';
 import type { IAttachSources } from '@/tools/servers/sources/types';
-import type { IAttachSuite } from '@/tools/servers/suite/types';
 import type { IncomingMessage, Server as HttpServer, ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { randomUUID } from 'node:crypto';
@@ -12,7 +11,6 @@ import { MCP_HOST } from '@/tools/constants';
 import { callAppTool, registerAppTools } from '@/tools/servers/app';
 import { callDeviceTool, registerDeviceTools } from '@/tools/servers/device';
 import { callSourceTool, registerSourceTools } from '@/tools/servers/sources';
-import { callSuiteTool, registerSuiteTools } from '@/tools/servers/suite';
 import { registerPermissionTool, workspaceOfPath } from './library';
 
 /**
@@ -23,7 +21,6 @@ export class McpHost {
   private readonly token = randomUUID();
   private readonly devices = new Map<string, IAttachDevice>();
   private readonly apps = new Map<string, IAttachApp>();
-  private readonly suites = new Map<string, IAttachSuite>();
   private readonly sources = new Map<string, IAttachSources>();
   private readonly queues = new Map<string, Promise<unknown>>();
   private server: HttpServer | null = null;
@@ -67,19 +64,6 @@ export class McpHost {
   }
 
   /**
-   * Serve as ferramentas da suíte no escopo de um agente que muda uma suíte, cada
-   * execução feita por ele, até o `detachSuite`.
-   */
-  public attachSuite(suite: IAttachSuite): void {
-    this.suites.set(suite.scope, suite);
-  }
-
-  public detachSuite(scope: string): void {
-    this.suites.delete(scope);
-    this.queues.delete(scope);
-  }
-
-  /**
    * Serve as ferramentas de fonte no escopo de um chat que responde, cada busca feita por
    * ele, até o `detachSources`.
    */
@@ -115,7 +99,6 @@ export class McpHost {
   public close(): void {
     this.devices.clear();
     this.apps.clear();
-    this.suites.clear();
     this.sources.clear();
     this.queues.clear();
     this.server?.close();
@@ -130,12 +113,11 @@ export class McpHost {
     const scope = workspaceOfPath({ path: request.url ?? '', token: this.token });
     const device = scope === null ? undefined : this.devices.get(scope);
     const app = scope === null ? undefined : this.apps.get(scope);
-    const suite = scope === null ? undefined : this.suites.get(scope);
     const sources = scope === null ? undefined : this.sources.get(scope);
 
     const isPermissions = scope === MCP_HOST.permissionsScope;
 
-    if (scope === null || (!device && !app && !suite && !sources && !isPermissions)) {
+    if (scope === null || (!device && !app && !sources && !isPermissions)) {
       response.writeHead(404).end();
 
       return;
@@ -156,12 +138,6 @@ export class McpHost {
       registerAppTools({
         mcp,
         call: (call) => this.inTurn({ scope, call: () => callAppTool({ app, call }) }),
-      });
-    else if (suite)
-      registerSuiteTools({
-        mcp,
-        call: (call) =>
-          this.inTurn({ scope, call: () => callSuiteTool({ suite, call }) }),
       });
     else if (sources)
       registerSourceTools({
