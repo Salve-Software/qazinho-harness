@@ -203,7 +203,7 @@ const report = (step: number, overrides: Partial<IStepReport> = {}): IStepReport
   severity: 'medium',
   goesOn: false,
   note: '',
-  proof: `Proof ${String(step)}`,
+  proof: 'Cart: 1 item',
   ...overrides,
 });
 

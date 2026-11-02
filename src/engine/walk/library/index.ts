@@ -13,6 +13,7 @@ export * from './privateUrlOf';
 export * from './proofHolds';
 export * from './proofLinesOf';
 export * from './proofWithValues';
+export * from './provableProof';
 export * from './readBook';
 export * from './recipeFor';
 export * from './recipeOf';

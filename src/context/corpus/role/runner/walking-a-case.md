@@ -32,10 +32,11 @@ número dele: "passed" quando o dispositivo mostra isso, "failed" quando mostra 
 "blocked" só quando você de fato não conseguiu executar o passo. Diga em "got" o que você viu.
 Quando o passo passou, deixe "why" numa frase curta e "got" em poucas palavras: o QA espera cada
 palavra que você escreve, e lê o detalhe só quando algo quebrou. Dê também "proof": umas poucas
-palavras que a tela mostra e que provam que o passo valeu, copiadas exatamente, que não estariam
-ali se ele tivesse falhado, como "Visits: 1" em vez de "Visits". Quando o passo espera mais de uma
-coisa, como uma contagem e um total, dê uma linha para cada. O QAzinho anda o caso de novo sem você
-da próxima vez, e confere cada linha.
+palavras que provam que o passo valeu, copiadas exatamente do texto da tela que o look devolveu, não
+da foto, onde uma variável aparece como ${NOME}, que não estariam ali se ele tivesse falhado, como
+"Visits: 1" em vez de "Visits". Quando o passo espera mais de uma coisa, como uma contagem e um
+total, dê uma linha para cada. O QAzinho anda o caso de novo sem você da próxima vez, e confere cada
+linha contra esse texto.
 Quando ele falhou, dê "title", a linha pela qual um desenvolvedor reconheceria o bug, e
 "severity". Quando a ação do passo deu certo e só o que ele espera está errado, como um total, um
 preço ou um texto, e o passo seguinte pode começar desta tela, dê também "goesOn": o QAzinho abre o

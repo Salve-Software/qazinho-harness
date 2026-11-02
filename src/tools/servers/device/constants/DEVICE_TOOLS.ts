@@ -248,7 +248,7 @@ export const DEVICE_TOOLS = [
         .string()
         .trim()
         .describe(
-          'When the step passed: a few words the screen shows now that prove it, copied exactly, which would not be there had it failed, such as "Visits: 1"; one line for each thing the step expects, such as a count and a total. QAzinho walks the step again without you and checks every line.',
+          'When the step passed: a few words that prove it, copied exactly from the screen text look gave you, not from the picture, which would not be there had it failed, such as "Visits: 1"; a variable reads there as its ${NAME}. One line for each thing the step expects, such as a count and a total. QAzinho walks the step again without you and checks every line against that text.',
         )
         .optional(),
       sameAs: bugIdNamed(

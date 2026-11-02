@@ -39,6 +39,7 @@ import {
   outcomeOfReport,
   proofHolds,
   proofWithValues,
+  provableProof,
   recipeFor,
   recipeOf,
   recordedAction,
@@ -242,17 +243,19 @@ export class PlanWalker {
       });
 
       if (report.verdict === 'passed') {
-        const values = expectedValuesOf(walking.step.expected);
+        const screen = await device.describe().catch(() => '');
 
         proofs.set(
           walking.step.numberInCase,
-          values.length === 0
-            ? report.proof
-            : proofWithValues({
-                proof: report.proof,
-                values,
-                screen: await device.describe().catch(() => ''),
-              }),
+          provableProof({
+            proof: proofWithValues({
+              proof: report.proof,
+              values: expectedValuesOf(walking.step.expected),
+              screen,
+            }),
+            screen,
+            values: this.values,
+          }),
         );
       }
 
