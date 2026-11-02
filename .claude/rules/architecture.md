@@ -61,6 +61,13 @@ src/
   ferramenta de permissão (`PERMISSION_TOOL`) ao lado de cada grupo. O `mcpConfigFor(scope)`
   escreve a config que a CLI do agente lê; o `mcpConfigWith` acrescenta os servidores do próprio
   QA, como o do Figma.
+- **Um agente de fora chega pelo `OutsideHost`** (`src/tools/OutsideHost.class.ts`): o agente que o
+  QA usa no próprio editor, e não um que o QAzinho inicia. O host entrega um endereço estável no
+  loopback (a porta e o token vêm dele), serve só as sete ferramentas de `servers/outside/`, sem a
+  de permissão, e não enfileira as chamadas, já que um `run_status` pode segurar por 50 segundos
+  enquanto um `stop_run` chega. Um pedido com um `Origin` ou um `Host` que não sejam desta máquina é
+  recusado (`isLocalRequest`). A resposta é dado do app testado, o que a descrição de cada
+  ferramenta diz, e um valor de variável nunca passa por ela.
 - **O agente pergunta ao QA no meio da run** pelo `ask_qa` do grupo device; a chamada espera até o
   host responder pelo `onAsk`.
 

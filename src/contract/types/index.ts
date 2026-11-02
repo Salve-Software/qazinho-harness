@@ -44,6 +44,7 @@ export type * from './IVariableBrief';
 export type * from './IViewport';
 export type * from './JiraFailure';
 export type * from './Language';
+export type * from './OutsideToolCall';
 export type * from './ReviewVerdict';
 export type * from './Severity';
 export type * from './StepVerdict';

@@ -1,5 +1,6 @@
 export * from './bugIdNamed';
 export * from './designAccessOf';
+export * from './isLocalRequest';
 export * from './mcpConfigWith';
 export * from './permissionOf';
 export * from './registerPermissionTool';

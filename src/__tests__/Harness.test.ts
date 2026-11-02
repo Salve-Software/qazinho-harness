@@ -12,6 +12,8 @@ import { describe, expect, it } from 'vitest';
 import {
   Harness,
   registerAppTools,
+  OUTSIDE_SERVER,
+  registerOutsideTools,
   registerSourceTools,
   registerDeviceTools,
 } from '@/index';
@@ -886,6 +888,32 @@ describe('Harness', () => {
       await expect(JSON.stringify(tools, null, 2)).toMatchFileSnapshot(
         './__prompts__/explore-tools.txt',
       );
+      await client.close();
+    });
+  });
+
+  describe('the outside tools', () => {
+    /**
+     * Listadas do jeito que o agente do QA as lista no próprio editor: um cliente MCP sobre
+     * um canal em memória, sem rede.
+     */
+    it('lists them to the agent exactly as pinned', async () => {
+      const mcp = new McpServer(
+        { name: 'qazinho', version: '0' },
+        { instructions: OUTSIDE_SERVER.instructions },
+      );
+      const client = new Client({ name: 'pin', version: '0' });
+      const [ours, theirs] = InMemoryTransport.createLinkedPair();
+
+      registerOutsideTools({ mcp, call: () => Promise.reject(new Error('not called')) });
+      await mcp.connect(ours);
+      await client.connect(theirs);
+
+      const { tools } = await client.listTools();
+
+      await expect(
+        JSON.stringify({ instructions: client.getInstructions(), tools }, null, 2),
+      ).toMatchFileSnapshot('./__prompts__/outside-tools.txt');
       await client.close();
     });
   });
