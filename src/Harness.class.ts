@@ -7,6 +7,7 @@ import type {
   IDesignLink,
   IFlatStep,
   IConfluencePage,
+  IImportSource,
   IJiraStoryCopy,
   IKnownBug,
   ITargetUnderTest,
@@ -28,7 +29,13 @@ import type {
   IReviewAnswer,
   IReviewBrief,
 } from '@/types';
-import { CODE_SECTION, DESIGN_SECTION, LANGUAGE_NAMES, STORY_SECTION } from '@/constants';
+import {
+  CODE_SECTION,
+  DESIGN_SECTION,
+  IMPORT_SECTION,
+  LANGUAGE_NAMES,
+  STORY_SECTION,
+} from '@/constants';
 import { CORPUS } from '@/context/constants';
 import {
   changedSections,
@@ -38,6 +45,7 @@ import {
   describeCase,
   describeChange,
   describeCode,
+  describeImport,
   describeDesign,
   describeExploration,
   describeKeptVariables,
@@ -131,6 +139,7 @@ export class Harness {
     runs: IChatReference[];
     look: AppLook | null;
     code: ICodeCopy | null;
+    source?: IImportSource | null;
     story: IJiraStoryCopy | null;
     page: IConfluencePage | null;
     design: IDesignLink | null;
@@ -164,6 +173,10 @@ export class Harness {
           code: props.code,
           wasTold: (props.told[CODE_SECTION.title] ?? '') !== '',
         }),
+        describeImport({
+          source: props.source ?? null,
+          wasTold: (props.told[IMPORT_SECTION.title] ?? '') !== '',
+        }),
         describeStory({
           story: props.story,
           wasTold: (props.told[STORY_SECTION.title] ?? '') !== '',
@@ -189,6 +202,7 @@ export class Harness {
       design: designAccessOf(props.design),
       readDirs: [
         ...(props.code === null ? [] : [props.code.root]),
+        ...(props.source == null ? [] : [props.source.dir]),
         ...(props.story?.files.some(({ path }) => path !== null) === true
           ? [props.story.root]
           : []),

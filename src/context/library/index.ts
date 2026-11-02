@@ -7,6 +7,7 @@ export * from './describeChange';
 export * from './describeCode';
 export * from './describeDesign';
 export * from './describeExploration';
+export * from './describeImport';
 export * from './describeKeptVariables';
 export * from './describeKnownBugs';
 export * from './describeLook';

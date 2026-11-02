@@ -257,6 +257,24 @@ describe('Harness', () => {
       expect(harness.chat(EMPTY_CHAT).readDirs).toEqual([]);
     });
 
+    it('opens a message planned from imported tests with the folder, and lets the agent read only it', async () => {
+      const chat = harness.chat({
+        ...EMPTY_CHAT,
+        text: 'Plan from these tests.',
+        source: {
+          name: 'loja-e2e',
+          dir: '/Users/qa/loja-e2e',
+          frameworks: [{ id: 'playwright', files: 1 }],
+          files: ['tests/cart.spec.ts'],
+          branch: 'main',
+          commit: 'aaa1111222233334444',
+        },
+      });
+
+      await expect(chat.prompt).toMatchFileSnapshot('./__prompts__/chat-import.txt');
+      expect(chat.readDirs).toEqual(['/Users/qa/loja-e2e']);
+    });
+
     it('opens a message planned from a Jira story with the story, and the folder of its files', async () => {
       const chat = harness.chat({
         ...EMPTY_CHAT,

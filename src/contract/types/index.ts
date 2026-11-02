@@ -18,6 +18,8 @@ export type * from './IConfluencePageRef';
 export type * from './IDesignLink';
 export type * from './IDeviceImage';
 export type * from './IDraftedCase';
+export type * from './IImportFramework';
+export type * from './IImportSource';
 export type * from './IFiledIssue';
 export type * from './IFlatStep';
 export type * from './IJiraAttachment';

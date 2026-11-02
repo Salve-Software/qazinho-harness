@@ -1,4 +1,5 @@
 export * from './CODE_SECTION';
+export * from './IMPORT_SECTION';
 export * from './DESIGN_SECTION';
 export * from './KNOWN_BUGS';
 export * from './LANGUAGE_NAMES';
