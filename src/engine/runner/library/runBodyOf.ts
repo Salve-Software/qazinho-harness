@@ -54,6 +54,7 @@ export function runBodyOf(props: {
         proof: outcome.by === 'replay' && outcome.got.length > 0 ? outcome.got : null,
         span:
           video === null ? null : { from: secondsOf(began), to: secondsOf(outcome.at) },
+        ...(outcome.unwalked === 'asked' ? { askedQa: true } : {}),
       };
     });
     const moments = walked.flatMap(({ index, outcome }) =>

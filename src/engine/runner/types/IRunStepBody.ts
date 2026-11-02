@@ -12,4 +12,5 @@ export interface IRunStepBody {
   by: 'agent' | 'replay' | 'healed';
   proof: string | null;
   span: { from: number; to: number } | null;
+  askedQa?: boolean;
 }

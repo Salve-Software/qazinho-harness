@@ -52,6 +52,29 @@ describe('runBodyOf', () => {
     });
   });
 
+  /** O servidor não segura o check por um caso que só uma pessoa poderia andar. */
+  it('marks the step where the agent stopped to ask for a person', () => {
+    const run = runBodyOf({
+      plan: PLAN,
+      steps: STEPS,
+      log: {
+        ...LOG,
+        outcomes: LOG.outcomes.map((outcome) =>
+          outcome.index === 1 ? { ...outcome, unwalked: 'asked' as const } : outcome,
+        ),
+      },
+      target: TARGET,
+      endedBy: 'finished',
+      keys: {},
+      bugIds: new Map(),
+      video: null,
+      network: null,
+    });
+
+    expect(run.cases[0]?.steps[0]?.askedQa).toBeUndefined();
+    expect(run.cases[0]?.steps[1]?.askedQa).toBe(true);
+  });
+
   it('skips the steps a walk never reached, saying so', () => {
     expect(body(null).cases[1]).toEqual({
       id: 'coupon',
