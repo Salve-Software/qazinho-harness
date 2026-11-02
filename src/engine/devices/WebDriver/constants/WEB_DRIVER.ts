@@ -5,6 +5,8 @@ export const WEB_DRIVER = {
   streamQuality: 80,
   actionTimeoutMs: 5_000,
   gotoTimeoutMs: 15_000,
+  appTries: 10,
+  appRetryMs: 3_000,
   settleMs: 2_000,
   quietMs: 300,
   quietCapMs: 1_500,

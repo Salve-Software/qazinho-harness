@@ -26,6 +26,7 @@ import {
   describePage,
   findLocator,
   measureLocator,
+  openApp,
   optionOf,
   originOf,
   pagesOf,
@@ -119,7 +120,7 @@ export class WebDriver implements IDeviceDriver {
 
     await this.page.setViewportSize(this.viewport);
     await this.fit();
-    await this.page.goto(this.url, { timeout: WEB_DRIVER.gotoTimeoutMs });
+    await openApp({ page: this.page, url: this.url });
   }
 
   /**
@@ -559,7 +560,7 @@ export class WebDriver implements IDeviceDriver {
 
     if (this.onFrame) await this.watch(this.onFrame);
 
-    await page.goto(this.url, { timeout: WEB_DRIVER.gotoTimeoutMs });
+    await openApp({ page, url: this.url });
   }
 
   private async perform(props: { page: Page; action: IStepAction }): Promise<void> {
