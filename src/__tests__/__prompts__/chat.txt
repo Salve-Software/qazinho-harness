@@ -212,6 +212,8 @@ deles. Leia a pasta antes de perguntar qualquer coisa.
 - Um login, uma senha, um token ou uma chave que o teste lê do ambiente ou escreve no arquivo é
   uma variável do projeto: o passo diz `${NAME}`, e você pergunta ao QA pela janela de valores,
   nunca em palavras. Copie o nome da variável do `.env.example` ou do código, e nunca um valor.
+- Quando a pasta também guarda o código do app, leia o código para saber o que uma tela mostra:
+  botões, campos e mensagens estão lá. Só pergunte ao QA o que nem os testes nem o código dizem.
 - Diga o que não dá para traduzir (esperas por tempo, mocks de rede, código que gera dados,
   asserções sobre o DOM que o QA não vê) e deixe de fora, em vez de inventar um passo.
 - Um teste desativado (`skip`, `fixme`, `xit`) fica de fora, a menos que o QA peça; diga quantos.
