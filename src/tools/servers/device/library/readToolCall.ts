@@ -1,6 +1,7 @@
 import type { DialogAnswer } from '@/contract';
 import type { DeviceToolCall } from '@/tools/servers/device/types';
 import { DEVICE_TOOLS } from '@/tools/servers/device/constants';
+import { withoutStrayTags } from './withoutStrayTags';
 
 /**
  * Lê uma chamada de ferramenta contra o schema da própria ferramenta; uma chamada que o
@@ -24,12 +25,12 @@ export function readToolCall(props: {
     return {
       kind: 'report',
       report: {
-        ...read.data,
-        title: read.data.title ?? '',
+        ...cleaned(read.data),
+        title: withoutStrayTags(read.data.title ?? ''),
         severity: read.data.severity ?? 'medium',
         goesOn: read.data.goesOn ?? false,
-        note: read.data.note ?? '',
-        proof: read.data.proof ?? '',
+        note: withoutStrayTags(read.data.note ?? ''),
+        proof: withoutStrayTags(read.data.proof ?? ''),
       },
     };
   }
@@ -43,7 +44,7 @@ export function readToolCall(props: {
         error: read.error.issues[0]?.message ?? 'File it again.',
       };
 
-    return { kind: 'finding', finding: read.data };
+    return { kind: 'finding', finding: cleaned(read.data) };
   }
 
   if (tool.name === 'ask_qa') {
@@ -122,4 +123,13 @@ export function readToolCall(props: {
       ...(args.promptText === undefined ? {} : { promptText: args.promptText }),
     },
   };
+}
+
+function cleaned<T extends Record<string, unknown>>(data: T): T {
+  return Object.fromEntries(
+    Object.entries(data).map(([key, value]) => [
+      key,
+      typeof value === 'string' ? withoutStrayTags(value) : value,
+    ]),
+  ) as T;
 }
