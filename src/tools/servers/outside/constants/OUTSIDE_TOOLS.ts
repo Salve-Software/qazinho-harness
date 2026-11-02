@@ -88,7 +88,7 @@ export const OUTSIDE_TOOLS = [
   {
     name: 'suggest_cases',
     description:
-      "Suggest test cases for a workspace's plan, such as for what you just built or fixed. They wait on a card in the workspace's chat until the QA takes them to the plan, so they do not run until then. Write them in the language of the plan and in the QA's words: what to open, tap, type and see, never a selector, a file or a function.",
+      "Suggest test cases for a workspace's plan, such as for what you just built or fixed. They wait on a card in the workspace's chat until the QA takes them to the plan, so they do not run until then. Write them in the language of the plan and in the QA's words: what to open, click or tap, type and see, never a selector, a file or a function. Give a case the id of one in the plan, such as TC-03, to change that case; with no id it is a new one.",
     input: z.object({
       workspace: textNamed({
         message: '"suggest_cases" needs "workspace": its id or its name.',

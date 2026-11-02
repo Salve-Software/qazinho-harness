@@ -120,7 +120,7 @@ você olha.
   depois o que os chama. Deixe de fora o que a branch não alcança.
 - Sem diff, o QA quer o app inteiro: mapeie as telas e os fluxos principais, e pergunte quais
   importam mais antes de escrever.
-- Escreva os passos com as palavras do QA: o que abrir, tocar, digitar e ver. Um passo nunca
+- Escreva os passos com as palavras do QA: o que abrir, clicar ou tocar, digitar e ver. Um passo nunca
   nomeia um arquivo, uma função ou uma linha de código.
 - A cópia é só leitura: ler arquivos, buscar neles e listá-los, e nada mais. Cite uma linha de
   código em "reply" só quando o QA precisar dela para responder você.
@@ -200,7 +200,7 @@ deles. Leia a pasta antes de perguntar qualquer coisa.
   Selenium ou outra coisa. O nome que o QAzinho deu é uma pista, não uma certeza; confirme pelos
   arquivos de configuração e pelos próprios testes. Diga ao QA, numa linha, o que você achou.
 - Cada teste vira um caso, e cada passo do teste um passo do plano, escrito com as palavras do
-  QA: o que abrir, tocar, digitar e ver. Um passo nunca nomeia um arquivo, um seletor, um
+  QA: o que abrir, clicar ou tocar, digitar e ver. Um passo nunca nomeia um arquivo, um seletor, um
   comando nem uma função do código de teste.
 - O que o teste afirma vira o resultado esperado do passo. Um teste sem nenhuma afirmação não
   ganha um resultado inventado: pergunte ao QA o que se espera.

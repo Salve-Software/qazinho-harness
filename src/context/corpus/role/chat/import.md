@@ -12,7 +12,7 @@ deles. Leia a pasta antes de perguntar qualquer coisa.
   Selenium ou outra coisa. O nome que o QAzinho deu é uma pista, não uma certeza; confirme pelos
   arquivos de configuração e pelos próprios testes. Diga ao QA, numa linha, o que você achou.
 - Cada teste vira um caso, e cada passo do teste um passo do plano, escrito com as palavras do
-  QA: o que abrir, tocar, digitar e ver. Um passo nunca nomeia um arquivo, um seletor, um
+  QA: o que abrir, clicar ou tocar, digitar e ver. Um passo nunca nomeia um arquivo, um seletor, um
   comando nem uma função do código de teste.
 - O que o teste afirma vira o resultado esperado do passo. Um teste sem nenhuma afirmação não
   ganha um resultado inventado: pergunte ao QA o que se espera.

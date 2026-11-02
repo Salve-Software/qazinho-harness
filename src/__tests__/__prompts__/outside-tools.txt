@@ -147,7 +147,7 @@
     },
     {
       "name": "suggest_cases",
-      "description": "Suggest test cases for a workspace's plan, such as for what you just built or fixed. They wait on a card in the workspace's chat until the QA takes them to the plan, so they do not run until then. Write them in the language of the plan and in the QA's words: what to open, tap, type and see, never a selector, a file or a function.",
+      "description": "Suggest test cases for a workspace's plan, such as for what you just built or fixed. They wait on a card in the workspace's chat until the QA takes them to the plan, so they do not run until then. Write them in the language of the plan and in the QA's words: what to open, click or tap, type and see, never a selector, a file or a function. Give a case the id of one in the plan, such as TC-03, to change that case; with no id it is a new one.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -194,11 +194,12 @@
                     "type": "object",
                     "properties": {
                       "action": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "What to do, in the QA's words: click on a web page, tap on a phone, in the language of the plan."
                       },
                       "expected": {
                         "type": "string",
-                        "description": "What the agent will read once the action is done: what you saw on screen, or what the QA said. For a screen you have not seen, only what the QA told you, never a text, an item or a field you suppose is there. A total is the sum of the prices you saw, worked out again before you write it."
+                        "description": "What the agent will read once the action is done: what you saw on screen, or what the QA said. For a screen you have not seen, only what the QA told you, never a text, an item or a field you suppose is there. A total is the sum of the prices you saw, worked out again before you write it. What an empty screen shows says nothing about a full one: free shipping on an empty cart is not the shipping rule."
                       },
                       "frame": {
                         "type": "string",
