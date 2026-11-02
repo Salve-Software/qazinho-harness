@@ -35,6 +35,7 @@ import {
   expectedValuesOf,
   findingAnswer,
   keptBugId,
+  missingValuesOf,
   outcomeOfReport,
   proofHolds,
   proofWithValues,
@@ -100,6 +101,21 @@ export class PlanWalker {
       if (position > 0) await this.driver.restart().catch(() => undefined);
 
       if (this.isStopped) break;
+
+      const missing = missingValuesOf({
+        steps: steps.map(({ step }) => step),
+        values: this.values,
+      });
+
+      if (missing.length > 0) {
+        this.unwalked({
+          pending: [...steps],
+          verdict: 'skipped',
+          reason: 'noValue',
+          why: `${UNWALKED.noValue} ${missing.map((name) => `\${${name}}`).join(', ')}`,
+        });
+        continue;
+      }
 
       const recipe =
         props.mode === 'agent'

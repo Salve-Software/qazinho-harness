@@ -7,6 +7,7 @@ export * from './fingerprintOf';
 export * from './hiddenValues';
 export * from './keptBugId';
 export * from './maskedBody';
+export * from './missingValuesOf';
 export * from './outcomeOfReport';
 export * from './privateUrlOf';
 export * from './proofHolds';

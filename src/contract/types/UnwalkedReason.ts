@@ -1,5 +1,6 @@
 /**
  * Por que um passo não rodou: o anterior não se sustentou, ficou sem relato, só havia
- * gravações, a IA acabou, ou o agente precisava do QA.
+ * gravações, a IA acabou, o agente precisava do QA, ou falta o valor de uma variável.
  */
-export type UnwalkedReason = 'skipped' | 'unreported' | 'noAgent' | 'capped' | 'asked';
+export type UnwalkedReason =
+  'skipped' | 'unreported' | 'noAgent' | 'capped' | 'asked' | 'noValue';

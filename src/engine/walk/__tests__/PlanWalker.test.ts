@@ -283,6 +283,25 @@ describe('PlanWalker', () => {
     ).toMatchObject({ outcome: { why: UNWALKED.noAgent } });
   });
 
+  /** Um ensaio no CI sem as variáveis: o agente chutou a senha cinco vezes, e gastou com isso. */
+  it('does NOT start a case that types a variable the run has no value for', async () => {
+    const agent = passingAgent();
+    const [first, second] = STEPS;
+    const { steps, events } = await walkWith({
+      agent,
+      steps: [
+        { ...(first as IFlatStep), action: 'Type ${PASSWORD} in the password field' },
+        { ...(second as IFlatStep) },
+      ],
+    });
+
+    expect(agent.turns).toHaveLength(0);
+    expect(steps.every(([, , verdict]) => verdict === 'skipped')).toBe(true);
+    expect(events.find((event) => event.kind === 'step')).toMatchObject({
+      outcome: { why: `${UNWALKED.noValue} \${PASSWORD}`, unwalked: 'noValue' },
+    });
+  });
+
   it('skips the rest of a case once a step fails, and goes on to the next case anew', async () => {
     const agent = fakeAgent(async (turn) => {
       await turn.device.onReport?.(

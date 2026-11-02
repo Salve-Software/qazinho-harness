@@ -5,4 +5,5 @@ export const UNWALKED = {
     'Skipped: this run walks recordings alone, and this case has none that still holds.',
   capped: 'Skipped: the run spent all it may on the model.',
   asked: 'Skipped: the agent needed the QA, and no one answers in this run. It asked:',
+  noValue: 'Skipped: this case types a variable this run has no value for:',
 } as const;
