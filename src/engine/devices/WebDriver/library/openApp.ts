@@ -10,8 +10,8 @@ const IN_WORDS: [RegExp, string][] = [
 ];
 
 /**
- * Abre o app, esperando um endereço que ainda vem vindo, como o de um preview recém-criado;
- * o que nunca abre é dito em palavras.
+ * Abre o app, esperando um endereço que ainda vem vindo, como o de um preview novo; o que
+ * nunca abre é dito em palavras.
  */
 export async function openApp(props: {
   page: Pick<Page, 'goto'>;
@@ -29,7 +29,7 @@ export async function openApp(props: {
       const message = failure instanceof Error ? failure.message : String(failure);
 
       if (!COMING.test(message) || tries >= WEB_DRIVER.appTries)
-        throw new Error(failureOf({ url, message }));
+        throw new Error(failureOf({ url, message }), { cause: failure });
 
       await new Promise((wake) => setTimeout(wake, retryMs));
     }
