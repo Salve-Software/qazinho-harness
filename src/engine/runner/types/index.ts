@@ -11,6 +11,7 @@ export type * from './IRunnerApiProps';
 export type * from './IRunnerEnv';
 export type * from './IRunStepBody';
 export type * from './ISightingBody';
+export type * from './IStepChange';
 export type * from './IWalkLog';
 export type * from './Landing';
 export type * from './Recording';

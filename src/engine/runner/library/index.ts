@@ -14,5 +14,6 @@ export * from './recipeBookOf';
 export * from './runBodyOf';
 export * from './runnerEnvOf';
 export * from './shotFilesOf';
+export * from './stepChangesOf';
 export * from './valuesOf';
 export * from './videoSecondsOf';

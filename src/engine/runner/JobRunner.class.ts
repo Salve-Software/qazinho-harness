@@ -28,6 +28,7 @@ import {
   networkJsonOf,
   recipeBookOf,
   runBodyOf,
+  stepChangesOf,
   shotFilesOf,
   valuesOf,
 } from './library';
@@ -346,6 +347,10 @@ export class JobRunner {
           bugIds: filed.bugIds,
           video: onVideo,
           network: network === null ? null : (keys[network] ?? null),
+          changes: stepChangesOf({
+            book: recipeBookOf({ recordings: job.recordings, planId: walk.plan.id }),
+            recorded: walk.recorded,
+          }),
         }),
       });
 

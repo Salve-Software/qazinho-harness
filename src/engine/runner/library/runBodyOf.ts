@@ -1,5 +1,11 @@
 import type { IFlatStep, IStepOutcome } from '@/contract';
-import type { IRunBody, IRunStepBody, IWalkLog, RunnerJob } from '@/engine/runner/types';
+import type {
+  IRunBody,
+  IRunStepBody,
+  IStepChange,
+  IWalkLog,
+  RunnerJob,
+} from '@/engine/runner/types';
 import { RUNNER } from '@/engine/runner/constants';
 import { caseVerdictOf } from './caseVerdictOf';
 import { videoSecondsOf } from './videoSecondsOf';
@@ -18,6 +24,7 @@ export function runBodyOf(props: {
   bugIds: Map<number, string>;
   video: { key: string; startedAt: number } | null;
   network: string | null;
+  changes?: Map<string, Map<number, IStepChange | null>>;
 }): IRunBody {
   const { log, keys, video } = props;
   const settled = new Map(log.outcomes.map((outcome) => [outcome.index, outcome]));
@@ -42,6 +49,7 @@ export function runBodyOf(props: {
         };
 
       const began = log.began.get(index) ?? outcome.at;
+      const change = props.changes?.get(step.caseId)?.get(step.numberInCase);
 
       return {
         number: step.numberInCase,
@@ -54,6 +62,7 @@ export function runBodyOf(props: {
         proof: outcome.by === 'replay' && outcome.got.length > 0 ? outcome.got : null,
         span:
           video === null ? null : { from: secondsOf(began), to: secondsOf(outcome.at) },
+        ...(outcome.by === 'healed' && change !== undefined ? { change } : {}),
         ...(outcome.unwalked === 'asked' ? { askedQa: true } : {}),
       };
     });

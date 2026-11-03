@@ -23,6 +23,42 @@ const body = (video: { key: string; startedAt: number } | null) =>
   });
 
 describe('runBodyOf', () => {
+  // A mudança só vale num passo curado: um passo andado pelo agente pela primeira vez não tem "antes".
+  it('carries what a heal changed, only on a healed step', () => {
+    const change = {
+      before: { actions: [], proof: 'Bem-vindo' },
+      after: { actions: [], proof: 'Olá' },
+    };
+    const run = runBodyOf({
+      plan: PLAN,
+      steps: STEPS,
+      log: {
+        ...LOG,
+        outcomes: LOG.outcomes.map((outcome, index) =>
+          index === 0 ? { ...outcome, by: 'healed' as const } : outcome,
+        ),
+      },
+      target: TARGET,
+      endedBy: 'finished',
+      keys: {},
+      bugIds: new Map(),
+      video: null,
+      network: null,
+      changes: new Map([
+        [
+          'pix',
+          new Map([
+            [1, change],
+            [2, change],
+          ]),
+        ],
+      ]),
+    });
+
+    expect(run.cases[0]?.steps[0]?.change).toEqual(change);
+    expect(run.cases[0]?.steps[1]).not.toHaveProperty('change');
+  });
+
   it('writes each case with its steps’ verdicts, why, bug and screens by key', () => {
     const run = body(null);
 
