@@ -1,4 +1,5 @@
 import type { IStepChange } from './IStepChange';
+import type { IStepAsked } from '@/contract';
 
 /**
  * Um passo de uma run como a API o recebe: o que foi feito, como foi e por quê, o bug em
@@ -16,4 +17,5 @@ export interface IRunStepBody {
   span: { from: number; to: number } | null;
   change?: IStepChange | null;
   askedQa?: boolean;
+  asked?: IStepAsked;
 }

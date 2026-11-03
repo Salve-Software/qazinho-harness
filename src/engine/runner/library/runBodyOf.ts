@@ -64,6 +64,7 @@ export function runBodyOf(props: {
           video === null ? null : { from: secondsOf(began), to: secondsOf(outcome.at) },
         ...(outcome.by === 'healed' && change !== undefined ? { change } : {}),
         ...(outcome.unwalked === 'asked' ? { askedQa: true } : {}),
+        ...(outcome.asked === undefined ? {} : { asked: outcome.asked }),
       };
     });
     const moments = walked.flatMap(({ index, outcome }) =>

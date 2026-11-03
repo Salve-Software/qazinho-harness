@@ -11,6 +11,7 @@ import type {
   ICaseRecipe,
   IFlatStep,
   IKnownBug,
+  IStepAsked,
   IRecipeBook,
   IStepAction,
   IStepOutcome,
@@ -64,6 +65,7 @@ export class PlanWalker {
   private readonly language: Language;
   private readonly values: IVariableValue[];
   private readonly bugs: IKnownBug[];
+  private readonly answers: { caseId: string; question: string; answer: string }[];
   private readonly shotDir: string;
   private readonly onEvent: (event: WalkEvent) => void;
   private isStopped = false;
@@ -80,6 +82,7 @@ export class PlanWalker {
     this.language = props.language;
     this.values = props.values;
     this.bugs = props.bugs;
+    this.answers = props.answers ?? [];
     this.shotDir = props.shotDir;
     this.onEvent = props.onEvent;
   }
@@ -347,11 +350,23 @@ export class PlanWalker {
       if (pending[0] === undefined || isOver)
         return 'This case is over: end your turn now.';
 
+      const asking = pending[0];
+      const shot = await this.driver
+        .shoot(join(this.shotDir, `step-${String(asking.index + 1)}.jpg`))
+        .catch(() => null);
+
       this.unwalked({
         pending,
         verdict: 'skipped',
         reason: 'asked',
         why: `${UNWALKED.asked} ${question.question}`,
+        shotFile: shot?.file ?? null,
+        asked: {
+          question: question.question,
+          options: question.options,
+          screen: question.screen,
+          secret: question.secret?.name ?? null,
+        },
       });
 
       return endCase(
@@ -406,6 +421,7 @@ export class PlanWalker {
         known: this.bugs,
         variables: this.values.map(({ name, description }) => ({ name, description })),
         design: null,
+        told: this.answers.filter(({ caseId }) => caseId === first?.step.caseId),
       }),
       device: { workspaceId: this.scope, driver: port, onReport, onFinding, onAsk },
       allowedTools: this.harness.toolsFor('runner').allowedTools,
@@ -522,6 +538,8 @@ export class PlanWalker {
     verdict: 'skipped' | 'blocked';
     reason: UnwalkedReason | null;
     why?: string;
+    shotFile?: string | null;
+    asked?: IStepAsked;
   }): void {
     const at = Date.now();
     const why =
@@ -538,6 +556,7 @@ export class PlanWalker {
           why: position === 0 ? why : UNWALKED.skipped,
           reason: position === 0 ? props.reason : 'skipped',
           at,
+          ...(position === 0 ? { shotFile: props.shotFile, asked: props.asked } : {}),
         }),
       });
 

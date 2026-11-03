@@ -1,5 +1,6 @@
 import type { Severity } from './Severity';
 import type { StepVerdict } from './StepVerdict';
+import type { IStepAsked } from './IStepAsked';
 import type { UnwalkedReason } from './UnwalkedReason';
 
 /**
@@ -26,4 +27,5 @@ export interface IStepOutcome {
   sameAs?: string;
   frame?: string;
   unwalked?: UnwalkedReason;
+  asked?: IStepAsked;
 }

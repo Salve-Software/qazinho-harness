@@ -128,6 +128,7 @@ async function walkWith(props: {
   book?: IRecipeBook;
   screen?: { text: string };
   steps?: IFlatStep[];
+  answers?: { caseId: string; question: string; answer: string }[];
 }) {
   const device = fakeDevice(props.screen ?? { text: 'Proof 1 Proof 2' });
   const events: WalkEvent[] = [];
@@ -142,6 +143,7 @@ async function walkWith(props: {
     language: 'en',
     values: [{ name: 'USER', description: 'The test account', value: 'ana@loja.test' }],
     bugs: [],
+    answers: props.answers ?? [],
     shotDir: '/runs/run-1',
     onEvent: (event) => {
       events.push(event);
@@ -462,12 +464,41 @@ describe('PlanWalker', () => {
           stepNumber: 1,
           verdict: 'skipped',
           why: `${UNWALKED.asked} Which code did the phone get?`,
+          asked: {
+            question: 'Which code did the phone get?',
+            options: [],
+            screen: null,
+            secret: null,
+          },
         }) as unknown,
       }),
     );
     await new Promise((settle) => setImmediate(settle));
 
     expect(agent.cancels).toBe(1);
+  });
+
+  // A resposta vem da plataforma, numa run seguinte: o agente segue sem perguntar de novo.
+  it('tells the agent what someone already answered for this case, and only for it', async () => {
+    const agent = fakeAgent(async (turn) => {
+      await turn.device.onReport?.(report(1));
+      await turn.device.onReport?.(report(2));
+
+      return undefined;
+    });
+
+    await walkWith({
+      agent,
+      steps: STEPS.slice(0, 2),
+      answers: [
+        { caseId: 'cart', question: 'Is this price right?', answer: 'Yes, it is.' },
+        { caseId: 'other', question: 'Another case?', answer: 'Not this one.' },
+      ],
+    });
+
+    expect(agent.turns[0]?.prompt).toContain('Is this price right?');
+    expect(agent.turns[0]?.prompt).toContain('Yes, it is.');
+    expect(agent.turns[0]?.prompt).not.toContain('Not this one.');
   });
 
   it('blocks the first step the agent left unreported when its turn ended', async () => {

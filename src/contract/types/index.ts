@@ -36,6 +36,7 @@ export type * from './IRunFinding';
 export type * from './IRunVideo';
 export type * from './IssueTracker';
 export type * from './IStepAction';
+export type * from './IStepAsked';
 export type * from './IStepOutcome';
 export type * from './IStepRecipe';
 export type * from './ITargetUnderTest';

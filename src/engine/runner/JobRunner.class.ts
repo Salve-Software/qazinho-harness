@@ -135,6 +135,7 @@ export class JobRunner {
           language: job.job.language,
           values,
           bugs: knownBugsOf({ bugs: job.bugs, planId: plan.id }),
+          answers: job.answers.filter(({ planId }) => planId === plan.id),
           shotDir,
           onEvent: (event) => {
             if (event.kind === 'doing') {

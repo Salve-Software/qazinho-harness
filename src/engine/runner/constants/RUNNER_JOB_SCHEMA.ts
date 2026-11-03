@@ -85,6 +85,16 @@ export const RUNNER_JOB_SCHEMA = z.object({
       status: z.string(),
     }),
   ),
+  answers: z
+    .array(
+      z.object({
+        planId: z.string(),
+        caseId: z.string(),
+        question: z.string(),
+        answer: z.string(),
+      }),
+    )
+    .catch([]),
   variables: z.array(
     z.object({ name: z.string(), description: z.string().nullable(), value: z.string() }),
   ),

@@ -20,6 +20,7 @@ export interface IPlanWalker {
   language: Language;
   values: IVariableValue[];
   bugs: IKnownBug[];
+  answers?: { caseId: string; question: string; answer: string }[];
   shotDir: string;
   onEvent: (event: WalkEvent) => void;
 }
