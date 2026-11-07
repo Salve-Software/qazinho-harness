@@ -203,7 +203,7 @@ export const DEVICE_TOOLS = [
   {
     name: 'report',
     description:
-      'Report a step once you judged it, by its number. The answer says what to do next.',
+      'Report a step once you judged it, by its number. Judge what the step means, not its exact words: a control, tab or screen the plan quotes that the screen words a little differently, such as a plural or a longer label, still passes; give the screen\'s words in "note". The answer says what to do next.',
     input: z.object({
       step: z
         .number({ error: '"report" needs "step": the number of the step you judged.' })
