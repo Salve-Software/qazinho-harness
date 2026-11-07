@@ -223,6 +223,13 @@ describe('Harness', () => {
       );
     });
 
+    it('says when the coding agent in the QA editor wrote the message, not the QA', () => {
+      expect(harness.chat({ ...FULL_CHAT, isFromAgent: true }).prompt).toContain(
+        "## Who wrote this message\nThe coding agent the QA works with in their editor wrote this message, through QAzinho's MCP server",
+      );
+      expect(harness.chat(FULL_CHAT).prompt).not.toContain('Who wrote this message');
+    });
+
     it('does NOT change the system prompt with what the workspace holds', () => {
       expect(harness.chat(FULL_CHAT).systemPrompt).toBe(
         harness.chat(EMPTY_CHAT).systemPrompt,

@@ -53,6 +53,7 @@ import {
   describeReview,
   describeRuns,
   describeScreen,
+  describeSender,
   describeSize,
   describePage,
   describeStory,
@@ -128,6 +129,7 @@ export class Harness {
     page: IConfluencePage | null;
     design: IDesignLink | null;
     variables: IVariableBrief[];
+    isFromAgent?: boolean;
   }): {
     systemPrompt: string;
     prompt: string;
@@ -177,7 +179,11 @@ export class Harness {
     return {
       systemPrompt: this.contextFor({ target: { role: 'chat' } }),
       prompt: chatMessageOf({
-        sections: [...news.changed, describeReferences(props.references)],
+        sections: [
+          ...news.changed,
+          describeReferences(props.references),
+          describeSender(props.isFromAgent === true),
+        ],
         text: props.text,
       }),
       told: news.told,

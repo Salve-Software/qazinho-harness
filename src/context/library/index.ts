@@ -17,6 +17,7 @@ export * from './describeReferences';
 export * from './describeReview';
 export * from './describeRuns';
 export * from './describeScreen';
+export * from './describeSender';
 export * from './describeSize';
 export * from './describeStory';
 export * from './describeVariables';
