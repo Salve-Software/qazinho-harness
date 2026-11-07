@@ -116,18 +116,25 @@ describe('readOutsideToolCall', () => {
     ).toMatchObject({ kind: 'call', call: { args: { project: 'SHOP' } } });
   });
 
-  /** Um agente de fora nunca mexe em variáveis, nas configurações nem nas integrações. */
-  it.each([
-    'delete_variable',
-    'update_variable',
-    'ask_variables',
-    'change_settings',
-    'disconnect_integration',
-    'approve_permission',
-  ])('refuses %s, which is not offered to an outside agent', (name) => {
-    expect(readOutsideToolCall({ name, args: {} })).toEqual({
+  it('refuses the permission tool, which is not offered to an outside agent', () => {
+    expect(readOutsideToolCall({ name: 'approve_permission', args: {} })).toEqual({
       kind: 'refused',
-      error: `There is no tool called "${name}".`,
+      error: 'There is no tool called "approve_permission".',
+    });
+  });
+
+  it('reads a variable by its name and description, never with a value', () => {
+    expect(
+      readOutsideToolCall({
+        name: 'ask_variables',
+        args: {
+          project: 'Loja',
+          variables: [{ name: 'admin_password', description: 'The admin password' }],
+        },
+      }),
+    ).toMatchObject({ kind: 'call', call: { name: 'ask_variables' } });
+    expect(readOutsideToolCall({ name: 'list_variables', args: {} })).toMatchObject({
+      kind: 'refused',
     });
   });
 });

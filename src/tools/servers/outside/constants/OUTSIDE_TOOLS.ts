@@ -213,6 +213,56 @@ export const OUTSIDE_TOOLS = [
     input: appInputOf('send_bug'),
   },
   {
+    name: 'list_variables',
+    description:
+      "List a project's variables: the logins, passwords and keys its plans use, each by its name and what it holds. A value never leaves QAzinho; a step names a variable as ${NAME}, and a run types its value.",
+    input: z.object({
+      project: textNamed({
+        message: '"list_variables" needs "project": its id or its name.',
+        description: 'The project, by its id or its name.',
+      }),
+    }),
+  },
+  {
+    name: 'ask_variables',
+    description:
+      'Add variables to a project, or change their values: QAzinho opens a window where the user types each value, so you never send or see one. It answers within 45 seconds with the names they kept, or says the window still waits; read it later with list_variables.',
+    input: appInputOf('ask_variables'),
+  },
+  {
+    name: 'update_variable',
+    description: `Rename one of a project's variables or change what it says it holds. Its value stays, and the plans that name it follow a new name. ${ASKS_THE_QA}`,
+    input: appInputOf('update_variable'),
+  },
+  {
+    name: 'delete_variable',
+    description: `Delete one of a project's variables, with its value. ${ASKS_THE_QA}`,
+    input: appInputOf('delete_variable'),
+  },
+  {
+    name: 'read_settings',
+    description:
+      'Read how QAzinho is set up: its theme, its language, how a finished run calls the user back, their agent, and which integrations are connected and as whom.',
+    input: z.object({}),
+  },
+  {
+    name: 'change_settings',
+    description:
+      'Change how QAzinho looks and calls the user back: the theme, the language, and how a finished run calls them.',
+    input: appInputOf('change_settings'),
+  },
+  {
+    name: 'connect_integration',
+    description:
+      "Start connecting GitHub or Jira: QAzinho opens it in its Settings. GitHub signs in through the user's browser, and the user types Jira's token there; you never see one.",
+    input: appInputOf('connect_integration'),
+  },
+  {
+    name: 'disconnect_integration',
+    description: `Disconnect GitHub or Jira from QAzinho. ${ASKS_THE_QA}`,
+    input: appInputOf('disconnect_integration'),
+  },
+  {
     name: 'ask_workspace_chat',
     description: `Write in a workspace's chat, to QAzinho's own agent there, as the QA would: ask it to plan the app, change the plan, or explain a run. The QA sees your message in that chat marked as written by an agent, and QAzinho's agent knows it too. Before a plan it looks at the app and may ask a round of questions: read them in the answer and reply with this tool, in the QA's place only when you know what they want. With waitSeconds it holds until the agent answers; call read_workspace_chat while it still works. ${DATA_NOTE}`,
     input: z.object({

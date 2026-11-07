@@ -20,10 +20,18 @@ export type OutsideToolCall =
           | 'delete_project'
           | 'explore_app'
           | 'dismiss_bug'
-          | 'send_bug';
+          | 'send_bug'
+          | 'ask_variables'
+          | 'update_variable'
+          | 'delete_variable'
+          | 'change_settings'
+          | 'connect_integration'
+          | 'disconnect_integration';
       }
     >
   | { name: 'list_workspaces'; args: Record<string, never> }
+  | { name: 'list_variables'; args: { project: string } }
+  | { name: 'read_settings'; args: Record<string, never> }
   | {
       name: 'create_project';
       args: { name: string; web?: string; android?: string; ios?: string };
