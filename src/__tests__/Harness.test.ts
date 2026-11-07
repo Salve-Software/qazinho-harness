@@ -230,6 +230,31 @@ describe('Harness', () => {
       expect(harness.chat(FULL_CHAT).prompt).not.toContain('Who wrote this message');
     });
 
+    it('hands the agent the files the QA attached, and the folder to read them from', () => {
+      const chat = harness.chat({
+        ...FULL_CHAT,
+        attachments: {
+          root: '/data/attachments/w1',
+          files: [
+            {
+              name: 'error.png',
+              path: '/data/attachments/w1/a1-error.png',
+              isImage: true,
+            },
+          ],
+        },
+      });
+
+      expect(chat.prompt).toContain(
+        '## Files the QA attached\nThe QA attached these files to this message.',
+      );
+      expect(chat.prompt).toContain(
+        '- error.png (image): /data/attachments/w1/a1-error.png',
+      );
+      expect(chat.readDirs).toContain('/data/attachments/w1');
+      expect(harness.chat(FULL_CHAT).readDirs).not.toContain('/data/attachments/w1');
+    });
+
     it('does NOT change the system prompt with what the workspace holds', () => {
       expect(harness.chat(FULL_CHAT).systemPrompt).toBe(
         harness.chat(EMPTY_CHAT).systemPrompt,

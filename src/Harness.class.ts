@@ -1,4 +1,4 @@
-import type { ICorpusFile } from '@/context/types';
+import type { IAttachedFiles, ICorpusFile } from '@/context/types';
 import type {
   IAppSnapshot,
   IChatAnswer,
@@ -39,14 +39,16 @@ import {
   changedSections,
   chatMessageOf,
   describeApp,
+  describeAttachments,
   describeBuild,
   describeCase,
   describeCode,
-  describeImport,
   describeDesign,
   describeExploration,
+  describeImport,
   describeKeptVariables,
   describeLook,
+  describePage,
   describePlan,
   describePull,
   describeReferences,
@@ -55,7 +57,6 @@ import {
   describeScreen,
   describeSender,
   describeSize,
-  describePage,
   describeStory,
   fillSections,
   renderSections,
@@ -130,6 +131,7 @@ export class Harness {
     design: IDesignLink | null;
     variables: IVariableBrief[];
     isFromAgent?: boolean;
+    attachments?: IAttachedFiles | null;
   }): {
     systemPrompt: string;
     prompt: string;
@@ -182,6 +184,7 @@ export class Harness {
         sections: [
           ...news.changed,
           describeReferences(props.references),
+          describeAttachments(props.attachments ?? null),
           describeSender(props.isFromAgent === true),
         ],
         text: props.text,
@@ -195,6 +198,9 @@ export class Harness {
         ...(props.source == null ? [] : [props.source.dir]),
         ...(props.story?.files.some(({ path }) => path !== null) === true
           ? [props.story.root]
+          : []),
+        ...((props.attachments?.files.length ?? 0) > 0 && props.attachments
+          ? [props.attachments.root]
           : []),
       ],
       permissionTool: PERMISSION_TOOL.granted,
