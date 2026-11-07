@@ -116,6 +116,24 @@ describe('readOutsideToolCall', () => {
     ).toMatchObject({ kind: 'call', call: { args: { project: 'SHOP' } } });
   });
 
+  it('reads the code the QA said yes to, on a change of the plan and on one the assistant makes', () => {
+    expect(
+      readOutsideToolCall({
+        name: 'delete_cases',
+        args: { workspace: 'Compra', cases: ['TC-02'], confirm: ' k7f2a9 ' },
+      }),
+    ).toMatchObject({ kind: 'call', call: { args: { confirm: 'k7f2a9' } } });
+    expect(
+      readOutsideToolCall({
+        name: 'delete_project',
+        args: { project: 'Loja', confirm: 'k7f2a9' },
+      }),
+    ).toEqual({
+      kind: 'call',
+      call: { name: 'delete_project', args: { project: 'Loja', confirm: 'k7f2a9' } },
+    });
+  });
+
   /** Um agente de fora nunca mexe em variáveis, nas configurações nem nas integrações. */
   it.each([
     'delete_variable',

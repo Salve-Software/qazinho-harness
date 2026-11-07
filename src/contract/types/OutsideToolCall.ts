@@ -14,15 +14,21 @@ export type OutsideToolCall =
           | 'bug_details'
           | 'stop_run'
           | 'create_workspace'
+          | 'explore_app';
+      }
+    >
+  | (Extract<
+      AppToolCall,
+      {
+        name:
           | 'update_project'
           | 'rename_workspace'
           | 'delete_workspace'
           | 'delete_project'
-          | 'explore_app'
           | 'dismiss_bug'
           | 'send_bug';
       }
-    >
+    > & { args: { confirm?: string } })
   | { name: 'list_workspaces'; args: Record<string, never> }
   | {
       name: 'create_project';
@@ -37,8 +43,14 @@ export type OutsideToolCall =
       args: { workspace: string; run?: string; waitSeconds?: number };
     }
   | { name: 'add_cases'; args: { workspace: string; cases: IDraftedCase[] } }
-  | { name: 'update_cases'; args: { workspace: string; cases: IDraftedCase[] } }
-  | { name: 'delete_cases'; args: { workspace: string; cases: string[] } }
+  | {
+      name: 'update_cases';
+      args: { workspace: string; cases: IDraftedCase[]; confirm?: string };
+    }
+  | {
+      name: 'delete_cases';
+      args: { workspace: string; cases: string[]; confirm?: string };
+    }
   | {
       name: 'ask_workspace_chat';
       args: { workspace: string; text: string; waitSeconds?: number };
