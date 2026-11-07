@@ -89,16 +89,40 @@ describe('readOutsideToolCall', () => {
     ).toEqual({ kind: 'refused', error: '"target" is web, android or ios.' });
   });
 
-  /** Um agente de fora nunca apaga, muda configurações nem mexe em variáveis. */
+  it('reads a change of the plan and a bug sent with the same schema as the assistant', () => {
+    expect(
+      readOutsideToolCall({
+        name: 'delete_cases',
+        args: { workspace: 'Compra', cases: ['TC-02'] },
+      }),
+    ).toEqual({
+      kind: 'call',
+      call: { name: 'delete_cases', args: { workspace: 'Compra', cases: ['TC-02'] } },
+    });
+    expect(
+      readOutsideToolCall({
+        name: 'delete_cases',
+        args: { workspace: 'Compra', cases: [] },
+      }),
+    ).toEqual({
+      kind: 'refused',
+      error: '"delete_cases" needs at least one case id, such as TC-03.',
+    });
+    expect(
+      readOutsideToolCall({
+        name: 'send_bug',
+        args: { workspace: 'Compra', bug: 'BUG-01', project: 'shop' },
+      }),
+    ).toMatchObject({ kind: 'call', call: { args: { project: 'SHOP' } } });
+  });
+
+  /** Um agente de fora nunca mexe em variáveis, nas configurações nem nas integrações. */
   it.each([
-    'delete_project',
-    'delete_workspace',
     'delete_variable',
     'update_variable',
     'ask_variables',
     'change_settings',
     'disconnect_integration',
-    'send_bug',
     'approve_permission',
   ])('refuses %s, which is not offered to an outside agent', (name) => {
     expect(readOutsideToolCall({ name, args: {} })).toEqual({

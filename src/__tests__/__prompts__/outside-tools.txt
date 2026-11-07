@@ -1,5 +1,5 @@
 {
-  "instructions": "QAzinho is the QA's desktop test assistant: it keeps test plans, walks them on a real browser, emulator or simulator, and keeps what each run found. Use it to check the app after you change it: list_workspaces to find the workspace, or create_project and create_workspace when the app has none, start_run, then run_status with waitSeconds until it ends. Read a failure's screenshots and API calls before you fix it, then run it again. Suggest cases for what you built with suggest_cases, or ask the workspace's own agent with ask_workspace_chat. Secrets stay with the QA: you only ever see a variable by its name, as ${NAME}.",
+  "instructions": "QAzinho is the QA's desktop test assistant: it keeps test plans, walks them on a real browser, emulator or simulator, and keeps what each run found. Use it to check the app after you change it: list_workspaces to find the workspace, or create_project and create_workspace when the app has none, start_run, then run_status with waitSeconds until it ends. Read a failure's screenshots and API calls before you fix it, then run it again. Suggest cases for what you built with suggest_cases, or ask the workspace's own agent with ask_workspace_chat. What changes or deletes something waits for the QA to confirm it in QAzinho. Secrets stay with the QA: you only ever see a variable by its name, as ${NAME}.",
   "tools": [
     {
       "name": "list_workspaces",
@@ -95,6 +95,332 @@
         "required": [
           "project",
           "name"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "update_project",
+      "description": "Change a project: rename it, or set or replace a target, such as a new web address or a newer .apk or .app. An empty text removes that target, unless a workspace tests on it. The QA confirms it on a card in QAzinho first. It answers within 45 seconds with what happened, or says it still waits on the QA: then it happens only once they confirm, and you tell them to look.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The project, by its id or its name."
+          },
+          "name": {
+            "type": "string",
+            "description": "The new name."
+          },
+          "web": {
+            "type": "string",
+            "description": "The web address, or \"\" to remove it."
+          },
+          "android": {
+            "type": "string",
+            "description": "The path of the Android .apk, or \"\" to remove it."
+          },
+          "ios": {
+            "type": "string",
+            "description": "The path of the iOS simulator .app, or \"\" to remove it."
+          }
+        },
+        "required": [
+          "project"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "rename_workspace",
+      "description": "Rename a workspace. The QA confirms it on a card in QAzinho first. It answers within 45 seconds with what happened, or says it still waits on the QA: then it happens only once they confirm, and you tell them to look.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The new name."
+          }
+        },
+        "required": [
+          "workspace",
+          "name"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "delete_workspace",
+      "description": "Delete a workspace with its plan, runs and bugs, only when the QA asked for it. The QA confirms it on a card in QAzinho first. It answers within 45 seconds with what happened, or says it still waits on the QA: then it happens only once they confirm, and you tell them to look.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          }
+        },
+        "required": [
+          "workspace"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "delete_project",
+      "description": "Delete a project with all its workspaces, only when the QA asked for it. The QA confirms it on a card in QAzinho first. It answers within 45 seconds with what happened, or says it still waits on the QA: then it happens only once they confirm, and you tell them to look.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The project, by its id or its name."
+          }
+        },
+        "required": [
+          "project"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "add_cases",
+      "description": "Add new test cases to a workspace's plan at once, such as for what you just built. Write them in the language of the plan and in the QA's words: what to open, click or tap, type and see, never a selector, a file or a function. Leave their ids out; to change a case of the plan use update_cases.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          },
+          "cases": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The id of the case this one keeps or changes, such as TC-03; none for a new case."
+                },
+                "title": {
+                  "type": "string"
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": [
+                    "P1",
+                    "P2",
+                    "P3"
+                  ]
+                },
+                "goal": {
+                  "type": "string"
+                },
+                "preconditions": {
+                  "type": "string"
+                },
+                "steps": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "action": {
+                        "type": "string",
+                        "description": "What to do, in the QA's words: click on a web page, tap on a phone, in the language of the plan."
+                      },
+                      "expected": {
+                        "type": "string",
+                        "description": "What the agent will read once the action is done: what you saw on screen, or what the QA said. For a screen you have not seen, only what the QA told you, never a text, an item or a field you suppose is there. A total is the sum of the prices you saw, worked out again before you write it. What an empty screen shows says nothing about a full one: free shipping on an empty cart is not the shipping rule."
+                      },
+                      "frame": {
+                        "type": "string",
+                        "description": "The id of the Figma node this step's screen should match, such as 12:345, from the workspace's design; none when it has no design or the step lands on no designed screen."
+                      }
+                    },
+                    "required": [
+                      "action",
+                      "expected"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "title",
+                "priority",
+                "goal",
+                "preconditions",
+                "steps"
+              ]
+            },
+            "description": "The new cases."
+          }
+        },
+        "required": [
+          "workspace",
+          "cases"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "update_cases",
+      "description": "Change cases of a workspace's plan: each case names the id of the one it replaces, such as TC-03, and comes whole, with every step. The QA confirms it on a card in QAzinho first. It answers within 45 seconds with what happened, or says it still waits on the QA: then it happens only once they confirm, and you tell them to look.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          },
+          "cases": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The id of the case this one keeps or changes, such as TC-03; none for a new case."
+                },
+                "title": {
+                  "type": "string"
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": [
+                    "P1",
+                    "P2",
+                    "P3"
+                  ]
+                },
+                "goal": {
+                  "type": "string"
+                },
+                "preconditions": {
+                  "type": "string"
+                },
+                "steps": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "action": {
+                        "type": "string",
+                        "description": "What to do, in the QA's words: click on a web page, tap on a phone, in the language of the plan."
+                      },
+                      "expected": {
+                        "type": "string",
+                        "description": "What the agent will read once the action is done: what you saw on screen, or what the QA said. For a screen you have not seen, only what the QA told you, never a text, an item or a field you suppose is there. A total is the sum of the prices you saw, worked out again before you write it. What an empty screen shows says nothing about a full one: free shipping on an empty cart is not the shipping rule."
+                      },
+                      "frame": {
+                        "type": "string",
+                        "description": "The id of the Figma node this step's screen should match, such as 12:345, from the workspace's design; none when it has no design or the step lands on no designed screen."
+                      }
+                    },
+                    "required": [
+                      "action",
+                      "expected"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "title",
+                "priority",
+                "goal",
+                "preconditions",
+                "steps"
+              ]
+            },
+            "description": "The cases, each whole and with the id of the one it replaces."
+          }
+        },
+        "required": [
+          "workspace",
+          "cases"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "delete_cases",
+      "description": "Take cases out of a workspace's plan, by their ids. The QA confirms it on a card in QAzinho first. It answers within 45 seconds with what happened, or says it still waits on the QA: then it happens only once they confirm, and you tell them to look.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          },
+          "cases": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "The ids of the cases, such as TC-03."
+          }
+        },
+        "required": [
+          "workspace",
+          "cases"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "explore_app",
+      "description": "Let QAzinho's agent explore a workspace's app on its own for ten minutes, with no plan: it notes each screen it reaches, keeps what is broken as bugs, and ends with a plan it suggests, which waits for the QA. It spends the QA's tokens. Read it with run_status, as a run.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          }
+        },
+        "required": [
+          "workspace"
         ],
         "$schema": "http://json-schema.org/draft-07/schema#"
       },
@@ -201,6 +527,82 @@
             "type": "string",
             "minLength": 1,
             "description": "The bug, by its id, such as BUG-02."
+          }
+        },
+        "required": [
+          "workspace",
+          "bug"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dismiss_bug",
+      "description": "Say a bug of a workspace is no bug, or fixed, so it leaves the open bugs and no run hears of it again; with reopen, it is open again. The QA confirms it on a card in QAzinho first. It answers within 45 seconds with what happened, or says it still waits on the QA: then it happens only once they confirm, and you tell them to look.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          },
+          "bug": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The bug, by its id, such as BUG-02."
+          },
+          "reopen": {
+            "type": "boolean",
+            "description": "True to open again a bug the QA had said is none."
+          }
+        },
+        "required": [
+          "workspace",
+          "bug"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "send_bug",
+      "description": "Send one bug of a workspace to the QA's tracker as an issue, Jira or GitHub. Leave the place out to send it where the project's last bug went. The QA confirms it on a card in QAzinho first. It answers within 45 seconds with what happened, or says it still waits on the QA: then it happens only once they confirm, and you tell them to look.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          },
+          "bug": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The bug, by its id, such as BUG-02."
+          },
+          "tracker": {
+            "type": "string",
+            "enum": [
+              "jira",
+              "github"
+            ],
+            "description": "The tracker it goes to, when the QA said which."
+          },
+          "project": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$",
+            "description": "The Jira project it goes to, by its key, such as SHOP."
+          },
+          "repository": {
+            "type": "string",
+            "pattern": "^[\\w.-]+\\/[\\w.-]+$",
+            "description": "The GitHub repository it goes to, as owner/name."
           }
         },
         "required": [

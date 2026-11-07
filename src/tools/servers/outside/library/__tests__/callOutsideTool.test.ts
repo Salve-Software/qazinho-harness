@@ -29,7 +29,7 @@ describe('callOutsideTool', () => {
 
         return Promise.resolve({ text: '', isError: false });
       },
-      call: { name: 'delete_project', args: { project: 'Loja' } },
+      call: { name: 'delete_variable', args: { project: 'Loja', variable: 'PASSWORD' } },
     });
 
     expect(calls).toEqual([]);
