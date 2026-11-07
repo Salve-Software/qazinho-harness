@@ -48,6 +48,7 @@ export class WebDriver implements IDeviceDriver {
   private readonly pixelRatio: number;
   private readonly shrink: ShrinkImage | null;
   private readonly access: IWebAccess;
+  private readonly onAddress: ((url: string) => void) | null;
   private readonly origins = new Set<string>();
   private readonly dialogs: string[] = [];
   private readonly requests = new Map<Request, INetworkEntry>();
@@ -79,6 +80,7 @@ export class WebDriver implements IDeviceDriver {
     );
     this.shrink = props.shrink ?? null;
     this.access = props.access ?? { headers: {}, credentials: null };
+    this.onAddress = props.onAddress ?? null;
   }
 
   /**
@@ -428,6 +430,7 @@ export class WebDriver implements IDeviceDriver {
     this.screencast = null;
     this.cdp = null;
     this.page = page;
+    this.tellAddress(page);
     await page.waitForLoadState('domcontentloaded').catch(() => undefined);
     await page.setViewportSize(this.viewport).catch(() => undefined);
     await this.fit();
@@ -518,6 +521,8 @@ export class WebDriver implements IDeviceDriver {
       const origin = originOf(frame.url());
 
       if (origin !== null) this.origins.add(origin);
+
+      if (frame === page.mainFrame() && page === this.page) this.tellAddress(page);
     });
     page.on('dialog', (dialog) => {
       const isOk = this.dialogAnswer === 'ok';
@@ -531,6 +536,12 @@ export class WebDriver implements IDeviceDriver {
         isOk ? dialog.accept(typed ?? dialog.defaultValue()) : dialog.dismiss()
       ).catch(() => undefined);
     });
+  }
+
+  private tellAddress(page: Page): void {
+    const url = page.url();
+
+    if (originOf(url) !== null) this.onAddress?.(url);
   }
 
   private async openAnew(props: { isCleared: boolean }): Promise<void> {
