@@ -1,5 +1,5 @@
 {
-  "instructions": "QAzinho is the QA's desktop test assistant: it keeps test plans, walks them on a real browser, emulator or simulator, and keeps what each run found. Use it to check the app after you change it: list_workspaces to find the workspace, or create_project and create_workspace when the app has none, start_run, then run_status with waitSeconds until it ends. Read a failure's screenshots and API calls before you fix it, then run it again. Suggest cases for what you built with suggest_cases, or ask the workspace's own agent with ask_workspace_chat. What changes or deletes something needs the QA's yes: ask them in your chat and call again with the code it gives, or they confirm it in QAzinho. Secrets stay with the QA: you only ever see a variable by its name, as ${NAME}.",
+  "instructions": "QAzinho is the QA's desktop test assistant: it keeps test plans, walks them on a real browser, emulator or simulator, and keeps what each run found. Use it to check the app after you change it: list_workspaces to find the workspace, or create_project and create_workspace when the app has none, start_run, then run_status with waitSeconds until it ends. Read a failure's screenshots and API calls before you fix it, then run it again. Suggest cases for what you built with suggest_cases, or ask the workspace's own agent with ask_workspace_chat. Before anything that changes or deletes what the user keeps, ask them with your own tool for asking, and go ahead only on their yes. Secrets stay with the QA: you only ever see a variable by its name, as ${NAME}.",
   "tools": [
     {
       "name": "list_workspaces",
@@ -104,7 +104,7 @@
     },
     {
       "name": "update_project",
-      "description": "Change a project: rename it, or set or replace a target, such as a new web address or a newer .apk or .app. An empty text removes that target, unless a workspace tests on it. The first call changes nothing: it answers with what would change and a code, and shows the QA a card in QAzinho. Ask the QA in your chat whether to go ahead, and only once they say yes, call it again with the same arguments and \"confirm\" set to that code. They may answer on the card in QAzinho instead, and then it is done without you.",
+      "description": "Change a project: rename it, or set or replace a target, such as a new web address or a newer .apk or .app. An empty text removes that target, unless a workspace tests on it. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -128,10 +128,6 @@
           "ios": {
             "type": "string",
             "description": "The path of the iOS simulator .app, or \"\" to remove it."
-          },
-          "confirm": {
-            "type": "string",
-            "description": "The code the first call answered with, only after the QA said yes in your chat to this exact change."
           }
         },
         "required": [
@@ -145,7 +141,7 @@
     },
     {
       "name": "rename_workspace",
-      "description": "Rename a workspace. The first call changes nothing: it answers with what would change and a code, and shows the QA a card in QAzinho. Ask the QA in your chat whether to go ahead, and only once they say yes, call it again with the same arguments and \"confirm\" set to that code. They may answer on the card in QAzinho instead, and then it is done without you.",
+      "description": "Rename a workspace. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -158,10 +154,6 @@
             "type": "string",
             "minLength": 1,
             "description": "The new name."
-          },
-          "confirm": {
-            "type": "string",
-            "description": "The code the first call answered with, only after the QA said yes in your chat to this exact change."
           }
         },
         "required": [
@@ -176,7 +168,7 @@
     },
     {
       "name": "delete_workspace",
-      "description": "Delete a workspace with its plan, runs and bugs. The first call changes nothing: it answers with what would change and a code, and shows the QA a card in QAzinho. Ask the QA in your chat whether to go ahead, and only once they say yes, call it again with the same arguments and \"confirm\" set to that code. They may answer on the card in QAzinho instead, and then it is done without you.",
+      "description": "Delete a workspace with its plan, runs and bugs. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -184,10 +176,6 @@
             "type": "string",
             "minLength": 1,
             "description": "The workspace, by its id or its name."
-          },
-          "confirm": {
-            "type": "string",
-            "description": "The code the first call answered with, only after the QA said yes in your chat to this exact change."
           }
         },
         "required": [
@@ -201,7 +189,7 @@
     },
     {
       "name": "delete_project",
-      "description": "Delete a project with all its workspaces. The first call changes nothing: it answers with what would change and a code, and shows the QA a card in QAzinho. Ask the QA in your chat whether to go ahead, and only once they say yes, call it again with the same arguments and \"confirm\" set to that code. They may answer on the card in QAzinho instead, and then it is done without you.",
+      "description": "Delete a project with all its workspaces. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -209,10 +197,6 @@
             "type": "string",
             "minLength": 1,
             "description": "The project, by its id or its name."
-          },
-          "confirm": {
-            "type": "string",
-            "description": "The code the first call answered with, only after the QA said yes in your chat to this exact change."
           }
         },
         "required": [
@@ -310,7 +294,7 @@
     },
     {
       "name": "update_cases",
-      "description": "Change cases of a workspace's plan: each case names the id of the one it replaces, such as TC-03, and comes whole, with every step. The first call changes nothing: it answers with what would change and a code, and shows the QA a card in QAzinho. Ask the QA in your chat whether to go ahead, and only once they say yes, call it again with the same arguments and \"confirm\" set to that code. They may answer on the card in QAzinho instead, and then it is done without you.",
+      "description": "Change cases of a workspace's plan: each case names the id of the one it replaces, such as TC-03, and comes whole, with every step. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -380,10 +364,6 @@
               ]
             },
             "description": "The cases, each whole and with the id of the one it replaces."
-          },
-          "confirm": {
-            "type": "string",
-            "description": "The code the first call answered with, only after the QA said yes in your chat to this exact change."
           }
         },
         "required": [
@@ -398,7 +378,7 @@
     },
     {
       "name": "delete_cases",
-      "description": "Take cases out of a workspace's plan, by their ids. The first call changes nothing: it answers with what would change and a code, and shows the QA a card in QAzinho. Ask the QA in your chat whether to go ahead, and only once they say yes, call it again with the same arguments and \"confirm\" set to that code. They may answer on the card in QAzinho instead, and then it is done without you.",
+      "description": "Take cases out of a workspace's plan, by their ids. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -415,10 +395,6 @@
               "minLength": 1
             },
             "description": "The ids of the cases, such as TC-03."
-          },
-          "confirm": {
-            "type": "string",
-            "description": "The code the first call answered with, only after the QA said yes in your chat to this exact change."
           }
         },
         "required": [
@@ -565,7 +541,7 @@
     },
     {
       "name": "dismiss_bug",
-      "description": "Say a bug of a workspace is no bug, or fixed, so it leaves the open bugs and no run hears of it again. The first call changes nothing: it answers with what would change and a code, and shows the QA a card in QAzinho. Ask the QA in your chat whether to go ahead, and only once they say yes, call it again with the same arguments and \"confirm\" set to that code. They may answer on the card in QAzinho instead, and then it is done without you. With reopen, it is open again at once.",
+      "description": "Say a bug of a workspace is no bug, or fixed, so it leaves the open bugs and no run hears of it again; with reopen, it is open again. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -582,10 +558,6 @@
           "reopen": {
             "type": "boolean",
             "description": "True to open again a bug the QA had said is none."
-          },
-          "confirm": {
-            "type": "string",
-            "description": "The code the first call answered with, only after the QA said yes in your chat to this exact change."
           }
         },
         "required": [
@@ -600,7 +572,7 @@
     },
     {
       "name": "send_bug",
-      "description": "Send one bug of a workspace to the QA's tracker as an issue, Jira or GitHub. Leave the place out to send it where the project's last bug went. The first call changes nothing: it answers with what would change and a code, and shows the QA a card in QAzinho. Ask the QA in your chat whether to go ahead, and only once they say yes, call it again with the same arguments and \"confirm\" set to that code. They may answer on the card in QAzinho instead, and then it is done without you.",
+      "description": "Send one bug of a workspace to the QA's tracker as an issue, Jira or GitHub. Leave the place out to send it where the project's last bug went. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -631,10 +603,6 @@
             "type": "string",
             "pattern": "^[\\w.-]+\\/[\\w.-]+$",
             "description": "The GitHub repository it goes to, as owner/name."
-          },
-          "confirm": {
-            "type": "string",
-            "description": "The code the first call answered with, only after the QA said yes in your chat to this exact change."
           }
         },
         "required": [
