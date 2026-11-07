@@ -50,6 +50,45 @@ describe('readOutsideToolCall', () => {
     });
   });
 
+  it('creates a project with a target, and refuses one with no name', () => {
+    expect(
+      readOutsideToolCall({
+        name: 'create_project',
+        args: { name: 'Loja', web: 'http://localhost:3000' },
+      }),
+    ).toEqual({
+      kind: 'call',
+      call: {
+        name: 'create_project',
+        args: { name: 'Loja', web: 'http://localhost:3000' },
+      },
+    });
+    expect(
+      readOutsideToolCall({
+        name: 'create_project',
+        args: { web: 'http://localhost:3000' },
+      }),
+    ).toMatchObject({
+      kind: 'refused',
+      error: expect.stringContaining('name') as string,
+    });
+  });
+
+  it('creates a workspace only on a target it knows', () => {
+    expect(
+      readOutsideToolCall({
+        name: 'create_workspace',
+        args: { project: 'Loja', name: 'Checkout', target: 'web' },
+      }),
+    ).toMatchObject({ kind: 'call' });
+    expect(
+      readOutsideToolCall({
+        name: 'create_workspace',
+        args: { project: 'Loja', name: 'Checkout', target: 'desktop' },
+      }),
+    ).toEqual({ kind: 'refused', error: '"target" is web, android or ios.' });
+  });
+
   /** Um agente de fora nunca apaga, muda configurações nem mexe em variáveis. */
   it.each([
     'delete_project',

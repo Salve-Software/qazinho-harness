@@ -1,5 +1,5 @@
 {
-  "instructions": "QAzinho is the QA's desktop test assistant: it keeps test plans, walks them on a real browser, emulator or simulator, and keeps what each run found. Use it to check the app after you change it: list_workspaces to find the workspace, start_run, then run_status with waitSeconds until it ends. Read a failure's screenshots and API calls before you fix it, then run it again. Suggest cases for what you built with suggest_cases. Secrets stay with the QA: you only ever see a variable by its name, as ${NAME}.",
+  "instructions": "QAzinho is the QA's desktop test assistant: it keeps test plans, walks them on a real browser, emulator or simulator, and keeps what each run found. Use it to check the app after you change it: list_workspaces to find the workspace, or create_project and create_workspace when the app has none, start_run, then run_status with waitSeconds until it ends. Read a failure's screenshots and API calls before you fix it, then run it again. Suggest cases for what you built with suggest_cases. Secrets stay with the QA: you only ever see a variable by its name, as ${NAME}.",
   "tools": [
     {
       "name": "list_workspaces",
@@ -27,6 +27,74 @@
         },
         "required": [
           "workspace"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "create_project",
+      "description": "Create a project in QAzinho for the app you work on, when list_workspaces shows none for it: its name, and at least one target among the web address it runs on, the path of an Android .apk and the path of an iOS simulator .app on the QA's machine. Then create a workspace in it with create_workspace.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the app is called."
+          },
+          "web": {
+            "type": "string",
+            "description": "The web address it runs on, such as http://localhost:3000."
+          },
+          "android": {
+            "type": "string",
+            "description": "The path of the Android .apk on the QA's machine."
+          },
+          "ios": {
+            "type": "string",
+            "description": "The path of the iOS simulator .app on the QA's machine."
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "create_workspace",
+      "description": "Create a workspace in a project: what it will test, and the target it tests on when the project has more than one. Its plan starts empty: suggest its first cases with suggest_cases, which wait for the QA to take them.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The project, by its id or its name."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What it will test, such as Checkout."
+          },
+          "target": {
+            "type": "string",
+            "enum": [
+              "web",
+              "android",
+              "ios"
+            ]
+          }
+        },
+        "required": [
+          "project",
+          "name"
         ],
         "$schema": "http://json-schema.org/draft-07/schema#"
       },

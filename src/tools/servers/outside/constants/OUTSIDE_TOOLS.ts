@@ -23,6 +23,50 @@ export const OUTSIDE_TOOLS = [
     }),
   },
   {
+    name: 'create_project',
+    description:
+      "Create a project in QAzinho for the app you work on, when list_workspaces shows none for it: its name, and at least one target among the web address it runs on, the path of an Android .apk and the path of an iOS simulator .app on the QA's machine. Then create a workspace in it with create_workspace.",
+    input: z.object({
+      name: textNamed({
+        message: '"create_project" needs "name": what the app is called.',
+        description: 'What the app is called.',
+      }),
+      web: z
+        .string()
+        .trim()
+        .describe('The web address it runs on, such as http://localhost:3000.')
+        .optional(),
+      android: z
+        .string()
+        .trim()
+        .describe("The path of the Android .apk on the QA's machine.")
+        .optional(),
+      ios: z
+        .string()
+        .trim()
+        .describe("The path of the iOS simulator .app on the QA's machine.")
+        .optional(),
+    }),
+  },
+  {
+    name: 'create_workspace',
+    description:
+      'Create a workspace in a project: what it will test, and the target it tests on when the project has more than one. Its plan starts empty: suggest its first cases with suggest_cases, which wait for the QA to take them.',
+    input: z.object({
+      project: textNamed({
+        message: '"create_workspace" needs "project": its id or its name.',
+        description: 'The project, by its id or its name.',
+      }),
+      name: textNamed({
+        message: '"create_workspace" needs "name": what it will test.',
+        description: 'What it will test, such as Checkout.',
+      }),
+      target: z
+        .enum(['web', 'android', 'ios'], { error: '"target" is web, android or ios.' })
+        .optional(),
+    }),
+  },
+  {
     name: 'start_run',
     description:
       "Start a run of a workspace's plan, on a real browser, emulator or simulator, in QAzinho. It answers at once with the run's id and the run goes on by itself, so read it with run_status. A case with a recording walks again without AI, in seconds and at no cost; any other case goes to the QA's own agent, which spends their tokens and takes minutes. Name cases to run only those.",
