@@ -26,7 +26,14 @@ export type OutsideToolCall =
           | 'delete_variable'
           | 'change_settings'
           | 'connect_integration'
-          | 'disconnect_integration';
+          | 'disconnect_integration'
+          | 'list_repositories'
+          | 'link_repository'
+          | 'unlink_repository'
+          | 'link_design'
+          | 'unlink_design'
+          | 'build_app'
+          | 'build_status';
       }
     >
   | { name: 'list_workspaces'; args: Record<string, never> }
@@ -52,7 +59,7 @@ export type OutsideToolCall =
       args: { workspace: string; text: string; waitSeconds?: number };
     }
   | { name: 'read_workspace_chat'; args: { workspace: string; waitSeconds?: number } }
-  | {
-      name: 'suggest_cases';
-      args: { workspace: string; summary: string; cases: IDraftedCase[] };
-    };
+  | { name: 'pause_run'; args: { workspace: string } }
+  | { name: 'resume_run'; args: { workspace: string } }
+  | { name: 'answer_run_question'; args: { workspace: string; answer: string } }
+  | { name: 'take_suggestion'; args: { workspace: string; cases?: number[] } };

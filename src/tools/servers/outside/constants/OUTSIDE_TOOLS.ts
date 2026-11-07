@@ -303,22 +303,94 @@ export const OUTSIDE_TOOLS = [
     }),
   },
   {
-    name: 'suggest_cases',
+    name: 'pause_run',
     description:
-      "Suggest test cases for a workspace's plan, such as for what you just built or fixed. They wait on a card in the workspace's chat until the QA takes them to the plan, so they do not run until then. Write them in the language of the plan and in the QA's words: what to open, click or tap, type and see, never a selector, a file or a function. Give a case the id of one in the plan, such as TC-03, to change that case; with no id it is a new one.",
+      "Pause the run a workspace walks, as the QA's Pause button does: its agent finishes what it is doing and waits. Go on with resume_run.",
     input: z.object({
       workspace: textNamed({
-        message: '"suggest_cases" needs "workspace": its id or its name.',
+        message: '"pause_run" needs "workspace": its id or its name.',
         description: 'The workspace, by its id or its name.',
       }),
-      summary: textNamed({
-        message: '"suggest_cases" needs "summary": what changed and why these cases.',
-        description: 'A line or two for the QA: what changed, and why these cases.',
+    }),
+  },
+  {
+    name: 'resume_run',
+    description: "Let a paused run of a workspace go on, as the QA's Resume button does.",
+    input: z.object({
+      workspace: textNamed({
+        message: '"resume_run" needs "workspace": its id or its name.',
+        description: 'The workspace, by its id or its name.',
+      }),
+    }),
+  },
+  {
+    name: 'answer_run_question',
+    description:
+      'Answer the question the agent of a run waits on, as the QA does in QAzinho: with one of the options run_status shows, or in words. Answer only with what the user told you, asking them first with your own tool for asking. A secret, such as a code sent to their phone, is never answered here: the QA types it in QAzinho.',
+    input: z.object({
+      workspace: textNamed({
+        message: '"answer_run_question" needs "workspace": its id or its name.',
+        description: 'The workspace, by its id or its name.',
+      }),
+      answer: textNamed({
+        message:
+          '"answer_run_question" needs "answer": an option, or the words to answer with.',
+        description:
+          'One of the options the question offers, or the words to answer with.',
+      }),
+    }),
+  },
+  {
+    name: 'take_suggestion',
+    description: `Take the plan an exploration suggested in a workspace's chat into its plan, as the QA's button on that card does: every case, or only the ones you name by their number on the card, from 1. ${ASKS_THE_QA}`,
+    input: z.object({
+      workspace: textNamed({
+        message: '"take_suggestion" needs "workspace": its id or its name.',
+        description: 'The workspace, by its id or its name.',
       }),
       cases: z
-        .array(DRAFTED_CASE)
-        .min(1, { error: '"suggest_cases" needs at least one case.' })
-        .describe('The cases to suggest.'),
+        .array(z.number().int().min(1))
+        .describe('The numbers of the cases to take, from 1; every case when left out.')
+        .optional(),
     }),
+  },
+  {
+    name: 'list_repositories',
+    description:
+      "List the QA's GitHub repositories with their default branch, to link one to a project. It works once GitHub is connected in QAzinho.",
+    input: appInputOf('list_repositories'),
+  },
+  {
+    name: 'link_repository',
+    description:
+      "Link one of the QA's GitHub repositories to a project, as owner/name, so its chat can plan from a branch and build_app can build it.",
+    input: appInputOf('link_repository'),
+  },
+  {
+    name: 'unlink_repository',
+    description: `Unlink a repository from a project. ${ASKS_THE_QA}`,
+    input: appInputOf('unlink_repository'),
+  },
+  {
+    name: 'link_design',
+    description:
+      "Check a workspace against a Figma design: the link to a frame or page in Figma. Its chat and its runs read the design through the QA's own Figma, and each step that lands on a designed screen is held to its frame.",
+    input: appInputOf('link_design'),
+  },
+  {
+    name: 'unlink_design',
+    description: `Stop checking a workspace against its Figma design. ${ASKS_THE_QA}`,
+    input: appInputOf('unlink_design'),
+  },
+  {
+    name: 'build_app',
+    description: `Build the app of a project from one of its GitHub repositories, with the QA's own agent: an Android .apk, or an iOS .app for the simulator. Once built, it becomes the project's target on that platform. It takes minutes and goes on by itself: build_status says how it goes. ${ASKS_THE_QA}`,
+    input: appInputOf('build_app'),
+  },
+  {
+    name: 'build_status',
+    description:
+      'Read how the builds started since QAzinho opened went, or are going: what each builds, how far it got, and what it made or why it made nothing.',
+    input: appInputOf('build_status'),
   },
 ] as const;

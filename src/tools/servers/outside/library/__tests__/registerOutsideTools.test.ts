@@ -57,7 +57,17 @@ describe('registerOutsideTools', () => {
       'disconnect_integration',
       'ask_workspace_chat',
       'read_workspace_chat',
-      'suggest_cases',
+      'pause_run',
+      'resume_run',
+      'answer_run_question',
+      'take_suggestion',
+      'list_repositories',
+      'link_repository',
+      'unlink_repository',
+      'link_design',
+      'unlink_design',
+      'build_app',
+      'build_status',
     ]);
 
     await client.callTool({ name: 'stop_run', arguments: { workspace: 'Compra' } });

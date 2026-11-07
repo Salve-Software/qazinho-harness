@@ -63,12 +63,16 @@ src/
   QA, como o do Figma.
 - **Um agente de fora chega pelo `OutsideHost`** (`src/tools/OutsideHost.class.ts`): o agente que o
   QA usa no próprio editor, e não um que o QAzinho inicia. O host entrega um endereço estável no
-  loopback (a porta e o token vêm dele), serve só as ferramentas de `servers/outside/` (as que mudam ou apagam mandam o agente perguntar ao usuário antes), sem a
+  loopback (a porta e o token vêm dele), serve só as ferramentas de `servers/outside/`, sem a
   de permissão, e não enfileira as chamadas, já que um `run_status` pode segurar por 50 segundos
   enquanto um `stop_run` chega. Um pedido com um `Origin` ou um `Host` que não sejam desta máquina é
   recusado (`isLocalRequest`). A resposta é dado do app testado, o que a descrição de cada
   ferramenta diz, e um valor de variável nunca passa por ela: o agente cadastra uma variável pelo nome e
   pela descrição, e o host abre a janela onde o usuário digita o valor.
+- **O que o QA faz à mão no QAzinho tem uma ferramenta de fora; o que só a IA faz vai pela conversa**
+  com o chat do workspace (`ask_workspace_chat`), como planejar a partir de uma história, de um design
+  ou do código. As que mudam ou apagam mandam o agente perguntar ao usuário antes, com a ferramenta de
+  perguntar dele.
 - **O agente pergunta ao QA no meio da run** pelo `ask_qa` do grupo device; a chamada espera até o
   host responder pelo `onAsk`.
 

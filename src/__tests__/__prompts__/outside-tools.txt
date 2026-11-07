@@ -1,5 +1,5 @@
 {
-  "instructions": "QAzinho is the QA's desktop test assistant: it keeps test plans, walks them on a real browser, emulator or simulator, and keeps what each run found. Use it to check the app after you change it: list_workspaces to find the workspace, or create_project and create_workspace when the app has none, start_run, then run_status with waitSeconds until it ends. Read a failure's screenshots and API calls before you fix it, then run it again. Suggest cases for what you built with suggest_cases, or ask the workspace's own agent with ask_workspace_chat. Before anything that changes or deletes what the user keeps, ask them with your own tool for asking, and go ahead only on their yes. Secrets stay with the QA: you only ever see a variable by its name, as ${NAME}.",
+  "instructions": "QAzinho is the QA's desktop test assistant: it keeps test plans, walks them on a real browser, emulator or simulator, and keeps what each run found. Use it to check the app after you change it: list_workspaces to find the workspace, or create_project and create_workspace when the app has none, start_run, then run_status with waitSeconds until it ends. Read a failure's screenshots and API calls before you fix it, then run it again. Write cases for what you built with add_cases, or ask the workspace's own agent to plan with ask_workspace_chat: what only an AI does in QAzinho, such as planning from a Jira story, a Figma design or the code, goes through that chat. Before anything that changes or deletes what the user keeps, ask them with your own tool for asking, and go ahead only on their yes. Secrets stay with the QA: you only ever see a variable by its name, as ${NAME}.",
   "tools": [
     {
       "name": "list_workspaces",
@@ -899,8 +899,50 @@
       }
     },
     {
-      "name": "suggest_cases",
-      "description": "Suggest test cases for a workspace's plan, such as for what you just built or fixed. They wait on a card in the workspace's chat until the QA takes them to the plan, so they do not run until then. Write them in the language of the plan and in the QA's words: what to open, click or tap, type and see, never a selector, a file or a function. Give a case the id of one in the plan, such as TC-03, to change that case; with no id it is a new one.",
+      "name": "pause_run",
+      "description": "Pause the run a workspace walks, as the QA's Pause button does: its agent finishes what it is doing and waits. Go on with resume_run.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          }
+        },
+        "required": [
+          "workspace"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "resume_run",
+      "description": "Let a paused run of a workspace go on, as the QA's Resume button does.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          }
+        },
+        "required": [
+          "workspace"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "answer_run_question",
+      "description": "Answer the question the agent of a run waits on, as the QA does in QAzinho: with one of the options run_status shows, or in words. Answer only with what the user told you, asking them first with your own tool for asking. A secret, such as a code sent to their phone, is never answered here: the QA types it in QAzinho.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -909,79 +951,218 @@
             "minLength": 1,
             "description": "The workspace, by its id or its name."
           },
-          "summary": {
+          "answer": {
             "type": "string",
             "minLength": 1,
-            "description": "A line or two for the QA: what changed, and why these cases."
-          },
-          "cases": {
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "The id of the case this one keeps or changes, such as TC-03; none for a new case."
-                },
-                "title": {
-                  "type": "string"
-                },
-                "priority": {
-                  "type": "string",
-                  "enum": [
-                    "P1",
-                    "P2",
-                    "P3"
-                  ]
-                },
-                "goal": {
-                  "type": "string"
-                },
-                "preconditions": {
-                  "type": "string"
-                },
-                "steps": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "action": {
-                        "type": "string",
-                        "description": "What to do, in the QA's words: click on a web page, tap on a phone, in the language of the plan."
-                      },
-                      "expected": {
-                        "type": "string",
-                        "description": "What the agent will read once the action is done: what you saw on screen, or what the QA said. For a screen you have not seen, only what the QA told you, never a text, an item or a field you suppose is there. A total is the sum of the prices you saw, worked out again before you write it. What an empty screen shows says nothing about a full one: free shipping on an empty cart is not the shipping rule."
-                      },
-                      "frame": {
-                        "type": "string",
-                        "description": "The id of the Figma node this step's screen should match, such as 12:345, from the workspace's design; none when it has no design or the step lands on no designed screen."
-                      }
-                    },
-                    "required": [
-                      "action",
-                      "expected"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "title",
-                "priority",
-                "goal",
-                "preconditions",
-                "steps"
-              ]
-            },
-            "description": "The cases to suggest."
+            "description": "One of the options the question offers, or the words to answer with."
           }
         },
         "required": [
           "workspace",
-          "summary",
-          "cases"
+          "answer"
         ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "take_suggestion",
+      "description": "Take the plan an exploration suggested in a workspace's chat into its plan, as the QA's button on that card does: every case, or only the ones you name by their number on the card, from 1. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          },
+          "cases": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "description": "The numbers of the cases to take, from 1; every case when left out."
+          }
+        },
+        "required": [
+          "workspace"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_repositories",
+      "description": "List the QA's GitHub repositories with their default branch, to link one to a project. It works once GitHub is connected in QAzinho.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "link_repository",
+      "description": "Link one of the QA's GitHub repositories to a project, as owner/name, so its chat can plan from a branch and build_app can build it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The project, by its id or its name."
+          },
+          "repository": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The repository, as owner/name."
+          },
+          "base": {
+            "type": "string",
+            "description": "The branch its changes are measured against."
+          }
+        },
+        "required": [
+          "project",
+          "repository"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "unlink_repository",
+      "description": "Unlink a repository from a project. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The project, by its id or its name."
+          },
+          "repository": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The repository, as owner/name."
+          }
+        },
+        "required": [
+          "project",
+          "repository"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "link_design",
+      "description": "Check a workspace against a Figma design: the link to a frame or page in Figma. Its chat and its runs read the design through the QA's own Figma, and each step that lands on a designed screen is held to its frame.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          },
+          "link": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The link to a frame or page in Figma, such as https://www.figma.com/design/AbC123/Shop?node-id=12-345."
+          }
+        },
+        "required": [
+          "workspace",
+          "link"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "unlink_design",
+      "description": "Stop checking a workspace against its Figma design. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The workspace, by its id or its name."
+          }
+        },
+        "required": [
+          "workspace"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "build_app",
+      "description": "Build the app of a project from one of its GitHub repositories, with the QA's own agent: an Android .apk, or an iOS .app for the simulator. Once built, it becomes the project's target on that platform. It takes minutes and goes on by itself: build_status says how it goes. Ask the user first, with your own tool for asking them, saying what will change, and call this only once they say yes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The project, by its id or its name."
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "android",
+              "ios"
+            ]
+          },
+          "repository": {
+            "type": "string",
+            "description": "One of the project's repositories, as owner/name; its only one when left out."
+          },
+          "branch": {
+            "type": "string",
+            "description": "The branch to build; the repository's base branch when left out."
+          }
+        },
+        "required": [
+          "project",
+          "platform"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "build_status",
+      "description": "Read how the builds started since QAzinho opened went, or are going: what each builds, how far it got, and what it made or why it made nothing.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "type": "string",
+            "description": "Only this project's builds, by its id or its name."
+          }
+        },
         "$schema": "http://json-schema.org/draft-07/schema#"
       },
       "execution": {

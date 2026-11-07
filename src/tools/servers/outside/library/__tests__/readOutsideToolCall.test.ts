@@ -35,19 +35,64 @@ describe('readOutsideToolCall', () => {
     });
   });
 
-  it('asks for at least one case to suggest, and for a summary', () => {
+  it('no longer offers suggest_cases: the agent writes cases, or asks the chat', () => {
     expect(
       readOutsideToolCall({
         name: 'suggest_cases',
         args: { workspace: 'w', summary: 'New coupon', cases: [] },
       }),
-    ).toEqual({ kind: 'refused', error: '"suggest_cases" needs at least one case.' });
+    ).toEqual({ kind: 'refused', error: 'There is no tool called "suggest_cases".' });
+  });
+
+  it('answers a run question in words, and refuses one with no answer', () => {
     expect(
-      readOutsideToolCall({ name: 'suggest_cases', args: { workspace: 'w', cases: [] } }),
+      readOutsideToolCall({
+        name: 'answer_run_question',
+        args: { workspace: 'Compra', answer: 'Plano anual' },
+      }),
+    ).toEqual({
+      kind: 'call',
+      call: {
+        name: 'answer_run_question',
+        args: { workspace: 'Compra', answer: 'Plano anual' },
+      },
+    });
+    expect(
+      readOutsideToolCall({ name: 'answer_run_question', args: { workspace: 'Compra' } }),
     ).toMatchObject({
       kind: 'refused',
-      error: expect.stringContaining('summary') as string,
+      error: expect.stringContaining('answer') as string,
     });
+  });
+
+  it('takes some cases of a suggestion by their number, from 1', () => {
+    expect(
+      readOutsideToolCall({
+        name: 'take_suggestion',
+        args: { workspace: 'Compra', cases: [1, 3] },
+      }),
+    ).toMatchObject({ kind: 'call', call: { args: { cases: [1, 3] } } });
+    expect(
+      readOutsideToolCall({
+        name: 'take_suggestion',
+        args: { workspace: 'Compra', cases: [0] },
+      }),
+    ).toMatchObject({ kind: 'refused' });
+  });
+
+  it('builds the app with the same schema as the assistant', () => {
+    expect(
+      readOutsideToolCall({
+        name: 'build_app',
+        args: { project: 'Loja', platform: 'android' },
+      }),
+    ).toMatchObject({ kind: 'call', call: { name: 'build_app' } });
+    expect(
+      readOutsideToolCall({
+        name: 'build_app',
+        args: { project: 'Loja', platform: 'web' },
+      }),
+    ).toMatchObject({ kind: 'refused' });
   });
 
   it('creates a project with a target, and refuses one with no name', () => {
