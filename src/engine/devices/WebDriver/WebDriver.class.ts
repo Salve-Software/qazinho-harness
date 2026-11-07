@@ -21,7 +21,12 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { chromium } from 'playwright-core';
 import { describeMeasure, sampleFileOf } from '@/engine/devices/library';
-import { FIELD_FORMATS, MOTION_PROBE, WEB_DRIVER } from './constants';
+import {
+  CHROME_DISABLED_FEATURES,
+  FIELD_FORMATS,
+  MOTION_PROBE,
+  WEB_DRIVER,
+} from './constants';
 import {
   describePage,
   findLocator,
@@ -89,7 +94,10 @@ export class WebDriver implements IDeviceDriver {
       headless: true,
       viewport: { ...this.viewport },
       deviceScaleFactor: this.pixelRatio,
-      args: [`--force-device-scale-factor=${String(this.pixelRatio)}`],
+      args: [
+        `--force-device-scale-factor=${String(this.pixelRatio)}`,
+        `--disable-features=${CHROME_DISABLED_FEATURES.join(',')}`,
+      ],
       ...(credentials === null || origin === null
         ? {}
         : { httpCredentials: { ...credentials, origin } }),

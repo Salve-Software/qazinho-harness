@@ -110,6 +110,9 @@ host que só pergunta ao agente (a API) nunca carregue o Playwright.
   requisição que o app faz; o `AndroidDriver` dirige um AVD pelo `adb` e pelo `uiautomator`; o
   `IosDriver`, um simulador pelo `simctl` e pelo idb. Um celular grava a si mesmo na pasta da run
   (`RUN_VIDEO_FILES`).
+- O Chrome abre sem copiar o próprio app (`CHROME_DISABLED_FEATURES`): no macOS, a cópia feita
+  debaixo do QAzinho pedia a permissão de gerenciar apps, e o sistema avisava que o QAzinho tentou
+  mudar outro app. O nosso `--disable-features` substitui o do Playwright, então repete a lista dele.
 - Um navegador é gravado pelos frames ao vivo. O desktop os codifica numa janela escondida; uma
   máquina do CI não tem nenhuma, então o `FrameRecorder` os entrega ao ffmpeg da máquina num ritmo
   constante, cada frame mantido até o próximo, e o vídeo guarda o tempo de relógio.
