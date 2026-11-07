@@ -24,6 +24,11 @@ export type OutsideToolCall =
       args: { workspace: string; run?: string; waitSeconds?: number };
     }
   | {
+      name: 'ask_workspace_chat';
+      args: { workspace: string; text: string; waitSeconds?: number };
+    }
+  | { name: 'read_workspace_chat'; args: { workspace: string; waitSeconds?: number } }
+  | {
       name: 'suggest_cases';
       args: { workspace: string; summary: string; cases: IDraftedCase[] };
     };

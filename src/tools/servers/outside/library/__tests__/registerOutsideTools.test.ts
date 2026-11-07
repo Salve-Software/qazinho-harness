@@ -37,6 +37,8 @@ describe('registerOutsideTools', () => {
       'run_status',
       'stop_run',
       'bug_details',
+      'ask_workspace_chat',
+      'read_workspace_chat',
       'suggest_cases',
     ]);
 

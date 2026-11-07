@@ -130,6 +130,46 @@ export const OUTSIDE_TOOLS = [
     }),
   },
   {
+    name: 'ask_workspace_chat',
+    description: `Write in a workspace's chat, to QAzinho's own agent there, as the QA would: ask it to plan the app, change the plan, or explain a run. The QA sees your message in that chat marked as written by an agent, and QAzinho's agent knows it too. Before a plan it looks at the app and may ask a round of questions: read them in the answer and reply with this tool, in the QA's place only when you know what they want. With waitSeconds it holds until the agent answers; call read_workspace_chat while it still works. ${DATA_NOTE}`,
+    input: z.object({
+      workspace: textNamed({
+        message: '"ask_workspace_chat" needs "workspace": its id or its name.',
+        description: 'The workspace, by its id or its name.',
+      }),
+      text: textNamed({
+        message: '"ask_workspace_chat" needs "text": what you write in the chat.',
+        description: 'What you write in the chat, in the language of the plan.',
+      }),
+      waitSeconds: z
+        .number({ error: '"waitSeconds" is a number of seconds, at most 50.' })
+        .int({ error: '"waitSeconds" is a whole number of seconds, at most 50.' })
+        .min(0, { error: '"waitSeconds" is a number of seconds, at most 50.' })
+        .max(50, {
+          error: '"waitSeconds" is at most 50. Call read_workspace_chat to wait longer.',
+        })
+        .describe('How long to hold for the answer, at most 50 seconds.')
+        .optional(),
+    }),
+  },
+  {
+    name: 'read_workspace_chat',
+    description: `Read the latest of a workspace's chat: whether its agent still works, what it answered, the plan it wrote and the questions it waits on. With waitSeconds it holds until the agent answers. ${DATA_NOTE}`,
+    input: z.object({
+      workspace: textNamed({
+        message: '"read_workspace_chat" needs "workspace": its id or its name.',
+        description: 'The workspace, by its id or its name.',
+      }),
+      waitSeconds: z
+        .number({ error: '"waitSeconds" is a number of seconds, at most 50.' })
+        .int({ error: '"waitSeconds" is a whole number of seconds, at most 50.' })
+        .min(0, { error: '"waitSeconds" is a number of seconds, at most 50.' })
+        .max(50, { error: '"waitSeconds" is at most 50. Call it again to wait longer.' })
+        .describe('How long to hold for the answer, at most 50 seconds.')
+        .optional(),
+    }),
+  },
+  {
     name: 'suggest_cases',
     description:
       "Suggest test cases for a workspace's plan, such as for what you just built or fixed. They wait on a card in the workspace's chat until the QA takes them to the plan, so they do not run until then. Write them in the language of the plan and in the QA's words: what to open, click or tap, type and see, never a selector, a file or a function. Give a case the id of one in the plan, such as TC-03, to change that case; with no id it is a new one.",
