@@ -1,4 +1,5 @@
 import type { BugCategory } from './BugCategory';
+import type { IScreenBox } from './IScreenBox';
 import type { IStepAsked } from './IStepAsked';
 import type { Severity } from './Severity';
 import type { StepVerdict } from './StepVerdict';
@@ -28,6 +29,7 @@ export interface IStepOutcome {
   sameAs?: string;
   frame?: string;
   category?: BugCategory;
+  box?: IScreenBox;
   unwalked?: UnwalkedReason;
   asked?: IStepAsked;
 }

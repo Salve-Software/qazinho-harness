@@ -4,6 +4,7 @@ import { bugIdNamed } from '@/tools/library/bugIdNamed';
 import { textNamed } from '@/tools/library/textNamed';
 import { variableNamed } from '@/tools/library/variableNamed';
 import { BUG_CATEGORY_INPUT } from './BUG_CATEGORY_INPUT';
+import { BUG_TARGET_INPUT } from './BUG_TARGET_INPUT';
 import { SEVERITY_SCALE } from './SEVERITY_SCALE';
 
 export const DEVICE_TOOLS = [
@@ -262,6 +263,7 @@ export const DEVICE_TOOLS = [
         )
         .optional(),
       category: BUG_CATEGORY_INPUT,
+      target: BUG_TARGET_INPUT,
     }),
   },
   {
@@ -296,6 +298,7 @@ export const DEVICE_TOOLS = [
         )
         .optional(),
       category: BUG_CATEGORY_INPUT,
+      target: BUG_TARGET_INPUT,
     }),
   },
   {

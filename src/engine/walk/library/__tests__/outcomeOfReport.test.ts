@@ -68,6 +68,24 @@ describe('outcomeOfReport', () => {
     expect(filed(REPORT)).not.toHaveProperty('category');
   });
 
+  it('keeps where a failed step is wrong on the screen, and only for a failure', () => {
+    const box = { x: 0.1, y: 0.2, width: 0.3, height: 0.1 };
+    const filed = (report: Parameters<typeof outcomeOfReport>[0]['report']) =>
+      outcomeOfReport({
+        report,
+        step: STEP,
+        index: 0,
+        workspaceId: 'w-1',
+        tookMs: 1,
+        at: 1,
+        shot: null,
+        box,
+      });
+
+    expect(filed(REPORT).box).toEqual(box);
+    expect(filed({ ...REPORT, verdict: 'passed' })).not.toHaveProperty('box');
+  });
+
   it('keeps the Figma frame a failed step is off, so its bug is one off the design', () => {
     const filed = (
       report: Omit<typeof REPORT, 'verdict'> & {

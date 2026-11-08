@@ -1,4 +1,5 @@
 import type { BugCategory } from './BugCategory';
+import type { IScreenBox } from './IScreenBox';
 import type { Severity } from './Severity';
 
 /**
@@ -20,4 +21,5 @@ export interface IRunFinding {
   sameAs?: string;
   frame?: string;
   category?: BugCategory;
+  box?: IScreenBox;
 }

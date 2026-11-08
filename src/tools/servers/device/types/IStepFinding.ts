@@ -11,4 +11,5 @@ export interface IStepFinding {
   sameAs?: string;
   frame?: string;
   category?: BugCategory;
+  target?: string;
 }

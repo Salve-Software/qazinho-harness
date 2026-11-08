@@ -17,4 +17,5 @@ export interface IStepReport {
   sameAs?: string;
   frame?: string;
   category?: BugCategory;
+  target?: string;
 }
