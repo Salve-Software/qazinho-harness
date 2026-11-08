@@ -19,7 +19,9 @@ function pageWith(found: Record<string, number>) {
       answer(`placeholder${exactly(options)}`),
     getByText: (_: string, options?: { exact?: boolean }) =>
       answer(`text${exactly(options)}`),
-    locator: () => answer('css'),
+    getByTestId: () => answer('testid'),
+    locator: (selector: string) =>
+      answer(selector.startsWith('[') ? `css:${selector}` : 'css'),
   });
 }
 
@@ -263,5 +265,32 @@ describe('findLocator', () => {
     expect(
       locatorName(await findLocator({ page, target: 'Comprar #2', kind: 'click' })),
     ).toBe('role:button:exact#2');
+  });
+
+  /** O time deu ao campo um test id: ele continua achando o campo quando as palavras mudam. */
+  it('takes a control by the test id the agent names, before any words', async () => {
+    const page = pageWith({ testid: 1, 'label:exact': 1 });
+
+    expect(
+      locatorName(
+        await findLocator({ page, target: 'testid=login-email', kind: 'fill' }),
+      ),
+    ).toBe('testid');
+  });
+
+  it('reads a test id kept in another attribute, such as data-cy', async () => {
+    const page = pageWith({ 'css:[data-cy="login-email"]': 1 });
+
+    expect(
+      locatorName(
+        await findLocator({ page, target: '[testid=login-email]', kind: 'click' }),
+      ),
+    ).toBe('css:[data-cy="login-email"]');
+  });
+
+  it('finds nothing for a test id the page does not have, rather than guessing', async () => {
+    const page = pageWith({ 'label:exact': 1 });
+
+    expect(await findLocator({ page, target: 'testid=gone', kind: 'fill' })).toBeNull();
   });
 });

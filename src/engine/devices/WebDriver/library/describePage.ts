@@ -17,16 +17,19 @@ export async function describePage(page: Page): Promise<string> {
     .replace(/\n{3,}/g, '\n\n')
     .slice(0, WEB_DRIVER.pageTextLimit);
 
-  const controls = (await listControls(page))
-    .slice(0, WEB_DRIVER.elementLimit)
-    .map(({ role, label }) => `${role}: ${label}`);
+  const listed = (await listControls(page)).slice(0, WEB_DRIVER.elementLimit);
+  const controls = listed.map(({ role, label, testId }) =>
+    testId === null ? `${role}: ${label}` : `${role}: ${label} [testid=${testId}]`,
+  );
 
   return [
     `URL: ${page.url()}`,
     `TITLE: ${await page.title()}`,
     'TEXT:',
     text,
-    'CONTROLS:',
+    listed.some(({ testId }) => testId !== null)
+      ? 'CONTROLS (target one with a [testid=…] as testid=…, which holds when its words change):'
+      : 'CONTROLS:',
     ...numberDuplicates(controls),
   ].join('\n');
 }

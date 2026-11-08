@@ -3,7 +3,11 @@ import { WEB_DRIVER } from '@/engine/devices/WebDriver/constants';
 import { describePage } from '@/engine/devices/WebDriver/library';
 import { fakePage } from './fakePage';
 
-function pageShowing(props: { text: string; controls: string[] }) {
+function pageShowing(props: {
+  text: string;
+  controls: string[];
+  testIds?: (string | null)[];
+}) {
   return fakePage({
     url: () => 'https://shop.test/cart',
     title: () => Promise.resolve('Cart'),
@@ -13,7 +17,7 @@ function pageShowing(props: { text: string; controls: string[] }) {
         props.controls.map((line, at) => {
           const [role = '', label = ''] = line.split(': ');
 
-          return { role, label, at };
+          return { role, label, testId: props.testIds?.[at] ?? null, at };
         }),
       ),
   });
@@ -75,5 +79,18 @@ describe('describePage', () => {
     expect(await describePage(page)).toBe(
       'URL: about:blank\nTITLE: \nTEXT:\n\nCONTROLS:',
     );
+  });
+
+  it('names the test id a control has, and says to target it by that', async () => {
+    const page = pageShowing({
+      text: 'Login',
+      controls: ['input: Email', 'button: Log In'],
+      testIds: ['login-email', null],
+    });
+    const look = await describePage(page);
+
+    expect(look).toContain('input: Email [testid=login-email]');
+    expect(look).toMatch(/^button: Log In$/m);
+    expect(look).toContain('target one with a [testid=…] as testid=…');
   });
 });

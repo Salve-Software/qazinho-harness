@@ -5,6 +5,10 @@ import { listControls } from './listControls';
 
 type AriaRole = Parameters<Page['getByRole']>[0];
 
+const TEST_ID = /^\[?\s*test-?id\s*[=:]\s*["']?([^"'\]]+)["']?\s*\]?$/i;
+
+const TEST_ID_ATTRIBUTES = ['data-test-id', 'data-test', 'data-cy', 'data-qa'];
+
 const CLICKABLE: AriaRole[] = [
   'button',
   'link',
@@ -40,6 +44,10 @@ export async function findLocator(props: {
   target: string;
   kind: 'click' | 'fill';
 }): Promise<Locator | null> {
+  const testId = TEST_ID.exec(props.target.trim())?.[1]?.trim() ?? null;
+
+  if (testId !== null) return byTestId({ page: props.page, testId });
+
   const found = await locate(props);
   const listed = withoutRole(props.target);
   const named =
@@ -47,6 +55,21 @@ export async function findLocator(props: {
   const counted = countedOf(ordinalOf(listed ?? props.target).name);
 
   return named ?? (counted === null ? null : onlyOne({ page: props.page, counted }));
+}
+
+async function byTestId(props: { page: Page; testId: string }): Promise<Locator | null> {
+  const quoted = props.testId.replace(/["\\]/g, '\\$&');
+
+  for (const candidate of [
+    props.page.getByTestId(props.testId),
+    ...TEST_ID_ATTRIBUTES.map((name) => props.page.locator(`[${name}="${quoted}"]`)),
+  ]) {
+    const shown = candidate.filter({ visible: true });
+
+    if ((await shown.count().catch(() => 0)) > 0) return shown.first();
+  }
+
+  return null;
 }
 
 async function onlyOne(props: { page: Page; counted: RegExp }): Promise<Locator | null> {
