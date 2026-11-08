@@ -2,8 +2,8 @@ import type { IChatAnswer } from '@/contract';
 import { CHAT_ANSWER } from '@/schemas';
 
 /**
- * Confere uma resposta do chat contra o schema; prosa ainda é uma resposta, e uma parte
- * que quebra o schema só custa a si mesma.
+ * Confere uma resposta do chat contra o schema; prosa ainda é uma resposta, uma parte que
+ * quebra o schema só custa a si mesma, e um plano sem caso é nenhum plano.
  */
 export function readChatAnswer(text: string): IChatAnswer | null {
   const json = jsonOf(text);
@@ -22,6 +22,8 @@ export function readChatAnswer(text: string): IChatAnswer | null {
   const questions =
     CHAT_ANSWER.shape.questions.safeParse(withoutNullVariables(field('questions')))
       .data ?? [];
+  const plan =
+    CHAT_ANSWER.shape.plan.safeParse(withoutNullIds(field('plan'))).data ?? null;
 
   return {
     reply: reply.trim(),
@@ -34,7 +36,7 @@ export function readChatAnswer(text: string): IChatAnswer | null {
       ),
       isMultiSelect: multiSelect,
     })),
-    plan: CHAT_ANSWER.shape.plan.safeParse(withoutNullIds(field('plan'))).data ?? null,
+    plan: plan !== null && plan.cases.length > 0 ? plan : null,
   };
 }
 

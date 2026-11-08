@@ -28,6 +28,23 @@ describe('readChatAnswer', () => {
     });
   });
 
+  /**
+   * O Haiku perguntou e mandou junto `plan: { summary: '', cases: [] }` no lugar de null: a
+   * página o tomava como um plano de zero casos, que trocava o plano do workspace.
+   */
+  it('reads a plan with no cases as no plan, keeping the questions', () => {
+    const answer = readChatAnswer(
+      JSON.stringify({
+        reply: 'I walked the app.',
+        questions: [QUESTION],
+        plan: { summary: '', cases: [] },
+      }),
+    );
+
+    expect(answer?.plan).toBeNull();
+    expect(answer?.questions).toHaveLength(1);
+  });
+
   it('reads a reply with the plan the QA asked for', () => {
     const answer = readChatAnswer(
       JSON.stringify({
