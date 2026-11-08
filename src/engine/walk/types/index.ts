@@ -7,3 +7,4 @@ export type * from './IPlanWalker';
 export type * from './IWalkEnd';
 export type * from './WalkEvent';
 export type * from './WalkMode';
+export type * from './IReplayDivergence';

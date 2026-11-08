@@ -1,6 +1,8 @@
 import type { ICaseAgent } from './ICaseAgent';
+import type { IReplayDivergence } from './IReplayDivergence';
 import type { WalkEvent } from './WalkEvent';
 import type {
+  DivergenceCause,
   IKnownBug,
   IMemoryBrief,
   ITargetUnderTest,
@@ -27,6 +29,7 @@ export interface IPlanWalker {
   values: IVariableValue[];
   bugs: IKnownBug[];
   memories?: IMemoryBrief[];
+  whyDiverged?: (at: IReplayDivergence) => Promise<DivergenceCause | null>;
   answers?: { caseId: string; question: string; answer: string }[];
   shotDir: string;
   onEvent: (event: WalkEvent) => void;

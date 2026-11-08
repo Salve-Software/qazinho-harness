@@ -6,4 +6,6 @@ export const UNWALKED = {
   capped: 'Skipped: the run spent all it may on the model.',
   asked: 'Skipped: the agent needed the QA, and no one answers in this run. It asked:',
   noValue: 'Skipped: this case types a variable this run has no value for:',
+  noData:
+    'Blocked: the environment does not hold the data this recording expects, so check the test data.',
 } as const;

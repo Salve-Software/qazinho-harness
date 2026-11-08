@@ -3,6 +3,7 @@ import type {
   ICaseAgent,
   IIndexedStep,
   IPlanWalker,
+  IReplayDivergence,
   IWalkEnd,
   WalkEvent,
   WalkMode,
@@ -67,11 +68,13 @@ export class PlanWalker {
   private readonly values: IVariableValue[];
   private readonly bugs: IKnownBug[];
   private readonly memories: IMemoryBrief[];
+  private readonly whyDiverged: IPlanWalker['whyDiverged'];
   private readonly answers: { caseId: string; question: string; answer: string }[];
   private readonly shotDir: string;
   private readonly onEvent: (event: WalkEvent) => void;
   private isStopped = false;
   private isCapped = false;
+  private divergedAt: IReplayDivergence | null = null;
 
   public constructor(props: IPlanWalker) {
     this.scope = props.scope;
@@ -85,6 +88,7 @@ export class PlanWalker {
     this.values = props.values;
     this.bugs = props.bugs;
     this.memories = props.memories ?? [];
+    this.whyDiverged = props.whyDiverged;
     this.answers = props.answers ?? [];
     this.shotDir = props.shotDir;
     this.onEvent = props.onEvent;
@@ -132,11 +136,17 @@ export class PlanWalker {
               steps: steps.map(({ step }) => step),
               targetKind: this.target.kind,
             });
-      const replayed = recipe === null ? null : await this.replayCase({ steps, recipe });
+      const replayed =
+        recipe === null ? null : await this.replayWeighing({ steps, recipe });
 
       if (replayed === 'stopped') break;
 
       if (replayed === 'replayed') continue;
+
+      if (replayed === 'noData') {
+        this.unwalked({ pending: [...steps], verdict: 'blocked', reason: 'noData' });
+        continue;
+      }
 
       if (replayed === 'diverged') await this.driver.restart().catch(() => undefined);
 
@@ -468,6 +478,33 @@ export class PlanWalker {
    * Anda um caso de novo sem o agente, do jeito que a gravação diz, conferindo a prova de
    * cada passo; os passos só são contados quando o caso inteiro valeu.
    */
+  /**
+   * Anda a gravação e, quando ela falha, pergunta por quê: uma instabilidade anda de novo
+   * uma vez, e um dado que falta não chama o agente.
+   */
+  private async replayWeighing(props: {
+    steps: IIndexedStep[];
+    recipe: ICaseRecipe;
+  }): Promise<'replayed' | 'diverged' | 'stopped' | 'noData'> {
+    this.divergedAt = null;
+
+    const first = await this.replayCase(props);
+    const at = this.divergedAt as IReplayDivergence | null;
+
+    if (first !== 'diverged' || at === null || this.whyDiverged === undefined)
+      return first;
+
+    const cause = await this.whyDiverged(at).catch(() => null);
+
+    if (cause === 'missing_data') return 'noData';
+
+    if (cause !== 'flaky') return first;
+
+    await this.driver.restart().catch(() => undefined);
+
+    return this.isStopped ? 'stopped' : this.replayCase(props);
+  }
+
   private async replayCase(props: {
     steps: IIndexedStep[];
     recipe: ICaseRecipe;
@@ -493,8 +530,15 @@ export class PlanWalker {
         () => false,
       );
 
-      if (!isDone || !(await this.proofShows({ device, proof: kept.proof })))
+      if (!isDone || !(await this.proofShows({ device, proof: kept.proof }))) {
+        this.divergedAt = {
+          step: step.action,
+          proof: kept.proof,
+          screen: await device.describe().catch(() => ''),
+        };
+
         return 'diverged';
+      }
 
       const shot = await this.driver.shoot(
         join(this.shotDir, `step-${String(index + 1)}.jpg`),

@@ -7,7 +7,7 @@ import type {
   ISightingBody,
   RunnerJob,
 } from './types';
-import type { ICaseRecipe } from '@/contract';
+import type { DivergenceCause, ICaseRecipe } from '@/contract';
 import { createReadStream, createWriteStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import { Readable } from 'node:stream';
@@ -53,6 +53,21 @@ export class RunnerApi implements IRunnerApi {
     message: string | null;
   }): Promise<void> {
     await this.send({ method: 'POST', path: '/api/runner/progress', body: progress });
+  }
+
+  /** Por que uma gravação falhou, quando há certeza; null senão, ou sem resposta. */
+  public async whyDiverged(asked: {
+    step: string;
+    proof: string;
+    screen: string;
+  }): Promise<DivergenceCause | null> {
+    const answer = await this.send({
+      method: 'POST',
+      path: '/api/runner/divergence',
+      body: asked,
+    }).catch(() => null);
+
+    return (answer as { cause?: DivergenceCause | null } | null)?.cause ?? null;
   }
 
   /** Onde subir um arquivo, e a chave pela qual ele será conhecido. */

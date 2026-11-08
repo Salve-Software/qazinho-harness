@@ -1,9 +1,10 @@
-import type { IFlatStep, IRecipeBook, IStepAction } from '@/contract';
+import type { IFlatStep, IMemoryBrief, IRecipeBook, IStepAction } from '@/contract';
 import type { IDeviceDriver } from '@/engine/devices/types';
 import type {
   CaseTurnEnd,
   ICaseAgent,
   ICaseTurn,
+  IPlanWalker,
   WalkEvent,
   WalkMode,
 } from '@/engine/walk/types';
@@ -129,6 +130,8 @@ async function walkWith(props: {
   screen?: { text: string };
   steps?: IFlatStep[];
   answers?: { caseId: string; question: string; answer: string }[];
+  memories?: IMemoryBrief[];
+  whyDiverged?: IPlanWalker['whyDiverged'];
 }) {
   const device = fakeDevice(props.screen ?? { text: 'Proof 1 Proof 2' });
   const events: WalkEvent[] = [];
@@ -144,6 +147,8 @@ async function walkWith(props: {
     values: [{ name: 'USER', description: 'The test account', value: 'ana@loja.test' }],
     bugs: [],
     answers: props.answers ?? [],
+    ...(props.memories === undefined ? {} : { memories: props.memories }),
+    ...(props.whyDiverged === undefined ? {} : { whyDiverged: props.whyDiverged }),
     shotDir: '/runs/run-1',
     onEvent: (event) => {
       events.push(event);
@@ -265,6 +270,124 @@ describe('PlanWalker', () => {
       ['cart', 2, 'passed', 'healed'],
     ]);
     expect(device.restarts()).toBe(1);
+  });
+
+  describe('when a recording fails', () => {
+    it('tells what failed: the step, the proof and the screen', async () => {
+      const asked: unknown[] = [];
+
+      await walkWith({
+        agent: passingAgent(),
+        book: bookWithCart('Proof that is gone'),
+        steps: STEPS.slice(0, 2),
+        whyDiverged: (at) => {
+          asked.push(at);
+
+          return Promise.resolve(null);
+        },
+      });
+
+      expect(asked[0]).toMatchObject({
+        step: 'Open the cart',
+        proof: 'Proof that is gone',
+        screen: 'Proof 1 Proof 2',
+      });
+    });
+
+    it('walks the recording once more on a passing hiccup, without the agent', async () => {
+      const agent = passingAgent();
+      const screen = { text: 'Carregando' };
+      let asks = 0;
+      const { steps, device } = await walkWith({
+        agent,
+        screen,
+        book: bookWithCart('Proof 1'),
+        steps: STEPS.slice(0, 2),
+        whyDiverged: () => {
+          asks += 1;
+          screen.text = 'Proof 1 Proof 2';
+
+          return Promise.resolve('flaky');
+        },
+      });
+
+      expect(asks).toBe(1);
+      expect(agent.turns).toHaveLength(0);
+      expect(steps).toEqual([
+        ['cart', 1, 'passed', 'replay'],
+        ['cart', 2, 'passed', 'replay'],
+      ]);
+      expect(device.restarts()).toBe(1);
+    });
+
+    it('goes to the agent when the second walk fails too', async () => {
+      const agent = passingAgent();
+
+      await walkWith({
+        agent,
+        book: bookWithCart('Proof that is gone'),
+        steps: STEPS.slice(0, 2),
+        whyDiverged: () => Promise.resolve('flaky'),
+      });
+
+      expect(agent.turns).toHaveLength(1);
+    });
+
+    it('blocks the case and calls no agent when test data is missing', async () => {
+      const agent = passingAgent();
+      const { steps, events } = await walkWith({
+        agent,
+        book: bookWithCart('Proof that is gone'),
+        steps: STEPS.slice(0, 2),
+        whyDiverged: () => Promise.resolve('missing_data'),
+      });
+
+      expect(agent.turns).toHaveLength(0);
+      expect(steps[0]?.[2]).toBe('blocked');
+      expect(events.find((event) => event.kind === 'step')).toMatchObject({
+        outcome: { why: UNWALKED.noData },
+      });
+    });
+
+    it('goes to the agent for a bug or an intended change', async () => {
+      for (const cause of ['app_bug', 'intended_change'] as const) {
+        const agent = passingAgent();
+
+        await walkWith({
+          agent,
+          book: bookWithCart('Proof that is gone'),
+          steps: STEPS.slice(0, 2),
+          whyDiverged: () => Promise.resolve(cause),
+        });
+
+        expect(agent.turns).toHaveLength(1);
+      }
+    });
+
+    it('goes on as always when the weighing itself fails', async () => {
+      const agent = passingAgent();
+
+      await walkWith({
+        agent,
+        book: bookWithCart('Proof that is gone'),
+        steps: STEPS.slice(0, 2),
+        whyDiverged: () => Promise.reject(new Error('sem rede')),
+      });
+
+      expect(agent.turns).toHaveLength(1);
+    });
+  });
+
+  it('hands the agent what was learned about the app', async () => {
+    const agent = passingAgent();
+
+    await walkWith({
+      agent,
+      steps: STEPS.slice(0, 2),
+      memories: [{ id: 'm-1', text: 'Em Ajustes.', scope: 'project', target: 'all' }],
+    });
+
+    expect(agent.turns[0]?.prompt).toContain('- [m-1] Em Ajustes.');
   });
 
   it('does NOT ask the agent in a run of recordings alone: a case with none is skipped', async () => {

@@ -91,6 +91,7 @@ function fakeApi(
       await writeFile(file, 'apk');
     },
     progress: (progress) => said('progress', progress),
+    whyDiverged: () => Promise.resolve(null),
     evidence: async (file) => {
       await said('evidence', file);
       keys += 1;

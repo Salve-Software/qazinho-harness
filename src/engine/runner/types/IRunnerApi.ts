@@ -3,12 +3,17 @@ import type { IEvidenceGrant } from './IEvidenceGrant';
 import type { IRunBody } from './IRunBody';
 import type { ISightingBody } from './ISightingBody';
 import type { RunnerJob } from './RunnerJob';
-import type { ICaseRecipe } from '@/contract';
+import type { DivergenceCause, ICaseRecipe } from '@/contract';
 
 /** A API do QAzinho como a máquina de uma run do CI a chama, com o token do job. */
 export interface IRunnerApi {
   job: () => Promise<RunnerJob>;
   build: (file: string) => Promise<void>;
+  whyDiverged: (asked: {
+    step: string;
+    proof: string;
+    screen: string;
+  }) => Promise<DivergenceCause | null>;
   progress: (progress: {
     phase: string;
     done: number;

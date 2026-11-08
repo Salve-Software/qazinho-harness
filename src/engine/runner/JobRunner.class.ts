@@ -137,6 +137,7 @@ export class JobRunner {
           values,
           bugs: knownBugsOf({ bugs: job.bugs, planId: plan.id }),
           memories: memoriesOfPlan({ memories: job.memories, planId: plan.id }),
+          whyDiverged: (at) => this.api.whyDiverged(at),
           answers: job.answers.filter(({ planId }) => planId === plan.id),
           shotDir,
           onEvent: (event) => {
