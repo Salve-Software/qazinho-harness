@@ -5,6 +5,17 @@ import { listControls } from './listControls';
 
 type AriaRole = Parameters<Page['getByRole']>[0];
 
+const CLICKABLE: AriaRole[] = [
+  'button',
+  'link',
+  'tab',
+  'menuitem',
+  'option',
+  'checkbox',
+  'radio',
+  'switch',
+];
+
 const ROLE_OF_TAG: Partial<Record<string, AriaRole>> = {
   a: 'link',
   button: 'button',
@@ -21,8 +32,8 @@ const ROLE_OF_TAG: Partial<Record<string, AriaRole>> = {
 };
 
 /**
- * Acha o que o agente nomeou do jeito que uma pessoa acharia: um campo para digitar ou um
- * controle para clicar, pelo nome, mesmo quando um contador no fim dele mudou.
+ * Acha o que o agente nomeou como uma pessoa: primeiro o que tem exatamente aquele nome,
+ * de qualquer tipo, depois o que o contém, mesmo com um contador no fim que mudou.
  */
 export async function findLocator(props: {
   page: Page;
@@ -94,31 +105,43 @@ async function locate(props: {
 
   if (numbered !== null) return numbered;
 
-  const fields = [
+  const exactFields = [
     page.getByLabel(name, { exact: true }),
     page.getByPlaceholder(name, { exact: true }),
     page.getByRole('textbox', { name, exact: true }),
+  ];
+  const looseFields = [
     page.getByLabel(name),
     page.getByPlaceholder(name),
     page.getByRole('textbox', { name }),
     page.getByRole('combobox', { name }),
   ];
-  const controls = [
-    page.getByRole('button', { name, exact: true }),
-    page.getByRole('link', { name, exact: true }),
-    page.getByRole('button', { name }),
-    page.getByRole('link', { name }),
-    page.getByRole('checkbox', { name }),
-    page.getByRole('radio', { name }),
-    page.getByRole('tab', { name }),
-    page.getByRole('menuitem', { name }),
-    page.getByRole('option', { name }),
-  ];
-  const texts = [page.getByText(name, { exact: true }), page.getByText(name)];
+  const exactControls = CLICKABLE.map((role) =>
+    page.getByRole(role, { name, exact: true }),
+  );
+  const looseControls = CLICKABLE.map((role) => page.getByRole(role, { name }));
+  const exactText = page.getByText(name, { exact: true });
+  const looseText = page.getByText(name);
   const candidates =
     kind === 'fill'
-      ? [...fields, ...controls, ...texts, page.locator(name)]
-      : [...controls, ...fields, ...texts, page.locator(name)];
+      ? [
+          ...exactFields,
+          ...looseFields,
+          ...exactControls,
+          exactText,
+          ...looseControls,
+          looseText,
+          page.locator(name),
+        ]
+      : [
+          ...exactControls,
+          exactText,
+          ...looseControls,
+          ...exactFields,
+          ...looseFields,
+          looseText,
+          page.locator(name),
+        ];
 
   for (const candidate of candidates) {
     const shown = candidate.filter({ visible: true });

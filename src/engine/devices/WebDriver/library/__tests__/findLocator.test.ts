@@ -45,6 +45,26 @@ describe('findLocator', () => {
     );
   });
 
+  /**
+   * A lista de modelos de um CRM: a aba "Proposta" ao lado do botão "Novo modelo de
+   * proposta". O botão que contém a palavra vinha antes da aba com o nome exato.
+   */
+  it('takes a tab named exactly before a button that holds the name', async () => {
+    const page = pageWith({ 'role:button': 1, 'role:tab:exact': 1, 'role:tab': 1 });
+
+    expect(
+      locatorName(await findLocator({ page, target: 'Proposta', kind: 'click' })),
+    ).toBe('role:tab:exact');
+  });
+
+  it('takes words shown exactly before a control that holds them', async () => {
+    const page = pageWith({ 'role:button': 1, 'text:exact': 1, text: 2 });
+
+    expect(
+      locatorName(await findLocator({ page, target: 'Proposta', kind: 'click' })),
+    ).toBe('text:exact');
+  });
+
   it('takes the exact name before a part of it', async () => {
     const page = pageWith({ 'role:button': 2, 'role:button:exact': 1 });
 
