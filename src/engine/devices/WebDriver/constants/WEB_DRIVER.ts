@@ -16,6 +16,7 @@ export const WEB_DRIVER = {
   wholeQuality: 92,
   pageTextLimit: 2_000,
   elementLimit: 40,
+  pressGraceMs: 400,
   frameLimit: 8,
   frameDepth: 3,
   longPressMs: 800,

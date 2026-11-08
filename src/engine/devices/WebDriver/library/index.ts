@@ -7,6 +7,7 @@ export * from './openApp';
 export * from './optionOf';
 export * from './originOf';
 export * from './pagesOf';
+export * from './pressChecked';
 export * from './summarizeMotion';
 export * from './webAccessOf';
 export * from './writeChromePrefs';

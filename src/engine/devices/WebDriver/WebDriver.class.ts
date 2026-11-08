@@ -37,6 +37,7 @@ import {
   optionOf,
   originOf,
   pagesOf,
+  pressChecked,
   summarizeMotion,
   writeChromePrefs,
 } from './library';
@@ -626,7 +627,11 @@ export class WebDriver implements IDeviceDriver {
     this.resolved = { locator: String(locator), toLocator: null, option: null };
 
     if (action.kind === 'long_press') {
-      await locator.click({ delay: WEB_DRIVER.longPressMs, timeout });
+      await pressChecked({
+        locator,
+        target: action.target,
+        press: () => locator.click({ delay: WEB_DRIVER.longPressMs, timeout }),
+      });
 
       return;
     }
@@ -680,7 +685,11 @@ export class WebDriver implements IDeviceDriver {
     }
 
     if (action.kind !== 'fill') {
-      await locator.click({ timeout: WEB_DRIVER.actionTimeoutMs });
+      await pressChecked({
+        locator,
+        target: action.target,
+        press: () => locator.click({ timeout }),
+      });
 
       return;
     }

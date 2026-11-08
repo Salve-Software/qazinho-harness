@@ -16,6 +16,8 @@ export const MOTION_PROBE = `(() => {
       for (const entry of list.getEntries()) probe.frames.push({ at: entry.startTime, ms: entry.duration });
     }).observe({ type: 'long-animation-frame', buffered: true });
   } catch {}
+  for (const name of ['pointerdown', 'mousedown', 'click'])
+    window.addEventListener(name, () => { probe.pressed = true; }, true);
   new MutationObserver(touch).observe(document, {
     subtree: true, childList: true, characterData: true, attributes: true,
   });
