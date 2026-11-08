@@ -1,3 +1,4 @@
+import type { BugCategory } from './BugCategory';
 import type { Severity } from './Severity';
 
 /**
@@ -18,4 +19,5 @@ export interface IRunFinding {
   shotFile: string | null;
   sameAs?: string;
   frame?: string;
+  category?: BugCategory;
 }

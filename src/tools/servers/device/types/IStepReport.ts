@@ -1,4 +1,4 @@
-import type { Severity } from '@/contract';
+import type { BugCategory, Severity } from '@/contract';
 
 /**
  * Um passo que o agente julgou pelo `report`: as palavras que provam que passou, o bug
@@ -16,4 +16,5 @@ export interface IStepReport {
   proof: string;
   sameAs?: string;
   frame?: string;
+  category?: BugCategory;
 }

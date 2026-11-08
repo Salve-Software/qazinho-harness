@@ -1,4 +1,5 @@
 export type * from './AppToolCall';
+export type * from './BugCategory';
 export type * from './BuildPlatform';
 export type * from './DialogAnswer';
 export type * from './IActionMotion';

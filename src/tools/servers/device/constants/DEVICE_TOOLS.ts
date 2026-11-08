@@ -3,6 +3,7 @@ import { DRAFTED_CASE } from '@/schemas/DRAFTED_CASE';
 import { bugIdNamed } from '@/tools/library/bugIdNamed';
 import { textNamed } from '@/tools/library/textNamed';
 import { variableNamed } from '@/tools/library/variableNamed';
+import { BUG_CATEGORY_INPUT } from './BUG_CATEGORY_INPUT';
 import { SEVERITY_SCALE } from './SEVERITY_SCALE';
 
 export const DEVICE_TOOLS = [
@@ -260,6 +261,7 @@ export const DEVICE_TOOLS = [
           'When it failed because the screen differs from the Figma design in what the step expects: the node id of the frame it differs from, such as 12:345. Do not file that difference again with bug.',
         )
         .optional(),
+      category: BUG_CATEGORY_INPUT,
     }),
   },
   {
@@ -293,6 +295,7 @@ export const DEVICE_TOOLS = [
           'When the bug is a difference from the Figma design: the node id of the frame the screen differs from, such as 12:345.',
         )
         .optional(),
+      category: BUG_CATEGORY_INPUT,
     }),
   },
   {

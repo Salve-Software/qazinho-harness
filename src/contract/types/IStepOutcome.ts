@@ -1,3 +1,4 @@
+import type { BugCategory } from './BugCategory';
 import type { IStepAsked } from './IStepAsked';
 import type { Severity } from './Severity';
 import type { StepVerdict } from './StepVerdict';
@@ -26,6 +27,7 @@ export interface IStepOutcome {
   by?: 'replay' | 'healed';
   sameAs?: string;
   frame?: string;
+  category?: BugCategory;
   unwalked?: UnwalkedReason;
   asked?: IStepAsked;
 }

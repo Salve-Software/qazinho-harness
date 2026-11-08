@@ -394,6 +394,18 @@
         "frame": {
           "type": "string",
           "description": "When it failed because the screen differs from the Figma design in what the step expects: the node id of the frame it differs from, such as 12:345. Do not file that difference again with bug."
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "layout",
+            "text",
+            "style",
+            "behavior",
+            "data",
+            "error"
+          ],
+          "description": "What kind of bug it is, shown to the QA as the moment it is caught: layout (size, position, spacing), text (wrong or missing words), style (colour, font, border, corners), behavior (something did not do what it should), data (a wrong value, total or list) or error (an error on screen or a call that failed)."
         }
       },
       "required": [
@@ -446,6 +458,18 @@
         "frame": {
           "type": "string",
           "description": "When the bug is a difference from the Figma design: the node id of the frame the screen differs from, such as 12:345."
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "layout",
+            "text",
+            "style",
+            "behavior",
+            "data",
+            "error"
+          ],
+          "description": "What kind of bug it is, shown to the QA as the moment it is caught: layout (size, position, spacing), text (wrong or missing words), style (colour, font, border, corners), behavior (something did not do what it should), data (a wrong value, total or list) or error (an error on screen or a call that failed)."
         }
       },
       "required": [

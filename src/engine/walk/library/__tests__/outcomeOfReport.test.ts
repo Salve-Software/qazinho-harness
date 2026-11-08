@@ -49,6 +49,25 @@ describe('outcomeOfReport', () => {
     });
   });
 
+  it('keeps the kind of bug a failed step is, and only for a failure', () => {
+    const filed = (report: Parameters<typeof outcomeOfReport>[0]['report']) =>
+      outcomeOfReport({
+        report,
+        step: STEP,
+        index: 0,
+        workspaceId: 'w-1',
+        tookMs: 1,
+        at: 1,
+        shot: null,
+      });
+
+    expect(filed({ ...REPORT, category: 'text' }).category).toBe('text');
+    expect(filed({ ...REPORT, verdict: 'passed', category: 'text' })).not.toHaveProperty(
+      'category',
+    );
+    expect(filed(REPORT)).not.toHaveProperty('category');
+  });
+
   it('keeps the Figma frame a failed step is off, so its bug is one off the design', () => {
     const filed = (
       report: Omit<typeof REPORT, 'verdict'> & {

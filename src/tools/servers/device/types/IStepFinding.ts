@@ -1,4 +1,4 @@
-import type { Severity } from '@/contract';
+import type { BugCategory, Severity } from '@/contract';
 
 /**
  * Um bug visto ao andar um passo que o passo não pergunta; `sameAs` nomeia um bug aberto.
@@ -10,4 +10,5 @@ export interface IStepFinding {
   got: string;
   sameAs?: string;
   frame?: string;
+  category?: BugCategory;
 }
