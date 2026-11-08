@@ -312,6 +312,36 @@
     }
   },
   {
+    "name": "tab",
+    "description": "Work on more than one screen at once, as two people at two computers would: only when a step needs it, such as two users editing the same thing. In a browser only. \"new\" opens another tab with the same login, \"new_session\" opens a clean browser that shares nothing with this one, to sign in with another account, \"switch\" moves you to the screen numbered in \"value\", and \"close\" closes the screen numbered in \"value\", or this one. Every answer lists the screens open and the one you are on.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "enum": [
+            "new",
+            "new_session",
+            "switch",
+            "close"
+          ],
+          "description": "What to do."
+        },
+        "value": {
+          "type": "string",
+          "description": "For new and new_session: the URL to open, left out for the app. For switch and close: the number of the screen."
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
     "name": "wait",
     "description": "Wait for the device to settle, in milliseconds, before looking again.",
     "inputSchema": {

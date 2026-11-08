@@ -79,6 +79,9 @@ src/
   a cada resposta do `callDeviceTool`, e o que devolver vai antes dela: o que o QA disse no meio da run
   e os lembretes de um passo que não anda. O agente conta o porquê com `say` e responde o QA com
   `answer_qa`; fora de uma run que os ouve, o `say` só responde.
+- **Um navegador tem mais de uma tela** pelo `tab`: `new` no mesmo contexto, `new_session` num contexto
+  isolado (`browser.newContext`), `switch` e `close` pelo número. A transmissão principal é sempre a da
+  tela do agente, cada tela aberta manda a própria, e o `describe` lista as telas quando há mais de uma.
 
 ## As respostas
 

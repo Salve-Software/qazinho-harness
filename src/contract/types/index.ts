@@ -18,6 +18,7 @@ export type * from './IConfluencePage';
 export type * from './IConfluencePageRef';
 export type * from './IDesignLink';
 export type * from './IDeviceImage';
+export type * from './IDeviceScreen';
 export type * from './IDraftedCase';
 export type * from './IImportFramework';
 export type * from './IImportSource';

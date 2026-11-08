@@ -193,6 +193,25 @@ export const DEVICE_TOOLS = [
     }),
   },
   {
+    name: 'tab',
+    description:
+      'Work on more than one screen at once, as two people at two computers would: only when a step needs it, such as two users editing the same thing. In a browser only. "new" opens another tab with the same login, "new_session" opens a clean browser that shares nothing with this one, to sign in with another account, "switch" moves you to the screen numbered in "value", and "close" closes the screen numbered in "value", or this one. Every answer lists the screens open and the one you are on.',
+    input: z.object({
+      target: z
+        .enum(['new', 'new_session', 'switch', 'close'], {
+          error: '"tab" needs "target": new, new_session, switch or close.',
+        })
+        .describe('What to do.'),
+      value: z
+        .string()
+        .trim()
+        .describe(
+          'For new and new_session: the URL to open, left out for the app. For switch and close: the number of the screen.',
+        )
+        .optional(),
+    }),
+  },
+  {
     name: 'wait',
     description: 'Wait for the device to settle, in milliseconds, before looking again.',
     input: z.object({

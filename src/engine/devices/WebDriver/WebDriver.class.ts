@@ -1,8 +1,9 @@
-import type { IWebAccess, IWebDriver } from './types';
+import type { IWebAccess, IWebDriver, IWebScreen } from './types';
 import type {
   DialogAnswer,
   IActionMotion,
   IDeviceImage,
+  IDeviceScreen,
   INetworkEntry,
   IRunVideo,
   IScreenBox,
@@ -31,6 +32,7 @@ import {
 } from './constants';
 import {
   describePage,
+  describeScreens,
   findLocator,
   frameRootsOf,
   measureLocator,
@@ -55,16 +57,21 @@ export class WebDriver implements IDeviceDriver {
   private readonly shrink: ShrinkImage | null;
   private readonly access: IWebAccess;
   private readonly onAddress: ((url: string) => void) | null;
+  private readonly onScreens: ((screens: IDeviceScreen[]) => void) | null;
   private readonly origins = new Set<string>();
   private readonly dialogs: string[] = [];
   private readonly requests = new Map<Request, INetworkEntry>();
   private readonly entries: INetworkEntry[] = [];
   private readonly answers = new Map<number, Response>();
   private context: BrowserContext | null = null;
+  private accounts: BrowserContext[] = [];
+  private screens: IWebScreen[] = [];
+  private nextScreen = 1;
+  private moving: Promise<void> = Promise.resolve();
+  private toldScreens = 0;
   private page: Page | null = null;
-  private screencast: CDPSession | null = null;
   private cdp: CDPSession | null = null;
-  private onFrame: ((jpeg: Buffer) => void) | null = null;
+  private onFrame: ((jpeg: Buffer, screen?: number) => void) | null = null;
   private lastMotion: IActionMotion | null = null;
   private resolved: {
     locator: string;
@@ -87,6 +94,7 @@ export class WebDriver implements IDeviceDriver {
     this.shrink = props.shrink ?? null;
     this.access = props.access ?? { headers: {}, credentials: null };
     this.onAddress = props.onAddress ?? null;
+    this.onScreens = props.onScreens ?? null;
   }
 
   /**
@@ -96,8 +104,6 @@ export class WebDriver implements IDeviceDriver {
   public async open(): Promise<void> {
     await rm(this.profileDir, { recursive: true, force: true, maxRetries: 5 });
     await writeChromePrefs(this.profileDir);
-    const origin = originOf(this.url);
-    const { headers, credentials } = this.access;
     this.context = await chromium.launchPersistentContext(this.profileDir, {
       channel: 'chrome',
       headless: true,
@@ -107,33 +113,12 @@ export class WebDriver implements IDeviceDriver {
         `--force-device-scale-factor=${String(this.pixelRatio)}`,
         `--disable-features=${CHROME_DISABLED_FEATURES.join(',')}`,
       ],
-      ...(credentials === null || origin === null
-        ? {}
-        : { httpCredentials: { ...credentials, origin } }),
+      ...this.loginOptions(),
     });
-    if (origin !== null && Object.keys(headers).length > 0)
-      await this.context.route(`${origin}/**`, (route) =>
-        route.continue({ headers: { ...route.request().headers(), ...headers } }),
-      );
-    await this.context.addInitScript(MOTION_PROBE);
-    this.context.on('request', (request) => {
-      this.noteRequest(request);
-    });
-    this.context.on('requestfinished', (request) => {
-      void this.settleRequest({ request, failure: null });
-    });
-    this.context.on('requestfailed', (request) => {
-      void this.settleRequest({
-        request,
-        failure: request.failure()?.errorText ?? 'failed',
-      });
-    });
-    this.context.on('page', (page) => {
-      this.follow(page);
-      void this.adopt(page);
-    });
+    await this.wire(this.context);
     this.page = this.context.pages()[0] ?? (await this.context.newPage());
     this.follow(this.page);
+    this.addScreen({ page: this.page, account: 1, opener: null });
 
     await this.page.setViewportSize(this.viewport);
     await this.fit();
@@ -208,6 +193,13 @@ export class WebDriver implements IDeviceDriver {
 
     if (action.kind === 'reopen') {
       await this.openAnew({ isCleared: false });
+      await this.settle(this.page ?? page);
+
+      return;
+    }
+
+    if (action.kind === 'tab') {
+      await this.tab(action);
       await this.settle(this.page ?? page);
 
       return;
@@ -299,8 +291,13 @@ export class WebDriver implements IDeviceDriver {
 
     const page = await describePage(this.page);
     const shown = this.dialogs.splice(0);
+    const screens = describeScreens(this.openScreens());
 
-    return shown.length === 0 ? page : [page, 'DIALOGS:', ...shown].join('\n');
+    return [
+      ...(screens === null ? [] : [screens, '']),
+      page,
+      ...(shown.length === 0 ? [] : ['DIALOGS:', ...shown]),
+    ].join('\n');
   }
 
   /**
@@ -350,7 +347,9 @@ export class WebDriver implements IDeviceDriver {
     return { file, dataUrl: `data:image/jpeg;base64,${image.toString('base64')}` };
   }
 
-  public async stream(onFrame: (jpeg: Buffer) => void): Promise<boolean> {
+  public async stream(
+    onFrame: (jpeg: Buffer, screen?: number) => void,
+  ): Promise<boolean> {
     if (!this.context || !this.page) return false;
 
     await this.watch(onFrame);
@@ -388,70 +387,242 @@ export class WebDriver implements IDeviceDriver {
 
     if (!this.page) return;
 
-    await this.page.setViewportSize(viewport);
+    for (const { page } of this.screens)
+      await page.setViewportSize(viewport).catch(() => undefined);
+
     await this.fit();
     await this.recast();
   }
 
   public async close(): Promise<void> {
-    await this.screencast?.detach().catch(() => undefined);
+    const open = this.screens;
+
+    this.screens = [];
+
+    for (const { cast } of open) await cast?.detach().catch(() => undefined);
+
     await this.cdp?.detach().catch(() => undefined);
-    this.screencast = null;
     this.cdp = null;
     this.onFrame = null;
+
+    for (const account of this.accounts) await account.close().catch(() => undefined);
+
+    this.accounts = [];
     await this.context?.close().catch(() => undefined);
     this.context = null;
     this.page = null;
   }
 
-  /**
-   * Transmite os frames da aba aberta para quem estiver vendo; uma aba nova pede uma nova
-   * visualização.
-   */
-  private async watch(onFrame: (jpeg: Buffer) => void): Promise<void> {
-    if (!this.context || !this.page) return;
+  /** Transmite os frames de cada tela aberta para quem estiver vendo. */
+  private async watch(onFrame: (jpeg: Buffer, screen?: number) => void): Promise<void> {
+    this.onFrame = onFrame;
+    await this.castAll();
+    await this.stillAll();
+  }
 
-    const session = await this.context.newCDPSession(this.page);
+  private async castAll(): Promise<void> {
+    if (!this.onFrame) return;
+
+    for (const screen of this.screens)
+      if (screen.cast === null) await this.castScreen(screen).catch(() => undefined);
+  }
+
+  private async castScreen(screen: IWebScreen): Promise<void> {
+    const session = await screen.page.context().newCDPSession(screen.page);
 
     session.on('Page.screencastFrame', (frame) => {
-      onFrame(Buffer.from(frame.data, 'base64'));
+      this.sendFrame({ screen, jpeg: Buffer.from(frame.data, 'base64') });
       void session
         .send('Page.screencastFrameAck', { sessionId: frame.sessionId })
         .catch(() => undefined);
     });
 
-    this.screencast = session;
-    this.onFrame = onFrame;
-    await this.cast();
+    screen.cast = session;
+    await this.cast(screen);
   }
 
-  /**
-   * Vira para uma aba que o app abriu, como os olhos de uma pessoa, e volta para a que a
-   * abriu quando ela fecha.
-   */
+  /** Um frame vai à transmissão do agente, se a tela é a dele, e à própria. */
+  private sendFrame(props: { screen: IWebScreen; jpeg: Buffer }): void {
+    const { screen, jpeg } = props;
+
+    if (screen.page === this.page) this.onFrame?.(jpeg);
+
+    if (this.screens.length > 1) this.onFrame?.(jpeg, screen.id);
+  }
+
+  /** Vira para uma aba que o app abriu, que vira uma tela até fechar. */
   private async adopt(page: Page): Promise<void> {
     const opener = await page.opener().catch(() => null);
 
     if (opener === null) return;
 
-    page.once('close', () => {
-      if (this.page === page && !opener.isClosed()) void this.show(opener);
+    this.addScreen({
+      page,
+      account: this.screens.find((one) => one.page === opener)?.account ?? 1,
+      opener,
     });
     await this.show(page);
   }
 
+  private addScreen(props: { page: Page; account: number; opener: Page | null }): void {
+    const { page } = props;
+
+    this.screens.push({ ...props, id: this.nextScreen, cast: null });
+    this.nextScreen += 1;
+    page.once('close', () => {
+      this.dropScreen(page);
+    });
+  }
+
+  private dropScreen(page: Page): void {
+    const gone = this.screens.find((one) => one.page === page);
+
+    if (gone === undefined) return;
+
+    this.screens = this.screens.filter((one) => one !== gone);
+
+    if (this.page !== page) {
+      this.tellScreens();
+
+      return;
+    }
+
+    const next =
+      this.screens.find((one) => one.page === gone.opener) ?? this.screens.at(-1);
+
+    if (next !== undefined) this.moving = this.show(next.page);
+  }
+
+  private openScreens(): IDeviceScreen[] {
+    return this.screens.map(({ id, page, account }) => ({
+      id,
+      url: page.url(),
+      isAgent: page === this.page,
+      account,
+    }));
+  }
+
+  private tellScreens(): void {
+    if (this.screens.length < 2 && this.toldScreens < 2) return;
+
+    this.toldScreens = this.screens.length;
+    this.onScreens?.(this.openScreens());
+  }
+
   private async show(page: Page): Promise<void> {
-    await this.screencast?.detach().catch(() => undefined);
     await this.cdp?.detach().catch(() => undefined);
-    this.screencast = null;
     this.cdp = null;
     this.page = page;
     this.tellAddress(page);
     await page.waitForLoadState('domcontentloaded').catch(() => undefined);
     await page.setViewportSize(this.viewport).catch(() => undefined);
     await this.fit();
+    await this.castAll();
+    await this.stillAll();
+    this.tellScreens();
+  }
 
-    if (this.onFrame) await this.watch(this.onFrame);
+  /** Abre, troca ou fecha uma tela, e deixa o agente na que ele pediu. */
+  private async tab(action: IStepAction): Promise<void> {
+    const current = this.screens.find(({ page }) => page === this.page);
+
+    if (!current) throw new Error('The browser is not open.');
+
+    if (action.target === 'new' || action.target === 'new_session') {
+      const isAnother = action.target === 'new_session';
+      const context = isAnother ? await this.newAccount() : current.page.context();
+      const page = await context.newPage();
+
+      this.addScreen({
+        page,
+        account: isAnother ? this.accounts.length + 1 : current.account,
+        opener: null,
+      });
+      await page.setViewportSize(this.viewport);
+      await this.show(page);
+      await openApp({ page, url: action.value === '' ? this.url : action.value });
+      this.tellScreens();
+
+      return;
+    }
+
+    const named = this.screens.find(({ id }) => String(id) === action.value);
+    const open = this.screens.map(({ id }) => String(id)).join(', ');
+
+    if (action.target === 'switch') {
+      if (named === undefined)
+        throw new Error(`There is no screen "${action.value}". Open: ${open}.`);
+
+      await this.show(named.page);
+
+      return;
+    }
+
+    if (action.value !== '' && named === undefined)
+      throw new Error(`There is no screen "${action.value}". Open: ${open}.`);
+
+    if (this.screens.length === 1) throw new Error('This is the only screen open.');
+
+    await (named ?? current).page.close();
+    await this.moving;
+  }
+
+  /** Abre um navegador limpo, que não divide login nem dados com o outro. */
+  private async newAccount(): Promise<BrowserContext> {
+    const browser = this.context?.browser();
+
+    if (!browser) throw new Error('The browser is not open.');
+
+    const context = await browser.newContext({
+      viewport: { ...this.viewport },
+      deviceScaleFactor: this.pixelRatio,
+      ...this.loginOptions(),
+    });
+
+    await this.wire(context);
+    this.accounts.push(context);
+
+    return context;
+  }
+
+  private loginOptions(): {
+    httpCredentials?: { username: string; password: string; origin: string };
+  } {
+    const origin = originOf(this.url);
+    const { credentials } = this.access;
+
+    return credentials === null || origin === null
+      ? {}
+      : { httpCredentials: { ...credentials, origin } };
+  }
+
+  /** Liga a um contexto o que toda tela precisa: o acesso ao app, a sonda e a rede. */
+  private async wire(context: BrowserContext): Promise<void> {
+    const origin = originOf(this.url);
+    const { headers } = this.access;
+
+    if (origin !== null && Object.keys(headers).length > 0)
+      await context.route(`${origin}/**`, (route) =>
+        route.continue({ headers: { ...route.request().headers(), ...headers } }),
+      );
+
+    await context.addInitScript(MOTION_PROBE);
+    context.on('request', (request) => {
+      this.noteRequest(request);
+    });
+    context.on('requestfinished', (request) => {
+      void this.settleRequest({ request, failure: null });
+    });
+    context.on('requestfailed', (request) => {
+      void this.settleRequest({
+        request,
+        failure: request.failure()?.errorText ?? 'failed',
+      });
+    });
+    context.on('page', (page) => {
+      this.follow(page);
+      void this.adopt(page);
+    });
   }
 
   /**
@@ -538,7 +709,11 @@ export class WebDriver implements IDeviceDriver {
 
       if (origin !== null) this.origins.add(origin);
 
-      if (frame === page.mainFrame() && page === this.page) this.tellAddress(page);
+      if (frame !== page.mainFrame()) return;
+
+      if (page === this.page) this.tellAddress(page);
+
+      this.tellScreens();
     });
     page.on('dialog', (dialog) => {
       const isOk = this.dialogAnswer === 'ok';
@@ -565,11 +740,20 @@ export class WebDriver implements IDeviceDriver {
 
     if (!context) throw new Error('The browser is not open.');
 
-    await this.screencast?.detach().catch(() => undefined);
+    const open = this.screens;
+
+    this.screens = [];
+    this.nextScreen = 1;
+
+    for (const { cast } of open) await cast?.detach().catch(() => undefined);
+
     await this.cdp?.detach().catch(() => undefined);
-    this.screencast = null;
     this.cdp = null;
     this.lastMotion = null;
+
+    for (const account of this.accounts) await account.close().catch(() => undefined);
+
+    this.accounts = [];
 
     const page = await context.newPage();
 
@@ -577,6 +761,7 @@ export class WebDriver implements IDeviceDriver {
       if (stale !== page) await stale.close().catch(() => undefined);
 
     this.page = page;
+    this.addScreen({ page, account: 1, opener: null });
     await page.setViewportSize(this.viewport);
 
     if (props.isCleared) {
@@ -592,9 +777,8 @@ export class WebDriver implements IDeviceDriver {
     }
 
     await this.fit();
-
-    if (this.onFrame) await this.watch(this.onFrame);
-
+    await this.castAll();
+    this.tellScreens();
     await openApp({ page, url: this.url });
   }
 
@@ -872,9 +1056,9 @@ export class WebDriver implements IDeviceDriver {
   }
 
   private async session(): Promise<CDPSession | null> {
-    if (!this.context || !this.page) return null;
+    if (!this.page) return null;
 
-    this.cdp ??= await this.context.newCDPSession(this.page);
+    this.cdp ??= await this.page.context().newCDPSession(this.page);
 
     return this.cdp;
   }
@@ -897,40 +1081,50 @@ export class WebDriver implements IDeviceDriver {
   }
 
   private async recast(): Promise<void> {
-    if (!this.screencast) return;
+    for (const screen of this.screens) {
+      await screen.cast?.send('Page.stopScreencast').catch(() => undefined);
+      await this.cast(screen).catch(() => undefined);
+    }
 
-    await this.screencast.send('Page.stopScreencast').catch(() => undefined);
-    await this.cast().catch(() => undefined);
-    await this.still();
+    await this.stillAll();
   }
 
   /**
    * Limita um frame só pela altura: o Chrome mantém a janela com 500 pixels de largura,
    * então uma página mais estreita vem enquadrada mais larga.
    */
-  private async cast(): Promise<void> {
+  private async cast(screen: IWebScreen): Promise<void> {
     const detail = this.isFocused ? this.pixelRatio : 1;
 
-    await this.screencast?.send('Page.startScreencast', {
+    await screen.cast?.send('Page.startScreencast', {
       format: 'jpeg',
       quality: WEB_DRIVER.streamQuality,
       maxHeight: Math.round(this.viewport.height * detail),
     });
   }
 
+  private async stillAll(): Promise<void> {
+    for (const screen of this.screens) await this.still(screen);
+  }
+
   /**
-   * Entrega à transmissão a página como está: uma página parada não manda frame quando a
-   * transmissão recomeça.
+   * Entrega a página como está, duas vezes: uma página parada não manda frame, e o <img>
+   * só desenha uma parte do MJPEG quando chega a seguinte.
    */
-  private async still(): Promise<void> {
-    const shot = await this.screencast
+  private async still(screen: IWebScreen): Promise<void> {
+    const shot = await screen.cast
       ?.send('Page.captureScreenshot', {
         format: 'jpeg',
         quality: WEB_DRIVER.streamQuality,
       })
       .catch(() => null);
 
-    if (shot) this.onFrame?.(Buffer.from(shot.data, 'base64'));
+    if (!shot) return;
+
+    const jpeg = Buffer.from(shot.data, 'base64');
+
+    this.sendFrame({ screen, jpeg });
+    this.sendFrame({ screen, jpeg });
   }
 
   /**

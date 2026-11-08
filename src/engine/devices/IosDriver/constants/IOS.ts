@@ -13,6 +13,7 @@ export const IOS = {
   scrollTries: 8,
   notOnPhone: {
     hover: 'A phone has no mouse to hover with: tap or long press instead.',
+    tab: 'A phone has one screen: this works in a browser only.',
     upload:
       "A phone picks files in the app's own picker: tap through it instead of uploading.",
   },

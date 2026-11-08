@@ -16,7 +16,8 @@ export interface IStepAction {
     | 'long_press'
     | 'drag'
     | 'hover'
-    | 'upload';
+    | 'upload'
+    | 'tab';
   target: string;
   value: string;
   dialog?: DialogAnswer;

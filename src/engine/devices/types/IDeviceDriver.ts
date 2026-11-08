@@ -25,7 +25,7 @@ export interface IDeviceDriver {
   resize: (viewport: IViewport) => Promise<void>;
   focus: (isFocused: boolean) => Promise<void>;
   shoot: (file: string) => Promise<IShot | null>;
-  stream: (onFrame: (jpeg: Buffer) => void) => Promise<boolean>;
+  stream: (onFrame: (jpeg: Buffer, screen?: number) => void) => Promise<boolean>;
   record: (folder: string) => Promise<boolean>;
   stopRecording: () => Promise<IRunVideo | null>;
   close: () => Promise<void>;

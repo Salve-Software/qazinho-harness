@@ -1,4 +1,5 @@
 export * from './describePage';
+export * from './describeScreens';
 export * from './findLocator';
 export * from './frameRootsOf';
 export * from './listControls';

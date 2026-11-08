@@ -194,6 +194,10 @@ seletor. scroll traz à vista o que carrega mais abaixo. Um dropdown é preenchi
 da opção a escolher. Um campo de data é preenchido como AAAA-MM-DD e um de hora como HH:MM, seja
 qual for o jeito que a página os mostra. Uma aba ou janela que o app abre toma o dispositivo até
 fechar.
+Quando um passo precisa de mais de uma tela ao mesmo tempo, como dois usuários mexendo na mesma
+coisa, use tab: "new" abre outra aba com o mesmo login, "new_session" abre um navegador limpo para
+entrar com outra conta, e "switch" leva você a uma tela pelo número. Toda resposta lista as telas
+abertas e a que você está usando.
 Uma ação espera a página parar de mudar antes de responder, e diz como a página se mexeu nesse
 meio-tempo: deslocamentos de layout, e frames que demoraram. Um deslocamento de 0.1 ou mais que
 nenhuma entrada explica, ou um frame acima de 200 ms, é um salto que uma pessoa nota mesmo quando o

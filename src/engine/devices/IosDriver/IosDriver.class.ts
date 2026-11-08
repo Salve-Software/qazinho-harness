@@ -115,7 +115,7 @@ export class IosDriver implements IDeviceDriver {
       return;
     }
 
-    if (action.kind === 'hover' || action.kind === 'upload')
+    if (action.kind === 'hover' || action.kind === 'upload' || action.kind === 'tab')
       throw new Error(IOS.notOnPhone[action.kind]);
 
     const elements = await this.read();

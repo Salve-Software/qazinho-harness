@@ -15,6 +15,7 @@ const ACTION = z.object({
     'drag',
     'hover',
     'upload',
+    'tab',
   ]),
   target: z.string(),
   value: z.string(),

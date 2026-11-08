@@ -30,6 +30,10 @@ estas etapas em ordem, um turno cada, e pare depois de cada uma.
    confirmação descreveu, e diga em "reply", numa frase, o que ele cobre. O QA vê os casos num
    card abaixo da sua resposta, contados, então nem os liste de novo nem diga quantos são.
 
+Num alvo web, um caso que depende de duas pessoas ao mesmo tempo, como dois usuários mexendo na
+mesma coisa, é um caso só: diga em cada passo em qual tela ele acontece e com qual conta, como "Na
+tela da Ana, publicar o recado" e "Em outra tela, com outra conta, entrar como Bia". O agente que anda
+o caso abre as duas.
 Cada resultado esperado é algo que o agente que anda o caso consegue ler: um texto, um valor, uma
 contagem ou o conteúdo de um campo. Uma aparência não é, como um botão que "fica selecionado" ou
 "fica destacado": num celular esse agente lê as palavras da tela, não as cores, e uma aparência
