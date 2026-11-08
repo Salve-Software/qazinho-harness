@@ -72,6 +72,38 @@ describe('callDeviceTool', () => {
     );
   });
 
+  /**
+   * O Haiku andou um app e usou os nomes reais no plano, mas nunca disse ao QA que ele
+   * tinha escrito "Nova etiqueta" e o app mostrava "Nova etiqueta de produto". O corpus
+   * pedia isso; a resposta da ferramenta é o que ele lê.
+   */
+  it('reminds the chat learning the app to tell the QA where the names differ', async () => {
+    const { device } = fakeDevice();
+    const answer = text(
+      await callDeviceTool({
+        device: { ...device, purpose: 'learn' },
+        call: { name: 'look', args: {} },
+      }),
+    );
+
+    expect(answer).toMatch(/^Cart · \[button\] Apply\n\n/);
+    expect(answer).toContain('you said X, the app shows Y');
+    expect(answer).toContain('never save, send or delete');
+  });
+
+  it('leaves the reminder out of a run', async () => {
+    const { device } = fakeDevice();
+
+    expect(
+      text(
+        await callDeviceTool({
+          device: { ...device, purpose: 'walk' },
+          call: { name: 'click', args: { target: 'Apply' } },
+        }),
+      ),
+    ).not.toContain('you said X');
+  });
+
   it('says which API calls failed while it acted, before what the device shows', async () => {
     const { device } = fakeDevice({
       failed: ['#3 POST https://shop.test/api/coupon → 500 · 212 ms: {"error":"down"}'],

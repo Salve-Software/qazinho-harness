@@ -1,6 +1,7 @@
 import type { IAttachDevice } from '@/tools/servers/device/types';
 import type { ToolAnswer } from '@/tools/types';
 import { stripAnsi } from '@/library';
+import { LEARNING_NOTE } from '@/tools/servers/device/constants';
 import { describeMotion } from './describeMotion';
 import { readToolCall } from './readToolCall';
 import { timeLeftOf } from './timeLeftOf';
@@ -110,7 +111,10 @@ async function shown(props: {
 
   return {
     content: [
-      { type: 'text', text: `${props.lead}${text}` },
+      {
+        type: 'text',
+        text: `${props.lead}${text}${props.device.purpose === 'learn' ? LEARNING_NOTE : ''}`,
+      },
       ...(image === null ? [] : [{ type: 'image' as const, ...image }]),
     ],
     isError: false,
