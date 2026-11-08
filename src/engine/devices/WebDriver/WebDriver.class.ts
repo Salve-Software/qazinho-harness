@@ -38,6 +38,7 @@ import {
   originOf,
   pagesOf,
   summarizeMotion,
+  writeChromePrefs,
 } from './library';
 
 /**
@@ -91,6 +92,7 @@ export class WebDriver implements IDeviceDriver {
    */
   public async open(): Promise<void> {
     await rm(this.profileDir, { recursive: true, force: true, maxRetries: 5 });
+    await writeChromePrefs(this.profileDir);
     const origin = originOf(this.url);
     const { headers, credentials } = this.access;
     this.context = await chromium.launchPersistentContext(this.profileDir, {
