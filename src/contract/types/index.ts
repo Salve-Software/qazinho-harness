@@ -54,3 +54,8 @@ export type * from './Severity';
 export type * from './StepVerdict';
 export type * from './TargetKind';
 export type * from './UnwalkedReason';
+export type * from './IMemoryBrief';
+export type * from './KeepEvent';
+export type * from './MemoryOp';
+export type * from './MemoryScope';
+export type * from './MemoryTarget';

@@ -26,6 +26,7 @@ describe('CORPUS', () => {
       'builder',
       'chat',
       'explorer',
+      'keeper',
       'reader',
       'reporter',
       'runner',

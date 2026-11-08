@@ -8,3 +8,4 @@ export type * from './IPullAnswer';
 export type * from './IPullBrief';
 export type * from './IReviewAnswer';
 export type * from './IReviewBrief';
+export type * from './IKeepBrief';

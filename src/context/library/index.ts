@@ -26,3 +26,4 @@ export * from './fillSections';
 export * from './parseCorpusFile';
 export * from './renderSections';
 export * from './sectionsFor';
+export * from './describeKeep';

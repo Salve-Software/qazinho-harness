@@ -10,10 +10,12 @@ import type {
   IImportSource,
   IJiraStoryCopy,
   IKnownBug,
+  IMemoryBrief,
   ITargetUnderTest,
   IVariableBrief,
   IViewport,
   Language,
+  MemoryOp,
 } from '@/contract';
 import type { IDesignAccess, IHarnessTools } from '@/tools/types';
 import type {
@@ -22,6 +24,7 @@ import type {
   IBuildAnswer,
   IBuildMachine,
   IHarnessTarget,
+  IKeepBrief,
   IPullAnswer,
   IPullBrief,
   IReviewAnswer,
@@ -46,6 +49,7 @@ import {
   describeDesign,
   describeExploration,
   describeImport,
+  describeKeep,
   describeKeptVariables,
   describeLook,
   describePage,
@@ -65,10 +69,17 @@ import {
 import {
   readBuildAnswer,
   readChatAnswer,
+  readKeepAnswer,
   readPullAnswer,
   readReviewAnswer,
 } from '@/library';
-import { BUILD_SCHEMA, CHAT_SCHEMA, PULL_SCHEMA, REVIEW_SCHEMA } from '@/schemas';
+import {
+  BUILD_SCHEMA,
+  CHAT_SCHEMA,
+  KEEP_SCHEMA,
+  PULL_SCHEMA,
+  REVIEW_SCHEMA,
+} from '@/schemas';
 import { BUILD_TOOLS, MCP_HOST, PERMISSION_TOOL, TOOL_GRANTS } from '@/tools/constants';
 import { designAccessOf, toolsOfRole } from '@/tools/library';
 
@@ -309,6 +320,36 @@ export class Harness {
       schema: REVIEW_SCHEMA,
       readDirs: brief.readDirs,
     };
+  }
+
+  /**
+   * O que muda no que o QAzinho guarda depois do que aconteceu: as memórias de agora e o
+   * que o QA e o agente disseram, sem ferramentas.
+   */
+  public keep(brief: IKeepBrief): {
+    systemPrompt: string;
+    prompt: string;
+    schema: string;
+  } {
+    return {
+      systemPrompt: this.contextFor({
+        target: { role: 'keeper' },
+        values: { language: LANGUAGE_NAMES[brief.language] },
+      }),
+      prompt: chatMessageOf({
+        sections: describeKeep(brief),
+        text: 'What changes in what QAzinho keeps?',
+      }),
+      schema: KEEP_SCHEMA,
+    };
+  }
+
+  /**
+   * O que o agente pediu para mudar no que o QAzinho guarda, conferido contra as memórias
+   * que ele leu; null quando ele respondeu outra coisa.
+   */
+  public readKeep(props: { text: string; memories: IMemoryBrief[] }): MemoryOp[] | null {
+    return readKeepAnswer(props);
   }
 
   /**

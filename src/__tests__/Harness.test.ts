@@ -771,6 +771,62 @@ describe('Harness', () => {
     });
   });
 
+  describe('keep', () => {
+    const KEEP = {
+      memories: [
+        {
+          id: 'm-1',
+          text: 'Os formulários ficam em Ajustes.',
+          scope: 'project' as const,
+          target: 'all' as const,
+        },
+      ],
+      events: [
+        { kind: 'said' as const, text: 'Mudaram, agora ficam em Relatórios.' },
+        {
+          kind: 'answered' as const,
+          question: 'Onde fica o cupom?',
+          answer: 'Em Promoções.',
+        },
+        {
+          kind: 'walked' as const,
+          text: 'O Modelo base aparece depois de Mostrar arquivados.',
+        },
+      ],
+      language: 'pt' as const,
+    };
+
+    it('briefs the keeper, and nothing of a chat, a run or the assistant', async () => {
+      const { systemPrompt, schema } = harness.keep(KEEP);
+
+      await expect(systemPrompt).toMatchFileSnapshot('./__prompts__/keeper.txt');
+      await expect(schema).toMatchFileSnapshot('./__prompts__/keep-schema.txt');
+      expect(systemPrompt.replace(/\s+/g, ' ')).toContain(
+        'no idioma Brazilian Portuguese',
+      );
+      expect(systemPrompt).toContain('nunca decide o veredito');
+      expect(systemPrompt).toContain('CPF');
+      expect(systemPrompt).not.toContain('## Conversando com o QA');
+    });
+
+    it('asks what changes, with the memories and what happened', async () => {
+      await expect(harness.keep(KEEP).prompt).toMatchFileSnapshot(
+        './__prompts__/keep-message.txt',
+      );
+    });
+
+    it('reads what the keeper answered against the memories it read', () => {
+      expect(
+        harness.readKeep({
+          text: JSON.stringify({
+            ops: [{ op: 'replace', id: 'm-1', text: 'Ficam em Relatórios.' }],
+          }),
+          memories: KEEP.memories,
+        }),
+      ).toEqual([{ op: 'replace', id: 'm-1', text: 'Ficam em Relatórios.' }]);
+    });
+  });
+
   describe('readPull', () => {
     const PULL = {
       pull: {

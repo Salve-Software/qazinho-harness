@@ -1,0 +1,16 @@
+<qazinho>
+## What QAzinho keeps now
+- [m-1] (project, all) Os formulários ficam em Ajustes.
+
+## What just happened
+The QA said:
+  Mudaram, agora ficam em Relatórios.
+The agent asked the QA:
+  Onde fica o cupom?
+The QA answered:
+  Em Promoções.
+The agent said, while walking the app:
+  O Modelo base aparece depois de Mostrar arquivados.
+</qazinho>
+
+What changes in what QAzinho keeps?
