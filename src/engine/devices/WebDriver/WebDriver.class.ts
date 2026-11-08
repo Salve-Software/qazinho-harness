@@ -701,9 +701,35 @@ export class WebDriver implements IDeviceDriver {
         const type = await locator.getAttribute('type').catch(() => null);
         const format = FIELD_FORMATS[type ?? ''];
 
-        throw format === undefined
-          ? reason
-          : new Error(`"${action.target}" takes ${format}.`);
+        if (format !== undefined) throw new Error(`"${action.target}" takes ${format}.`);
+
+        const isTyped = await locator.click({ timeout }).then(
+          async () => {
+            const isEditable = await locator
+              .evaluate((element) => {
+                const field = element as unknown as {
+                  tagName: string;
+                  isContentEditable: boolean;
+                };
+
+                return (
+                  field.isContentEditable ||
+                  field.tagName === 'INPUT' ||
+                  field.tagName === 'TEXTAREA'
+                );
+              })
+              .catch(() => false);
+
+            if (isEditable) await page.keyboard.press('ControlOrMeta+A');
+
+            await page.keyboard.type(action.value);
+
+            return true;
+          },
+          () => false,
+        );
+
+        if (!isTyped) throw reason;
       });
 
       return;
