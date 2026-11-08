@@ -33,6 +33,7 @@ import {
 } from './constants';
 import {
   describePage,
+  gotoAddressOf,
   describeScreens,
   findLocator,
   frameRootsOf,
@@ -791,7 +792,9 @@ export class WebDriver implements IDeviceDriver {
     const { page, action } = props;
 
     if (action.kind === 'goto') {
-      await page.goto(action.target, { timeout: WEB_DRIVER.gotoTimeoutMs });
+      await page.goto(gotoAddressOf({ target: action.target, appUrl: this.url }), {
+        timeout: WEB_DRIVER.gotoTimeoutMs,
+      });
 
       return;
     }

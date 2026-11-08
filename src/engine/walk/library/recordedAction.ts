@@ -1,6 +1,7 @@
 import type { IStepAction } from '@/contract';
 import type { IVariableValue } from '@/engine/types';
 import { hiddenValues } from './hiddenValues';
+import { relativeGoto } from './relativeGoto';
 
 /**
  * A ação que uma receita guarda, com o ${NAME} como o agente escreveu, e como uma run web
@@ -10,8 +11,13 @@ export function recordedAction(props: {
   action: IStepAction;
   found: { locator: string; toLocator: string | null; option: string | null } | null;
   values: IVariableValue[];
+  appUrl?: string;
 }): IStepAction {
-  const { action, found, values } = props;
+  const { found, values, appUrl } = props;
+  const action =
+    props.action.kind === 'goto' && appUrl !== undefined
+      ? { ...props.action, target: relativeGoto({ target: props.action.target, appUrl }) }
+      : props.action;
 
   if (found === null) return action;
 

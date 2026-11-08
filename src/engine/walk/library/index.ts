@@ -18,6 +18,7 @@ export * from './readBook';
 export * from './recipeFor';
 export * from './recipeOf';
 export * from './recordedAction';
+export * from './relativeGoto';
 export * from './replayedOutcome';
 export * from './resolvedAction';
 export * from './stepCarryOn';

@@ -13,3 +13,4 @@ export * from './screenBoxOf';
 export * from './summarizeMotion';
 export * from './webAccessOf';
 export * from './writeChromePrefs';
+export * from './gotoAddressOf';

@@ -393,6 +393,7 @@ export class PlanWalker {
           actions.set(walking.step.numberInCase, [
             ...(actions.get(walking.step.numberInCase) ?? []),
             recordedAction({
+              appUrl: this.target.value,
               action,
               found: this.driver.resolution?.() ?? null,
               values: this.values,
