@@ -1,6 +1,12 @@
 import type { ICaseAgent } from './ICaseAgent';
 import type { WalkEvent } from './WalkEvent';
-import type { IKnownBug, ITargetUnderTest, IViewport, Language } from '@/contract';
+import type {
+  IKnownBug,
+  IMemoryBrief,
+  ITargetUnderTest,
+  IViewport,
+  Language,
+} from '@/contract';
 import type { IDeviceDriver } from '@/engine/devices/types';
 import type { IVariableValue } from '@/engine/types';
 import type { Harness } from '@/Harness.class';
@@ -20,6 +26,7 @@ export interface IPlanWalker {
   language: Language;
   values: IVariableValue[];
   bugs: IKnownBug[];
+  memories?: IMemoryBrief[];
   answers?: { caseId: string; question: string; answer: string }[];
   shotDir: string;
   onEvent: (event: WalkEvent) => void;

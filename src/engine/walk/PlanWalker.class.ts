@@ -11,6 +11,7 @@ import type {
   ICaseRecipe,
   IFlatStep,
   IKnownBug,
+  IMemoryBrief,
   IStepAsked,
   IRecipeBook,
   IStepAction,
@@ -65,6 +66,7 @@ export class PlanWalker {
   private readonly language: Language;
   private readonly values: IVariableValue[];
   private readonly bugs: IKnownBug[];
+  private readonly memories: IMemoryBrief[];
   private readonly answers: { caseId: string; question: string; answer: string }[];
   private readonly shotDir: string;
   private readonly onEvent: (event: WalkEvent) => void;
@@ -82,6 +84,7 @@ export class PlanWalker {
     this.language = props.language;
     this.values = props.values;
     this.bugs = props.bugs;
+    this.memories = props.memories ?? [];
     this.answers = props.answers ?? [];
     this.shotDir = props.shotDir;
     this.onEvent = props.onEvent;
@@ -419,6 +422,7 @@ export class PlanWalker {
         language: this.language,
         filed: [...props.filed],
         known: this.bugs,
+        memories: this.memories,
         variables: this.values.map(({ name, description }) => ({ name, description })),
         design: null,
         told: this.answers.filter(({ caseId }) => caseId === first?.step.caseId),

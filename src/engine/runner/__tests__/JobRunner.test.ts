@@ -58,6 +58,7 @@ const JOB: RunnerJob = {
   recordings: [],
   bugs: [],
   answers: [],
+  memories: [],
   variables: [{ name: 'USER', description: null, value: 'ana@loja.test' }],
   build: null,
 };

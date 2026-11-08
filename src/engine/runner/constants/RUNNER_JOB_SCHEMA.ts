@@ -96,6 +96,17 @@ export const RUNNER_JOB_SCHEMA = z.object({
       }),
     )
     .catch([]),
+  memories: z
+    .array(
+      z.object({
+        planId: z.string().nullable(),
+        id: z.string(),
+        text: z.string(),
+        scope: z.enum(['project', 'plan']),
+        target: z.enum(['all', 'web', 'android', 'ios']),
+      }),
+    )
+    .catch([]),
   variables: z.array(
     z.object({ name: z.string(), description: z.string().nullable(), value: z.string() }),
   ),

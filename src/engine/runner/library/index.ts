@@ -8,6 +8,7 @@ export * from './filedBugsOf';
 export * from './fileFactsOf';
 export * from './flatStepsOf';
 export * from './knownBugsOf';
+export * from './memoriesOfPlan';
 export * from './landingOf';
 export * from './networkJsonOf';
 export * from './recipeBookOf';

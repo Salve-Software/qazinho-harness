@@ -25,6 +25,7 @@ import {
   filedBugsOf,
   flatStepsOf,
   knownBugsOf,
+  memoriesOfPlan,
   networkJsonOf,
   recipeBookOf,
   runBodyOf,
@@ -135,6 +136,7 @@ export class JobRunner {
           language: job.job.language,
           values,
           bugs: knownBugsOf({ bugs: job.bugs, planId: plan.id }),
+          memories: memoriesOfPlan({ memories: job.memories, planId: plan.id }),
           answers: job.answers.filter(({ planId }) => planId === plan.id),
           shotDir,
           onEvent: (event) => {
