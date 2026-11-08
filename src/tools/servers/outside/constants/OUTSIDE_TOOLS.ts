@@ -393,4 +393,40 @@ export const OUTSIDE_TOOLS = [
       'Read how the builds started since QAzinho opened went, or are going: what each builds, how far it got, and what it made or why it made nothing.',
     input: appInputOf('build_status'),
   },
+  {
+    name: 'export_code',
+    description:
+      "Turn the cases a workspace's runs recorded into code, as the QA's Export button does: a Playwright test for a web app, one Maestro flow per case for a phone app. It answers with the code for you to save where the user wants, and names the cases with no recording yet, which a run with the agent records.",
+    input: z.object({
+      workspace: textNamed({
+        message: '"export_code" needs "workspace": its id or its name.',
+        description: 'The workspace, by its id or its name.',
+      }),
+    }),
+  },
+  {
+    name: 'publish_plan',
+    description: `Publish a workspace's plan to Confluence as a page, with how its last run went, as the QA's button does. A plan already published writes the next version of its page; the first time it needs the space, and a parent page if any. ${ASKS_THE_QA}`,
+    input: z.object({
+      workspace: textNamed({
+        message: '"publish_plan" needs "workspace": its id or its name.',
+        description: 'The workspace, by its id or its name.',
+      }),
+      space: z
+        .string()
+        .trim()
+        .describe('The Confluence space, by its key or its name; the first time only.')
+        .optional(),
+      parent: z
+        .string()
+        .trim()
+        .describe('The id of the page to publish under, if any; the first time only.')
+        .optional(),
+      title: z
+        .string()
+        .trim()
+        .describe("The page's title; QAzinho names it after the workspace when left out.")
+        .optional(),
+    }),
+  },
 ] as const;

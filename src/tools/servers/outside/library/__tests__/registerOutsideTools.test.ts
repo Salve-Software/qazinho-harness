@@ -68,6 +68,8 @@ describe('registerOutsideTools', () => {
       'unlink_design',
       'build_app',
       'build_status',
+      'export_code',
+      'publish_plan',
     ]);
 
     await client.callTool({ name: 'stop_run', arguments: { workspace: 'Compra' } });

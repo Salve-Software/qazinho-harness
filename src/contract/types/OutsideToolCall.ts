@@ -62,4 +62,9 @@ export type OutsideToolCall =
   | { name: 'pause_run'; args: { workspace: string } }
   | { name: 'resume_run'; args: { workspace: string } }
   | { name: 'answer_run_question'; args: { workspace: string; answer: string } }
-  | { name: 'take_suggestion'; args: { workspace: string; cases?: number[] } };
+  | { name: 'take_suggestion'; args: { workspace: string; cases?: number[] } }
+  | { name: 'export_code'; args: { workspace: string } }
+  | {
+      name: 'publish_plan';
+      args: { workspace: string; space?: string; parent?: string; title?: string };
+    };
