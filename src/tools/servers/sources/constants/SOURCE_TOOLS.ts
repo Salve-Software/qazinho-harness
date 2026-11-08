@@ -8,8 +8,9 @@ export const SOURCE_TOOLS = [
       "Read a Jira story through the QA's own Jira, the way /jira hands it to you: what it asks for, its acceptance criteria, the team's comments, the issues it links to, and the files attached, downloaded for you to read. Call it when the QA names a story by its key or its link.",
     input: z.object({
       story: textNamed({
-        message: '"read_jira_story" needs "story": its key, such as HC-878, or its link.',
-        description: 'The story, by its key such as HC-878, or the link to it.',
+        message:
+          '"read_jira_story" needs "story": its key, such as SHOP-878, or its link.',
+        description: 'The story, by its key such as SHOP-878, or the link to it.',
       }),
     }),
   },
@@ -20,7 +21,7 @@ export const SOURCE_TOOLS = [
     input: z.object({
       query: textNamed({
         message: '"search_confluence" needs "query": words of the page\'s title.',
-        description: "Words of the page's title, such as CT-ABA Abas do preview.",
+        description: "Words of the page's title, such as CT-CHK Checkout com cupom.",
       }),
     }),
   },

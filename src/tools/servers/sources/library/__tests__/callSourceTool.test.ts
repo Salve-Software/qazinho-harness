@@ -11,15 +11,15 @@ describe('callSourceTool', () => {
         fetch: (call) => {
           asked.push(call);
 
-          return Promise.resolve({ text: '## The Jira story\nHC-878', isError: false });
+          return Promise.resolve({ text: '## The Jira story\nSHOP-878', isError: false });
         },
       },
-      call: { name: 'read_jira_story', args: { story: 'HC-878' } },
+      call: { name: 'read_jira_story', args: { story: 'SHOP-878' } },
     });
 
-    expect(asked).toEqual([{ name: 'read_jira_story', key: 'HC-878' }]);
+    expect(asked).toEqual([{ name: 'read_jira_story', key: 'SHOP-878' }]);
     expect(answer).toEqual({
-      content: [{ type: 'text', text: '## The Jira story\nHC-878' }],
+      content: [{ type: 'text', text: '## The Jira story\nSHOP-878' }],
       isError: false,
     });
   });

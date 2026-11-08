@@ -30,7 +30,7 @@ export function readSourceToolCall(props: {
     return key === null
       ? {
           kind: 'refused',
-          error: `"${read.data.story}" names no Jira story: give its key, such as HC-878, or its link.`,
+          error: `"${read.data.story}" names no Jira story: give its key, such as SHOP-878, or its link.`,
         }
       : { kind: 'call', call: { name: 'read_jira_story', key } };
   }

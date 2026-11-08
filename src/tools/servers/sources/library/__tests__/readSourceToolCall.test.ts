@@ -6,12 +6,12 @@ describe('readSourceToolCall', () => {
     expect(
       readSourceToolCall({
         name: 'read_jira_story',
-        args: { story: 'https://acme.atlassian.net/browse/hc-878' },
+        args: { story: 'https://acme.atlassian.net/browse/shop-878' },
       }),
-    ).toEqual({ kind: 'call', call: { name: 'read_jira_story', key: 'HC-878' } });
+    ).toEqual({ kind: 'call', call: { name: 'read_jira_story', key: 'SHOP-878' } });
     expect(
-      readSourceToolCall({ name: 'search_confluence', args: { query: ' CT-ABA ' } }),
-    ).toEqual({ kind: 'call', call: { name: 'search_confluence', query: 'CT-ABA' } });
+      readSourceToolCall({ name: 'search_confluence', args: { query: ' CT-CHK ' } }),
+    ).toEqual({ kind: 'call', call: { name: 'search_confluence', query: 'CT-CHK' } });
     expect(
       readSourceToolCall({
         name: 'read_confluence_page',
@@ -24,7 +24,7 @@ describe('readSourceToolCall', () => {
   it('refuses a page named by its title, and points to the search', () => {
     const read = readSourceToolCall({
       name: 'read_confluence_page',
-      args: { page: 'CT-ABA Abas do preview' },
+      args: { page: 'CT-CHK Checkout com cupom' },
     });
 
     expect(read).toMatchObject({ kind: 'refused' });

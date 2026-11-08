@@ -7,7 +7,7 @@ import {
 
 const PAGE = {
   id: '42',
-  title: 'CT-ABA Abas do preview',
+  title: 'CT-CHK Checkout com cupom',
   space: 'QA',
   url: 'https://acme.atlassian.net/wiki/spaces/QA/pages/42',
 };
@@ -17,7 +17,7 @@ describe('the source answers', () => {
     expect(pageAnswerOf({ page: PAGE, text: 'CT01 · Abrir o preview' })).toBe(
       [
         '## The Confluence page',
-        'CT-ABA Abas do preview · QA',
+        'CT-CHK Checkout com cupom · QA',
         PAGE.url,
         'Its text:',
         '  CT01 · Abrir o preview',
@@ -26,8 +26,8 @@ describe('the source answers', () => {
   });
 
   it('lists the pages a search found with their ids, and says so when none matched', () => {
-    expect(pagesFoundOf({ query: 'CT-ABA', pages: [PAGE] })).toContain(
-      '- 42 · CT-ABA Abas do preview · QA',
+    expect(pagesFoundOf({ query: 'CT-CHK', pages: [PAGE] })).toContain(
+      '- 42 · CT-CHK Checkout com cupom · QA',
     );
     expect(pagesFoundOf({ query: 'nada', pages: [] })).toContain('has no page');
   });
@@ -37,9 +37,9 @@ describe('the source answers', () => {
       sourceFailureOf({ source: 'confluence', failure: 'off', subject: 'it' }),
     ).toContain("Jira's card");
     expect(
-      sourceFailureOf({ source: 'jira', failure: 'not-found', subject: 'story HC-9' }),
+      sourceFailureOf({ source: 'jira', failure: 'not-found', subject: 'story SHOP-9' }),
     ).toBe(
-      "Jira has no story HC-9, or the QA's account cannot see it. Ask the QA whether the key or the link is right.",
+      "Jira has no story SHOP-9, or the QA's account cannot see it. Ask the QA whether the key or the link is right.",
     );
   });
 });

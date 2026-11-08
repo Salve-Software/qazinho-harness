@@ -42,8 +42,8 @@ describe('registerSourceTools', () => {
   it('hands each source tool call on', async () => {
     const { client, calls } = await serve();
 
-    await client.callTool({ name: 'read_jira_story', arguments: { story: 'HC-878' } });
+    await client.callTool({ name: 'read_jira_story', arguments: { story: 'SHOP-878' } });
 
-    expect(calls).toEqual([{ name: 'read_jira_story', args: { story: 'HC-878' } }]);
+    expect(calls).toEqual([{ name: 'read_jira_story', args: { story: 'SHOP-878' } }]);
   });
 });

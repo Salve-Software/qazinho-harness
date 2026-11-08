@@ -6,7 +6,7 @@ describe('confluencePageIdOf', () => {
     expect(confluencePageIdOf('123456')).toBe('123456');
     expect(
       confluencePageIdOf(
-        'https://ploomes.atlassian.net/wiki/spaces/QA/pages/123456/CT-ABA+Abas',
+        'https://acme.atlassian.net/wiki/spaces/QA/pages/123456/Checkout',
       ),
     ).toBe('123456');
     expect(
@@ -17,6 +17,6 @@ describe('confluencePageIdOf', () => {
   });
 
   it('does NOT take a title for an id', () => {
-    expect(confluencePageIdOf('CT-ABA Abas do preview HC-878')).toBeNull();
+    expect(confluencePageIdOf('CT-CHK Checkout com cupom SHOP-878')).toBeNull();
   });
 });

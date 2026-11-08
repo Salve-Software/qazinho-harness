@@ -8,7 +8,7 @@
         "story": {
           "type": "string",
           "minLength": 1,
-          "description": "The story, by its key such as HC-878, or the link to it."
+          "description": "The story, by its key such as SHOP-878, or the link to it."
         }
       },
       "required": [
@@ -29,7 +29,7 @@
         "query": {
           "type": "string",
           "minLength": 1,
-          "description": "Words of the page's title, such as CT-ABA Abas do preview."
+          "description": "Words of the page's title, such as CT-CHK Checkout com cupom."
         }
       },
       "required": [

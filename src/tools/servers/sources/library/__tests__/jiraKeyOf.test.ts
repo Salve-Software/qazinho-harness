@@ -3,14 +3,14 @@ import { jiraKeyOf } from '@/tools/servers/sources/library';
 
 describe('jiraKeyOf', () => {
   it('reads the key in a bare key, a link to the issue, or a board link', () => {
-    expect(jiraKeyOf('HC-878')).toBe('HC-878');
-    expect(jiraKeyOf('hc-878')).toBe('HC-878');
-    expect(jiraKeyOf('https://ploomes.atlassian.net/browse/HC-878')).toBe('HC-878');
+    expect(jiraKeyOf('SHOP-878')).toBe('SHOP-878');
+    expect(jiraKeyOf('shop-878')).toBe('SHOP-878');
+    expect(jiraKeyOf('https://acme.atlassian.net/browse/SHOP-878')).toBe('SHOP-878');
     expect(
       jiraKeyOf(
-        'https://ploomes.atlassian.net/jira/software/projects/HC/boards/1?selectedIssue=HC-12',
+        'https://acme.atlassian.net/jira/software/projects/SHOP/boards/1?selectedIssue=SHOP-12',
       ),
-    ).toBe('HC-12');
+    ).toBe('SHOP-12');
   });
 
   it('does NOT find a key in words with no number', () => {
