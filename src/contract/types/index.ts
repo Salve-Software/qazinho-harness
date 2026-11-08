@@ -48,6 +48,7 @@ export type * from './JiraFailure';
 export type * from './Language';
 export type * from './OutsideToolCall';
 export type * from './ReviewVerdict';
+export type * from './IScreenBox';
 export type * from './Severity';
 export type * from './StepVerdict';
 export type * from './TargetKind';

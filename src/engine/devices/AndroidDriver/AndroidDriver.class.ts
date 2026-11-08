@@ -3,6 +3,7 @@ import type {
   IActionMotion,
   IDeviceImage,
   IRunVideo,
+  IScreenBox,
   IStepAction,
   IViewport,
 } from '@/contract';
@@ -13,6 +14,7 @@ import { RUN_VIDEO_FILES } from '@/engine/devices/constants';
 import {
   describeMeasure,
   phoneGlance,
+  fractionBoxOf,
   phoneMeasureOf,
   phoneShot,
   swipeOf,
@@ -185,6 +187,16 @@ export class AndroidDriver implements IDeviceDriver {
         scale: ANDROID.baselineDensity / this.density,
       }),
     );
+  }
+
+  /** Onde uma coisa da tela está agora, em frações dela; nada quando não está lá. */
+  public async locate(target: string): Promise<IScreenBox | null> {
+    const node = findNode({ nodes: await this.read(), target });
+    const screen = screenSizeOf(await this.shell(['wm', 'size']).catch(() => ''));
+
+    return node === null || screen === null
+      ? null
+      : fractionBoxOf({ box: node.box, screen });
   }
 
   /**

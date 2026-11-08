@@ -3,6 +3,7 @@ import type {
   IActionMotion,
   IDeviceImage,
   IRunVideo,
+  IScreenBox,
   IStepAction,
   IViewport,
 } from '@/contract';
@@ -18,6 +19,7 @@ import {
   describeMeasure,
   mp4FactsOf,
   phoneGlance,
+  fractionBoxOf,
   phoneMeasureOf,
   phoneShot,
   swipeOf,
@@ -184,6 +186,17 @@ export class IosDriver implements IDeviceDriver {
         scale: 1,
       }),
     );
+  }
+
+  /** Onde uma coisa da tela está agora, em frações dela; nada quando não está lá. */
+  public async locate(target: string): Promise<IScreenBox | null> {
+    const described = await this.ui(['describe-all']);
+    const element = findElement({ elements: parseElements(described), target });
+    const screen = screenOf(described);
+
+    return element === null || screen === null
+      ? null
+      : fractionBoxOf({ box: element.box, screen });
   }
 
   /**

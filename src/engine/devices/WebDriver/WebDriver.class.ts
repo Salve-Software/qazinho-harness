@@ -5,6 +5,7 @@ import type {
   IDeviceImage,
   INetworkEntry,
   IRunVideo,
+  IScreenBox,
   IStepAction,
   IViewport,
 } from '@/contract';
@@ -38,6 +39,7 @@ import {
   originOf,
   pagesOf,
   pressChecked,
+  screenBoxOf,
   summarizeMotion,
   writeChromePrefs,
 } from './library';
@@ -313,6 +315,15 @@ export class WebDriver implements IDeviceDriver {
     if (locator === null) throw new Error(`Nothing on the page reads "${target}".`);
 
     return describeMeasure(await measureLocator(locator));
+  }
+
+  /** Onde uma coisa da página está na tela agora; nada quando não está à vista. */
+  public async locate(target: string): Promise<IScreenBox | null> {
+    if (!this.page) return null;
+
+    const locator = await findLocator({ page: this.page, target, kind: 'click' });
+
+    return locator === null ? null : screenBoxOf({ locator, screen: this.viewport });
   }
 
   /**

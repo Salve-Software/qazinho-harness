@@ -8,6 +8,7 @@ export * from './optionOf';
 export * from './originOf';
 export * from './pagesOf';
 export * from './pressChecked';
+export * from './screenBoxOf';
 export * from './summarizeMotion';
 export * from './webAccessOf';
 export * from './writeChromePrefs';

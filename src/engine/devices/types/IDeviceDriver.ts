@@ -4,6 +4,7 @@ import type {
   IDeviceImage,
   INetworkEntry,
   IRunVideo,
+  IScreenBox,
   IStepAction,
   IViewport,
 } from '@/contract';
@@ -18,6 +19,7 @@ export interface IDeviceDriver {
   act: (action: IStepAction) => Promise<void>;
   describe: () => Promise<string>;
   inspect: (target: string) => Promise<string>;
+  locate?: (target: string) => Promise<IScreenBox | null>;
   glance: () => Promise<IDeviceImage | null>;
   motion: () => Promise<IActionMotion | null>;
   resize: (viewport: IViewport) => Promise<void>;
