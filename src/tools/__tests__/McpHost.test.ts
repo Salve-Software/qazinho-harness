@@ -136,4 +136,22 @@ describe('McpHost', () => {
 
     expect(response.status).toBe(404);
   });
+
+  /** O chat conhece o app no dispositivo do QAzinho e lê o Jira do QA, no mesmo turno. */
+  it('serves a chat the device to learn the app on beside its sources, and nothing to report', async () => {
+    const host = await started();
+    const scope = 'chat~w1';
+
+    host.attachSources({ scope, fetch: async () => ({ text: '', isError: false }) });
+    host.attach({ workspaceId: scope, driver: {} as never, purpose: 'learn' });
+
+    const names = await toolNamesAt(urlOf(host.mcpConfigFor(scope)));
+
+    expect(names).toEqual(
+      expect.arrayContaining(['look', 'click', 'fill', 'goto', 'read_jira_story']),
+    );
+    expect(names).not.toContain('report');
+    expect(names).not.toContain('bug');
+    expect(names).not.toContain('ask_qa');
+  });
 });

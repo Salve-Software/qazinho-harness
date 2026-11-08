@@ -423,9 +423,9 @@ describe('Harness', () => {
     /**
      * O QA nomeou uma página do Confluence em palavras, e o chat não tinha como lê-la.
      */
-    it("gives the chat the QA's Jira and Confluence to read, and no other tool of QAzinho", () => {
+    it("gives the chat the device to learn the app on, and the QA's Jira and Confluence", () => {
       expect(harness.chat(EMPTY_CHAT).tools).toEqual({
-        groups: ['sources'],
+        groups: ['device', 'sources'],
         allowedTools: ['mcp__qazinho'],
       });
     });

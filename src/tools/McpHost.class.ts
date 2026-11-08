@@ -134,12 +134,14 @@ export class McpHost {
         call: (call) =>
           this.inTurn({ scope, call: () => callDeviceTool({ device, call }) }),
       });
-    else if (app)
+
+    if (app)
       registerAppTools({
         mcp,
         call: (call) => this.inTurn({ scope, call: () => callAppTool({ app, call }) }),
       });
-    else if (sources)
+
+    if (sources)
       registerSourceTools({
         mcp,
         call: (call) =>
