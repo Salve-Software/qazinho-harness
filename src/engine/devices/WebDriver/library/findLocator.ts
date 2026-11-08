@@ -9,6 +9,8 @@ const TEST_ID = /^\[?\s*test-?id\s*[=:]\s*["']?([^"'\]]+)["']?\s*\]?$/i;
 
 const TEST_ID_ATTRIBUTES = ['data-test-id', 'data-test', 'data-cy', 'data-qa'];
 
+const BARE_TEST_ID = /^[\w.:-]+$/;
+
 const CLICKABLE: AriaRole[] = [
   'button',
   'link',
@@ -36,8 +38,8 @@ const ROLE_OF_TAG: Partial<Record<string, AriaRole>> = {
 };
 
 /**
- * Acha o que o agente nomeou como uma pessoa: primeiro o que tem exatamente aquele nome,
- * de qualquer tipo, depois o que o contém, mesmo com um contador no fim que mudou.
+ * Acha o que o agente nomeou como uma pessoa: o nome exato, depois o que o contém, e por
+ * fim um test id escrito sem o `testid=`.
  */
 export async function findLocator(props: {
   page: Page;
@@ -54,7 +56,14 @@ export async function findLocator(props: {
     found ?? (listed === null ? null : await locate({ ...props, target: listed }));
   const counted = countedOf(ordinalOf(listed ?? props.target).name);
 
-  return named ?? (counted === null ? null : onlyOne({ page: props.page, counted }));
+  const worded =
+    named ?? (counted === null ? null : await onlyOne({ page: props.page, counted }));
+  const bare = props.target.trim();
+
+  return (
+    worded ??
+    (BARE_TEST_ID.test(bare) ? byTestId({ page: props.page, testId: bare }) : null)
+  );
 }
 
 async function byTestId(props: { page: Page; testId: string }): Promise<Locator | null> {

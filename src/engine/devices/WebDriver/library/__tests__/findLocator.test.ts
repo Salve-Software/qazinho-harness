@@ -288,6 +288,32 @@ describe('findLocator', () => {
     ).toBe('css:[data-cy="login-email"]');
   });
 
+  /**
+   * O Haiku leu `[testid=login-email]` na página e preencheu `login-email`, sem o prefixo:
+   * nada achava o campo, e ele caía no rótulo depois de duas ações perdidas.
+   */
+  it('takes a test id written without the prefix when no words match it', async () => {
+    const page = pageWith({ testid: 1 });
+
+    expect(
+      locatorName(await findLocator({ page, target: 'login-email', kind: 'fill' })),
+    ).toBe('testid');
+  });
+
+  it('keeps the words first when a bare name is also a label', async () => {
+    const page = pageWith({ testid: 1, 'label:exact': 1 });
+
+    expect(locatorName(await findLocator({ page, target: 'Email', kind: 'fill' }))).toBe(
+      'label:exact',
+    );
+  });
+
+  it('never reads words with spaces as a test id', async () => {
+    const page = pageWith({ testid: 1 });
+
+    expect(await findLocator({ page, target: 'Novo modelo', kind: 'click' })).toBeNull();
+  });
+
   it('finds nothing for a test id the page does not have, rather than guessing', async () => {
     const page = pageWith({ 'label:exact': 1 });
 
