@@ -24,6 +24,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { chromium } from 'playwright-core';
 import { describeMeasure, sampleFileOf } from '@/engine/devices/library';
+import { withinLimit } from '@/engine/library/withinLimit';
 import {
   CHROME_DISABLED_FEATURES,
   FIELD_FORMATS,
@@ -289,7 +290,11 @@ export class WebDriver implements IDeviceDriver {
   public async describe(): Promise<string> {
     if (!this.page) return '';
 
-    const page = await describePage(this.page);
+    const page = await withinLimit({
+      work: describePage(this.page),
+      ms: WEB_DRIVER.readLimitMs,
+      said: WEB_DRIVER.readLimitWords,
+    });
     const shown = this.dialogs.splice(0);
     const screens = describeScreens(this.openScreens());
 

@@ -4,6 +4,9 @@ export const WEB_DRIVER = {
   waitMs: 1_000,
   streamQuality: 80,
   actionTimeoutMs: 5_000,
+  readLimitMs: 20_000,
+  readLimitWords:
+    'The page did not answer in time, it may still be changing. Wait a moment and look again.',
   gotoTimeoutMs: 15_000,
   appTries: 10,
   appRetryMs: 3_000,

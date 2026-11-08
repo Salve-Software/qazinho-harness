@@ -1,5 +1,7 @@
 import type { IAttachDevice } from '@/tools/servers/device/types';
 import type { ToolAnswer } from '@/tools/types';
+import { WEB_DRIVER } from '@/engine/devices/WebDriver/constants';
+import { withinLimit } from '@/engine/library/withinLimit';
 import { stripAnsi } from '@/library';
 import { LEARNING_NOTE } from '@/tools/servers/device/constants';
 import { describeMotion } from './describeMotion';
@@ -126,7 +128,11 @@ async function shown(props: {
   const { driver } = props.device;
   const [text, image] = await Promise.all([
     driver.describe(),
-    driver.glance().catch(() => null),
+    withinLimit({
+      work: driver.glance(),
+      ms: WEB_DRIVER.readLimitMs,
+      said: WEB_DRIVER.readLimitWords,
+    }).catch(() => null),
   ]);
 
   return {
