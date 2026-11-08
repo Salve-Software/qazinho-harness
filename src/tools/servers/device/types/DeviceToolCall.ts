@@ -1,6 +1,7 @@
 import type { IExploredScreen } from './IExploredScreen';
 import type { IExploreFinish } from './IExploreFinish';
 import type { IQaQuestion } from './IQaQuestion';
+import type { ISaid } from './ISaid';
 import type { IStepFinding } from './IStepFinding';
 import type { IStepReport } from './IStepReport';
 import type { IStepAction } from '@/contract';
@@ -17,7 +18,7 @@ export type DeviceToolCall =
   | { kind: 'report'; report: IStepReport }
   | { kind: 'finding'; finding: IStepFinding }
   | { kind: 'ask'; question: IQaQuestion }
-  | { kind: 'say'; text: string }
+  | ({ kind: 'say' } & ISaid)
   | { kind: 'answer'; text: string }
   | { kind: 'screen'; screen: IExploredScreen }
   | { kind: 'finish'; finish: IExploreFinish }

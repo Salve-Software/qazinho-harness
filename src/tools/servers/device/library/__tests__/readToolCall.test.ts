@@ -386,4 +386,14 @@ describe('readToolCall', () => {
       });
     });
   });
+
+  it('reads which memory a line of say is about', () => {
+    expect(
+      readToolCall({ name: 'say', args: { text: 'Vou por Ajustes.', memory: 'm-1' } }),
+    ).toEqual({ kind: 'say', text: 'Vou por Ajustes.', memory: 'm-1' });
+    expect(readToolCall({ name: 'say', args: { text: 'Vou por Ajustes.' } })).toEqual({
+      kind: 'say',
+      text: 'Vou por Ajustes.',
+    });
+  });
 });

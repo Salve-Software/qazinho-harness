@@ -1,5 +1,12 @@
-import type { IDesignLink, IFlatStep, IKnownBug, IVariableBrief } from '@/contract';
+import type {
+  IDesignLink,
+  IFlatStep,
+  IKnownBug,
+  IMemoryBrief,
+  IVariableBrief,
+} from '@/contract';
 import { describeKnownBugs } from './describeKnownBugs';
+import { describeMemories } from './describeMemories';
 import { describeVariables } from './describeVariables';
 
 /**
@@ -13,6 +20,7 @@ export function describeExploration(props: {
   known: IKnownBug[];
   design: IDesignLink | null;
   plan?: IFlatStep[];
+  memories?: IMemoryBrief[];
 }): string {
   const { minutes, screen, variables, known, design } = props;
   const cases = [
@@ -27,6 +35,7 @@ export function describeExploration(props: {
           `Figma design: ${design.url} (fileKey ${design.fileKey}${design.nodeId === null ? '' : `, node ${design.nodeId}`}). Hold each screen it draws to its frame.`,
         ]),
     ...describeVariables(variables),
+    ...describeMemories({ memories: props.memories ?? [] }),
     ...(cases.length === 0
       ? []
       : [

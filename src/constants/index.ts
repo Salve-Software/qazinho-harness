@@ -8,3 +8,4 @@ export * from './PULL_SECTION';
 export * from './SCREEN_NAMES';
 export * from './STORY_SECTION';
 export * from './THEME_NAMES';
+export * from './MEMORY_WORDS';

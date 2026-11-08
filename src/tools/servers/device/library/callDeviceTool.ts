@@ -63,7 +63,7 @@ async function answerOf(props: {
       return said(await device.onAsk(read.question));
     }
 
-    if (read.kind === 'say') return said((await device.onSay?.(read.text)) ?? 'Noted.');
+    if (read.kind === 'say') return said((await device.onSay?.(read)) ?? 'Noted.');
 
     if (read.kind === 'answer') {
       if (!device.onAnswer) return said('There is no QA to answer outside a run.', true);

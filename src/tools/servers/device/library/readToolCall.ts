@@ -75,9 +75,16 @@ export function readToolCall(props: {
         error: read.error.issues[0]?.message ?? 'Call it again.',
       };
 
+    const text = withoutStrayTags(read.data.text);
+
+    if (tool.name === 'answer_qa') return { kind: 'answer', text };
+
+    const { memory } = read.data as { memory?: string };
+
     return {
-      kind: tool.name === 'say' ? 'say' : 'answer',
-      text: withoutStrayTags(read.data.text),
+      kind: 'say',
+      text,
+      ...(memory === undefined || memory === '' ? {} : { memory }),
     };
   }
 

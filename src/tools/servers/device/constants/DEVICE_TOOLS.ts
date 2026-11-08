@@ -330,6 +330,13 @@ export const DEVICE_TOOLS = [
         description:
           'What you are doing and why, such as "This case needs a template with a product table: the account has none, so I am creating one".',
       }),
+      memory: z
+        .string()
+        .trim()
+        .describe(
+          'When this line is about something QAzinho has learned about the app: its id as the message lists it, such as "m-3f2a1b".',
+        )
+        .optional(),
     }),
   },
   {

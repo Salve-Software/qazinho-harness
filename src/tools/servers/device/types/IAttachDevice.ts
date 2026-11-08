@@ -3,6 +3,7 @@ import type { IDevicePort } from './IDevicePort';
 import type { IExploredScreen } from './IExploredScreen';
 import type { IExploreFinish } from './IExploreFinish';
 import type { IQaQuestion } from './IQaQuestion';
+import type { ISaid } from './ISaid';
 import type { IStepFinding } from './IStepFinding';
 import type { IStepReport } from './IStepReport';
 
@@ -20,7 +21,7 @@ export interface IAttachDevice {
   onScreen?: (screen: IExploredScreen) => Promise<string>;
   onFinish?: (finish: IExploreFinish) => Promise<string>;
   onAsk?: (question: IQaQuestion) => Promise<string>;
-  onSay?: (text: string) => Promise<string>;
+  onSay?: (said: ISaid) => Promise<string>;
   onAnswer?: (text: string) => Promise<string>;
   aside?: () => string | null;
 }

@@ -45,6 +45,7 @@ import {
   describeAttachments,
   describeBuild,
   describeCase,
+  describeChatMemories,
   describeCode,
   describeDesign,
   describeExploration,
@@ -143,6 +144,7 @@ export class Harness {
     variables: IVariableBrief[];
     isFromAgent?: boolean;
     attachments?: IAttachedFiles | null;
+    memories?: IMemoryBrief[];
   }): {
     systemPrompt: string;
     prompt: string;
@@ -166,6 +168,7 @@ export class Harness {
           ],
         },
         describeKeptVariables(props.variables),
+        describeChatMemories(props.memories ?? []),
         describeRuns(props.runs),
         describeLook(props.look),
         describeCode({
@@ -453,6 +456,7 @@ export class Harness {
     known: IKnownBug[];
     design: IDesignLink | null;
     plan?: IFlatStep[];
+    memories?: IMemoryBrief[];
   }): string {
     return describeExploration(props);
   }
@@ -471,6 +475,8 @@ export class Harness {
     design: IDesignLink | null;
     told?: { question: string; answer: string }[];
     isUnderWay?: boolean;
+    memories?: IMemoryBrief[];
+    heardMemories?: string[];
   }): string {
     return describeCase(props);
   }

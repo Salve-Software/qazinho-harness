@@ -2,16 +2,18 @@ import type {
   IDesignLink,
   IFlatStep,
   IKnownBug,
+  IMemoryBrief,
   IVariableBrief,
   Language,
 } from '@/contract';
 import { LANGUAGE_NAMES } from '@/constants';
 import { describeKnownBugs } from './describeKnownBugs';
+import { describeMemories } from './describeMemories';
 import { describeVariables } from './describeVariables';
 
 /**
- * A mensagem que começa um caso: os passos e frames, o idioma, as variáveis, as respostas
- * dadas e os bugs abertos.
+ * A mensagem que começa um caso: os passos e frames, o idioma, as variáveis, o que já se
+ * aprendeu do app, as respostas dadas e os bugs abertos.
  */
 export function describeCase(props: {
   steps: IFlatStep[];
@@ -23,6 +25,8 @@ export function describeCase(props: {
   design: IDesignLink | null;
   told?: { question: string; answer: string }[];
   isUnderWay?: boolean;
+  memories?: IMemoryBrief[];
+  heardMemories?: string[];
 }): string {
   const { steps, screen, language, filed, known, variables, design } = props;
   const told = props.told ?? [];
@@ -56,6 +60,10 @@ export function describeCase(props: {
     ]),
     `Write what you report and note in ${LANGUAGE_NAMES[language]}, whatever language these steps are in.`,
     ...describeVariables(variables),
+    ...describeMemories({
+      memories: props.memories ?? [],
+      heard: props.heardMemories ?? [],
+    }),
     ...(told.length === 0
       ? []
       : [

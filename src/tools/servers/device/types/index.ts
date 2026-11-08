@@ -6,5 +6,6 @@ export type * from './IDeviceTool';
 export type * from './IExploredScreen';
 export type * from './IExploreFinish';
 export type * from './IQaQuestion';
+export type * from './ISaid';
 export type * from './IStepFinding';
 export type * from './IStepReport';
