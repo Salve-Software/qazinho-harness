@@ -1,4 +1,4 @@
-import type { Page } from 'playwright-core';
+import type { Frame, Page } from 'playwright-core';
 import { CONTROL_SELECTOR } from '@/engine/devices/WebDriver/constants';
 
 /**
@@ -6,7 +6,7 @@ import { CONTROL_SELECTOR } from '@/engine/devices/WebDriver/constants';
  * test id que o time deu a ele, e o lugar dele entre todos os controles.
  */
 export async function listControls(
-  page: Page,
+  page: Page | Frame,
 ): Promise<{ role: string; label: string; testId: string | null; at: number }[]> {
   try {
     return await page.$$eval(CONTROL_SELECTOR, (nodes) =>

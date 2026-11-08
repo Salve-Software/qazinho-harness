@@ -1,5 +1,6 @@
 export * from './describePage';
 export * from './findLocator';
+export * from './frameRootsOf';
 export * from './listControls';
 export * from './measureLocator';
 export * from './openApp';

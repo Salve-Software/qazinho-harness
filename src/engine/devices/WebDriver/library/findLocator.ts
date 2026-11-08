@@ -1,6 +1,8 @@
+import type { IFrameRoot } from '@/engine/devices/WebDriver/types';
 import type { Locator, Page } from 'playwright-core';
 import { countedOf, ordinalOf, withoutRole } from '@/engine/devices/library';
 import { CONTROL_SELECTOR } from '@/engine/devices/WebDriver/constants';
+import { frameRootsOf } from './frameRootsOf';
 import { listControls } from './listControls';
 
 type AriaRole = Parameters<Page['getByRole']>[0];
@@ -38,40 +40,54 @@ const ROLE_OF_TAG: Partial<Record<string, AriaRole>> = {
 };
 
 /**
- * Acha o que o agente nomeou como uma pessoa: o nome exato, depois o que o contém, e por
- * fim um test id escrito sem o `testid=`.
+ * Acha o que o agente nomeou como uma pessoa, na página e depois em cada iframe: o nome
+ * exato, depois o que o contém, e por fim um test id escrito sem o `testid=`.
  */
 export async function findLocator(props: {
   page: Page;
   target: string;
   kind: 'click' | 'fill';
 }): Promise<Locator | null> {
+  for (const frame of await frameRootsOf(props.page)) {
+    const found = await findIn({ frame, target: props.target, kind: props.kind });
+
+    if (found !== null) return found;
+  }
+
+  return null;
+}
+
+async function findIn(props: {
+  frame: IFrameRoot;
+  target: string;
+  kind: 'click' | 'fill';
+}): Promise<Locator | null> {
+  const { frame } = props;
   const testId = TEST_ID.exec(props.target.trim())?.[1]?.trim() ?? null;
 
-  if (testId !== null) return byTestId({ page: props.page, testId });
+  if (testId !== null) return byTestId({ frame, testId });
 
   const found = await locate(props);
   const listed = withoutRole(props.target);
   const named =
     found ?? (listed === null ? null : await locate({ ...props, target: listed }));
   const counted = countedOf(ordinalOf(listed ?? props.target).name);
-
-  const worded =
-    named ?? (counted === null ? null : await onlyOne({ page: props.page, counted }));
+  const worded = named ?? (counted === null ? null : await onlyOne({ frame, counted }));
   const bare = props.target.trim();
 
-  return (
-    worded ??
-    (BARE_TEST_ID.test(bare) ? byTestId({ page: props.page, testId: bare }) : null)
-  );
+  return worded ?? (BARE_TEST_ID.test(bare) ? byTestId({ frame, testId: bare }) : null);
 }
 
-async function byTestId(props: { page: Page; testId: string }): Promise<Locator | null> {
+async function byTestId(props: {
+  frame: IFrameRoot;
+  testId: string;
+}): Promise<Locator | null> {
+  const { root } = props.frame;
   const quoted = props.testId.replace(/["\\]/g, '\\$&');
 
   for (const candidate of [
-    props.page.getByTestId(props.testId),
-    ...TEST_ID_ATTRIBUTES.map((name) => props.page.locator(`[${name}="${quoted}"]`)),
+    root.getByTestId(props.testId),
+    ...TEST_ID_ATTRIBUTES.map((name) => root.locator(`[${name}="${quoted}"]`)),
   ]) {
     const shown = candidate.filter({ visible: true });
 
@@ -81,13 +97,17 @@ async function byTestId(props: { page: Page; testId: string }): Promise<Locator 
   return null;
 }
 
-async function onlyOne(props: { page: Page; counted: RegExp }): Promise<Locator | null> {
-  const { page, counted } = props;
+async function onlyOne(props: {
+  frame: IFrameRoot;
+  counted: RegExp;
+}): Promise<Locator | null> {
+  const { counted } = props;
+  const { root } = props.frame;
 
   for (const candidate of [
-    page.getByRole('link', { name: counted }),
-    page.getByRole('button', { name: counted }),
-    page.getByText(counted),
+    root.getByRole('link', { name: counted }),
+    root.getByRole('button', { name: counted }),
+    root.getByText(counted),
   ]) {
     const shown = candidate.filter({ visible: true });
 
@@ -98,12 +118,13 @@ async function onlyOne(props: { page: Page; counted: RegExp }): Promise<Locator 
 }
 
 async function listed(props: {
-  page: Page;
+  frame: IFrameRoot;
   name: string;
   nth: number;
 }): Promise<Locator | null> {
+  const { root, scope } = props.frame;
   const wanted = props.name.toLowerCase();
-  const named = (await listControls(props.page)).filter(
+  const named = (await listControls(scope)).filter(
     ({ label }) => label.toLowerCase() === wanted,
   );
   const control = named[props.nth];
@@ -115,25 +136,26 @@ async function listed(props: {
   const semantic =
     role === undefined
       ? null
-      : props.page.getByRole(role, { name: control.label, exact: true });
+      : root.getByRole(role, { name: control.label, exact: true });
   const count = semantic === null ? 0 : await semantic.count().catch(() => 0);
 
   return semantic !== null && count === sameRole.length
     ? semantic.nth(sameRole.indexOf(control))
-    : props.page.locator(CONTROL_SELECTOR).nth(control.at);
+    : root.locator(CONTROL_SELECTOR).nth(control.at);
 }
 
 async function locate(props: {
-  page: Page;
+  frame: IFrameRoot;
   target: string;
   kind: 'click' | 'fill';
 }): Promise<Locator | null> {
-  const { page, kind } = props;
+  const { frame, kind } = props;
+  const page = frame.root;
   const { name, nth, isNumbered } = ordinalOf(props.target.trim());
 
   if (name.length === 0) return null;
 
-  const numbered = isNumbered ? await listed({ page, name, nth }) : null;
+  const numbered = isNumbered ? await listed({ frame, name, nth }) : null;
 
   if (numbered !== null) return numbered;
 

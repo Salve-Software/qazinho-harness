@@ -12,6 +12,7 @@ import type { IDeviceDriver, IShot, ShrinkImage } from '@/engine/devices/types';
 import type {
   BrowserContext,
   CDPSession,
+  Locator,
   Page,
   Request,
   Response,
@@ -30,6 +31,7 @@ import {
 import {
   describePage,
   findLocator,
+  frameRootsOf,
   measureLocator,
   openApp,
   optionOf,
@@ -774,9 +776,9 @@ export class WebDriver implements IDeviceDriver {
     }
 
     for (let tries = 0; tries < WEB_DRIVER.scrollTries; tries += 1) {
-      const shown = page.getByText(until).first();
+      const shown = await this.textShown({ page, text: until });
 
-      if (await shown.isVisible().catch(() => false)) {
+      if (shown !== null) {
         await shown
           .scrollIntoViewIfNeeded({ timeout: WEB_DRIVER.actionTimeoutMs })
           .catch(() => undefined);
@@ -789,6 +791,16 @@ export class WebDriver implements IDeviceDriver {
     }
 
     throw new Error(`Nothing on the page reads "${until}" after scrolling ${direction}.`);
+  }
+
+  private async textShown(props: { page: Page; text: string }): Promise<Locator | null> {
+    for (const { root } of await frameRootsOf(props.page)) {
+      const shown = root.getByText(props.text).first();
+
+      if (await shown.isVisible().catch(() => false)) return shown;
+    }
+
+    return null;
   }
 
   private async markOf(page: Page): Promise<{ origin: number; at: number } | null> {

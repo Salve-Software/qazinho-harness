@@ -319,4 +319,40 @@ describe('findLocator', () => {
 
     expect(await findLocator({ page, target: 'testid=gone', kind: 'fill' })).toBeNull();
   });
+
+  /**
+   * O botão mora num iframe: nada na página de cima responde a ele, e o locator achado
+   * leva o caminho do iframe, que o código exportado repete.
+   */
+  it('finds a control inside an iframe when the page has none by that name', async () => {
+    const inner = pageWith({ 'role:button:exact': 1 });
+    const page = fakePage({
+      ...(pageWith({}) as unknown as object),
+      locator: () =>
+        Object.assign(fakeLocator({ name: 'css', count: 0 }), {
+          contentFrame: () => inner,
+        }),
+      mainFrame: () => ({
+        childFrames: () => [
+          {
+            url: () => 'http://127.0.0.1:5173/',
+            childFrames: () => [],
+            frameElement: () =>
+              Promise.resolve({
+                evaluate: () =>
+                  Promise.resolve({
+                    isShown: true,
+                    selector: 'iframe[title="Builder"]',
+                    name: 'Builder',
+                  }),
+              }),
+          },
+        ],
+      }),
+    });
+
+    expect(
+      locatorName(await findLocator({ page, target: 'Nova etiqueta', kind: 'click' })),
+    ).toBe('role:button:exact');
+  });
 });
