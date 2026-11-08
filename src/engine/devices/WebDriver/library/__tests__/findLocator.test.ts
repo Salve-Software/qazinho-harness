@@ -5,8 +5,9 @@ import { fakeLocator, fakePage, locatorName } from './fakePage';
 /**
  * Uma página em que só os jeitos de achar nomeados respondem, cada um com quantos acha.
  */
-function pageWith(found: Record<string, number>) {
-  const answer = (name: string) => fakeLocator({ name, count: found[name] ?? 0 });
+function pageWith(found: Record<string, number>, unreached: string[] = []) {
+  const answer = (name: string) =>
+    fakeLocator({ name, count: found[name] ?? 0, isReached: !unreached.includes(name) });
   const exactly = (options?: { exact?: boolean }) =>
     options?.exact === true ? ':exact' : '';
 
@@ -354,5 +355,35 @@ describe('findLocator', () => {
     expect(
       locatorName(await findLocator({ page, target: 'Nova etiqueta', kind: 'click' })),
     ).toBe('role:button:exact');
+  });
+
+  /**
+   * Um menu de ícones cujo botão não tem exatamente o nome, e um tooltip transparente com as
+   * palavras exatas: o clique caía no tooltip, respondia que tinha clicado e nada mudava.
+   */
+  it('passes over words no one could hit to the control that holds them', async () => {
+    const page = pageWith({ 'text:exact': 1, 'role:button': 1 }, ['text:exact']);
+
+    expect(
+      locatorName(await findLocator({ page, target: 'Etiquetas', kind: 'click' })),
+    ).toBe('role:button');
+  });
+
+  it('still takes what it found when nothing can be hit, rather than nothing', async () => {
+    const page = pageWith({ 'text:exact': 1 }, ['text:exact']);
+
+    expect(
+      locatorName(await findLocator({ page, target: 'Etiquetas', kind: 'click' })),
+    ).toBe('text:exact');
+  });
+
+  it('takes the next kind of control when the first cannot be hit', async () => {
+    const page = pageWith({ 'role:button:exact': 1, 'role:link:exact': 2 }, [
+      'role:button:exact',
+    ]);
+
+    expect(
+      locatorName(await findLocator({ page, target: 'Comprar', kind: 'click' })),
+    ).toBe('role:link:exact');
   });
 });

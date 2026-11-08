@@ -13,6 +13,8 @@ const TEST_ID_ATTRIBUTES = ['data-test-id', 'data-test', 'data-cy', 'data-qa'];
 
 const BARE_TEST_ID = /^[\w.:-]+$/;
 
+const REACH_CHECKS = 10;
+
 const CLICKABLE: AriaRole[] = [
   'button',
   'link',
@@ -40,8 +42,8 @@ const ROLE_OF_TAG: Partial<Record<string, AriaRole>> = {
 };
 
 /**
- * Acha o que o agente nomeou como uma pessoa, na página e depois em cada iframe: o nome
- * exato, depois o que o contém, e por fim um test id escrito sem o `testid=`.
+ * Acha o que o agente nomeou, na página e depois em cada iframe, só onde uma pessoa
+ * acertaria: o nome exato, o que o contém, um test id sem o `testid=`.
  */
 export async function findLocator(props: {
   page: Page;
@@ -197,12 +199,88 @@ async function locate(props: {
           page.locator(name),
         ];
 
+  let unreached: Locator | null = null;
+
   for (const candidate of candidates) {
     const shown = candidate.filter({ visible: true });
     const count = await shown.count().catch(() => 0);
 
-    if (count > nth) return shown.nth(nth);
+    if (count <= nth) continue;
+
+    const reached = await reachedOf({ shown, count });
+    const wanted = reached[nth];
+
+    if (wanted !== undefined) return wanted;
+
+    unreached ??= shown.nth(nth);
   }
 
-  return null;
+  return unreached;
+}
+
+async function reachedOf(props: { shown: Locator; count: number }): Promise<Locator[]> {
+  const reached: Locator[] = [];
+
+  for (let at = 0; at < Math.min(props.count, REACH_CHECKS); at += 1) {
+    const one = props.shown.nth(at);
+
+    if (await isReached(one)) reached.push(one);
+  }
+
+  return reached;
+}
+
+async function isReached(locator: Locator): Promise<boolean> {
+  return locator
+    .evaluate((node) => {
+      type Element = {
+        parentElement: Element | null;
+        contains: (other: unknown) => boolean;
+        getRootNode: () => { host?: Element };
+        getBoundingClientRect: () => {
+          left: number;
+          top: number;
+          width: number;
+          height: number;
+        };
+        ownerDocument: {
+          defaultView: {
+            innerWidth: number;
+            innerHeight: number;
+            getComputedStyle: (one: Element) => { opacity: string; visibility: string };
+          } | null;
+          elementFromPoint: (x: number, y: number) => Element | null;
+        };
+      };
+      const own = node as unknown as Element;
+      const view = own.ownerDocument.defaultView;
+      const up = (one: Element): Element | null =>
+        one.parentElement ?? one.getRootNode().host ?? null;
+
+      if (view === null) return true;
+
+      for (let one: Element | null = own; one !== null; one = up(one)) {
+        const style = view.getComputedStyle(one);
+
+        if (Number(style.opacity) === 0 || style.visibility === 'hidden') return false;
+      }
+
+      const box = own.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + box.height / 2;
+
+      if (x < 0 || y < 0 || x > view.innerWidth || y > view.innerHeight) return true;
+
+      const hit = own.ownerDocument.elementFromPoint(x, y);
+
+      if (hit === null) return false;
+
+      if (own.contains(hit)) return true;
+
+      for (let one: Element | null = own; one !== null; one = up(one))
+        if (one === hit) return true;
+
+      return false;
+    })
+    .catch(() => true);
 }
