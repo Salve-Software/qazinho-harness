@@ -17,6 +17,8 @@ export type DeviceToolCall =
   | { kind: 'report'; report: IStepReport }
   | { kind: 'finding'; finding: IStepFinding }
   | { kind: 'ask'; question: IQaQuestion }
+  | { kind: 'say'; text: string }
+  | { kind: 'answer'; text: string }
   | { kind: 'screen'; screen: IExploredScreen }
   | { kind: 'finish'; finish: IExploreFinish }
   | { kind: 'refused'; error: string };

@@ -7,8 +7,8 @@ import type { IStepFinding } from './IStepFinding';
 import type { IStepReport } from './IStepReport';
 
 /**
- * O dispositivo de um workspace durante uma run ou exploração, até quando pode agir, e
- * quem ouve o que o agente relata, anota, abre e pergunta ao QA.
+ * O dispositivo de um workspace durante uma run ou exploração, quem ouve o que o agente
+ * relata, abre e diz ao QA, e o que a run tem a dizer a ele junto de cada resposta.
  */
 export interface IAttachDevice {
   workspaceId: string;
@@ -20,4 +20,7 @@ export interface IAttachDevice {
   onScreen?: (screen: IExploredScreen) => Promise<string>;
   onFinish?: (finish: IExploreFinish) => Promise<string>;
   onAsk?: (question: IQaQuestion) => Promise<string>;
+  onSay?: (text: string) => Promise<string>;
+  onAnswer?: (text: string) => Promise<string>;
+  aside?: () => string | null;
 }

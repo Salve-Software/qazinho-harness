@@ -7,6 +7,8 @@ export const TOOLS_LEFT_OUT: Record<DevicePurpose, readonly string[]> = {
     'report',
     'bug',
     'ask_qa',
+    'say',
+    'answer_qa',
     'screen',
     'finish',
     'upload',

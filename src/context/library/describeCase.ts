@@ -22,6 +22,7 @@ export function describeCase(props: {
   variables: IVariableBrief[];
   design: IDesignLink | null;
   told?: { question: string; answer: string }[];
+  isUnderWay?: boolean;
 }): string {
   const { steps, screen, language, filed, known, variables, design } = props;
   const told = props.told ?? [];
@@ -33,9 +34,13 @@ export function describeCase(props: {
   return [
     `${first.caseId} · ${first.caseTitle}`,
     ...(first.caseGoal.length > 0 ? [`Goal: ${first.caseGoal}`] : []),
-    ...(first.casePreconditions.length > 0
-      ? [`Preconditions: ${first.casePreconditions}`]
-      : []),
+    ...(props.isUnderWay === true
+      ? [
+          'This case is already under way: the steps before these are done, and the app is where the last one left it. Do not prepare anything again: go on from the screen below.',
+        ]
+      : first.casePreconditions.length > 0
+        ? [`Preconditions: ${first.casePreconditions}`]
+        : []),
     ...(framed
       ? [
           `Figma design: ${design.url} (fileKey ${design.fileKey}). Hold each step that names a frame to it.`,

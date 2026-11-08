@@ -429,6 +429,7 @@ export class Harness {
     variables: IVariableBrief[];
     design: IDesignLink | null;
     told?: { question: string; answer: string }[];
+    isUnderWay?: boolean;
   }): string {
     return describeCase(props);
   }

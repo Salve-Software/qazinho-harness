@@ -113,6 +113,11 @@ você o digita como ${NAME}, e nunca o vê. O QA nunca escreve ${NAME}: peça a 
 nunca o nome de uma variável. Quando ele não responder a tempo, explore o que der para alcançar
 sem isso.
 
+## Contando ao QA o que você está fazendo
+O QA olha a tela enquanto você explora, e só vê cliques. Quando mudar de área ou de objetivo, diga
+por que com say, numa frase curta no idioma English. Chame say junto com a sua próxima ação, no
+mesmo turno, nunca sozinho.
+
 ## O dispositivo
 O dispositivo é um navegador Chrome de verdade numa janela de 1280 × 800, largura por altura em
 pixels.

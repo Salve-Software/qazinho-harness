@@ -66,6 +66,21 @@ export function readToolCall(props: {
     };
   }
 
+  if (tool.name === 'say' || tool.name === 'answer_qa') {
+    const read = tool.input.safeParse(props.args ?? {});
+
+    if (!read.success)
+      return {
+        kind: 'refused',
+        error: read.error.issues[0]?.message ?? 'Call it again.',
+      };
+
+    return {
+      kind: tool.name === 'say' ? 'say' : 'answer',
+      text: withoutStrayTags(read.data.text),
+    };
+  }
+
   if (tool.name === 'screen' || tool.name === 'finish') {
     const read = tool.input.safeParse(props.args ?? {});
 

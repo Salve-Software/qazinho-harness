@@ -402,6 +402,48 @@
     }
   },
   {
+    "name": "say",
+    "description": "Tell the QA, in one short sentence in their language, what you are doing and why. They are watching the screen and only see clicks: say it before any work the step does not name, such as preparing data the case needs, looking for a screen you did not find, or working around something. Give the reason, not the action. Call it together with your next action, never on its own.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What you are doing and why, such as \"This case needs a template with a product table: the account has none, so I am creating one\"."
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "answer_qa",
+    "description": "Answer what the QA told you in the middle of the run: what you checked and what you found, in a sentence or two in their language. The plan goes on after it.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What you checked and what you found."
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
     "name": "ask_qa",
     "description": "Ask the QA a question and wait for the answer, when you cannot go on without them: data nothing you were given holds, such as a code sent to their phone, a choice only they can make, or something on screen only they can judge, that the step leaves open. The run holds until they answer. Never ask whether a screen that differs from what the step expects is right: report the step failed.",
     "inputSchema": {

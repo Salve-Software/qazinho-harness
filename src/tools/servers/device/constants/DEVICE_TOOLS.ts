@@ -205,7 +205,7 @@ export const DEVICE_TOOLS = [
   {
     name: 'report',
     description:
-      'Report a step once you judged it, by its number. Words the plan quotes are what the QA expects to read: when the screen words that control or text differently, fail the step with the screen\'s words in "got", and give "goesOn" so the case goes on with the control the screen shows. The answer says what to do next.',
+      'Report a step once you judged it, by its number. Words the plan quotes are what the QA expects to read: when the screen words that control or text differently, fail the step with the screen\'s words in "got", and give "goesOn" so the case goes on with the control the screen shows. When you did not find the screen or control the step names, call ask_qa first, saying where you looked: the QA may know the way, and report only after their answer. The answer says what to do next.',
     input: z.object({
       step: z
         .number({ error: '"report" needs "step": the number of the step you judged.' })
@@ -299,6 +299,29 @@ export const DEVICE_TOOLS = [
         .optional(),
       category: BUG_CATEGORY_INPUT,
       target: BUG_TARGET_INPUT,
+    }),
+  },
+  {
+    name: 'say',
+    description:
+      'Tell the QA, in one short sentence in their language, what you are doing and why. They are watching the screen and only see clicks: say it before any work the step does not name, such as preparing data the case needs, looking for a screen you did not find, or working around something. Give the reason, not the action. Call it together with your next action, never on its own.',
+    input: z.object({
+      text: textNamed({
+        message: '"say" needs "text": what you are doing and why.',
+        description:
+          'What you are doing and why, such as "This case needs a template with a product table: the account has none, so I am creating one".',
+      }),
+    }),
+  },
+  {
+    name: 'answer_qa',
+    description:
+      'Answer what the QA told you in the middle of the run: what you checked and what you found, in a sentence or two in their language. The plan goes on after it.',
+    input: z.object({
+      text: textNamed({
+        message: '"answer_qa" needs "text": what you checked and what you found.',
+        description: 'What you checked and what you found.',
+      }),
     }),
   },
   {

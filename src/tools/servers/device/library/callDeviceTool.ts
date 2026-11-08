@@ -8,9 +8,21 @@ import { timeLeftOf } from './timeLeftOf';
 
 /**
  * Executa uma chamada de ferramenta do dispositivo e responde com a tela como texto e
- * como imagem, ou por que não conseguiu.
+ * como imagem, ou por que não conseguiu, com o que a run tem a dizer ao agente antes.
  */
 export async function callDeviceTool(props: {
+  device: IAttachDevice;
+  call: { name: string; args: Record<string, unknown> | undefined };
+}): Promise<ToolAnswer> {
+  const answer = await answerOf(props);
+  const aside = props.device.aside?.() ?? null;
+
+  return aside === null
+    ? answer
+    : { ...answer, content: [{ type: 'text', text: aside }, ...answer.content] };
+}
+
+async function answerOf(props: {
   device: IAttachDevice;
   call: { name: string; args: Record<string, unknown> | undefined };
 }): Promise<ToolAnswer> {
@@ -49,6 +61,14 @@ export async function callDeviceTool(props: {
       if (!device.onAsk) return said('There is no QA to ask outside a run.', true);
 
       return said(await device.onAsk(read.question));
+    }
+
+    if (read.kind === 'say') return said((await device.onSay?.(read.text)) ?? 'Noted.');
+
+    if (read.kind === 'answer') {
+      if (!device.onAnswer) return said('There is no QA to answer outside a run.', true);
+
+      return said(await device.onAnswer(read.text));
     }
 
     if (read.kind === 'screen') {

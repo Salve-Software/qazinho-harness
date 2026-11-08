@@ -75,6 +75,10 @@ src/
   perguntar dele.
 - **O agente pergunta ao QA no meio da run** pelo `ask_qa` do grupo device; a chamada espera até o
   host responder pelo `onAsk`.
+- **A run fala com o agente pelas respostas das ferramentas.** O `aside` do `IAttachDevice` é consultado
+  a cada resposta do `callDeviceTool`, e o que devolver vai antes dela: o que o QA disse no meio da run
+  e os lembretes de um passo que não anda. O agente conta o porquê com `say` e responde o QA com
+  `answer_qa`; fora de uma run que os ouve, o `say` só responde.
 
 ## As respostas
 
