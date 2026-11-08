@@ -440,7 +440,7 @@
         "target": {
           "type": "string",
           "minLength": 1,
-          "description": "The one thing on the screen that is wrong, named the way look lists it or by the words it shows, such as \"Salvar\": QAzinho marks it on the picture of the bug."
+          "description": "What QAzinho zooms in on, when the defect can be seen in one thing on the screen: a total showing the wrong value (\"R$ 90\"), a title with the wrong words, a button in the wrong colour. Name it the way look lists it or by the words it shows. Leave it out when no one thing shows the defect: an action had no effect, as when a saved item is not in the list; the whole screen is off, as when it is broken or tilted; or something is missing. Never point at the page title or a message to stand for the whole screen."
         }
       },
       "required": [
@@ -509,7 +509,7 @@
         "target": {
           "type": "string",
           "minLength": 1,
-          "description": "The one thing on the screen that is wrong, named the way look lists it or by the words it shows, such as \"Salvar\": QAzinho marks it on the picture of the bug."
+          "description": "What QAzinho zooms in on, when the defect can be seen in one thing on the screen: a total showing the wrong value (\"R$ 90\"), a title with the wrong words, a button in the wrong colour. Name it the way look lists it or by the words it shows. Leave it out when no one thing shows the defect: an action had no effect, as when a saved item is not in the list; the whole screen is off, as when it is broken or tilted; or something is missing. Never point at the page title or a message to stand for the whole screen."
         }
       },
       "required": [
