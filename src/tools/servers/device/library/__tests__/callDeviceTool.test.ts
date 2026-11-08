@@ -89,6 +89,7 @@ describe('callDeviceTool', () => {
     expect(answer).toMatch(/^Cart · \[button\] Apply\n\n/);
     expect(answer).toContain('you said X, the app shows Y');
     expect(answer).toContain('never save, send or delete');
+    expect(answer).toContain('type the project variables as ${NAME}');
   });
 
   it('leaves the reminder out of a run', async () => {
