@@ -1,1 +1,3 @@
-export const MEMORIES_SHOWN = 40;
+import { MEMORY_LIMIT } from '@/contract';
+
+export const MEMORIES_SHOWN = MEMORY_LIMIT.project + MEMORY_LIMIT.plan;

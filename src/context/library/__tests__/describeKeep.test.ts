@@ -1,12 +1,35 @@
 import { describe, expect, it } from 'vitest';
 import { describeKeep } from '@/context/library/describeKeep';
+import { MEMORY_LIMIT } from '@/contract';
 
 const textOf = (brief: Parameters<typeof describeKeep>[0]) =>
   describeKeep(brief)
     .flatMap(({ lines }) => lines)
     .join('\n');
+const planMemories = (count: number) =>
+  Array.from({ length: count }, (_, index) => ({
+    id: `m-${index}`,
+    text: `Fato ${index}.`,
+    scope: 'plan' as const,
+    target: 'all' as const,
+  }));
 
 describe('describeKeep', () => {
+  it('asks for room only once a scope holds all it can', () => {
+    const brief = {
+      events: [{ kind: 'said' as const, text: 'x' }],
+      language: 'pt' as const,
+    };
+    const full = `The plan memories are full (${MEMORY_LIMIT.plan} of ${MEMORY_LIMIT.plan})`;
+
+    expect(textOf({ ...brief, memories: planMemories(MEMORY_LIMIT.plan) })).toContain(
+      full,
+    );
+    expect(
+      textOf({ ...brief, memories: planMemories(MEMORY_LIMIT.plan - 1) }),
+    ).not.toContain('are full');
+  });
+
   it('says when nothing is kept yet', () => {
     expect(
       textOf({

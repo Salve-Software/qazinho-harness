@@ -1,5 +1,6 @@
 import type { IMemoryBrief } from '@/contract';
 import { describe, expect, it } from 'vitest';
+import { MEMORY_LIMIT } from '@/contract';
 import { readKeepAnswer } from '@/library/readKeepAnswer';
 
 const MEMORIES: IMemoryBrief[] = [
@@ -14,6 +15,16 @@ const read = (ops: unknown[]) =>
   readKeepAnswer({ text: JSON.stringify({ ops }), memories: MEMORIES });
 
 describe('readKeepAnswer', () => {
+  it('keeps a memory at the size limit and leaves out a longer one', () => {
+    const atLimit = 'x'.repeat(MEMORY_LIMIT.chars);
+
+    expect(read([{ op: 'add', text: atLimit }])).toEqual([
+      { op: 'add', text: atLimit, scope: 'project', target: 'all' },
+    ]);
+    expect(read([{ op: 'add', text: `${atLimit}x` }])).toEqual([]);
+    expect(read([{ op: 'replace', id: 'm-1', text: `${atLimit}x` }])).toEqual([]);
+  });
+
   it('reads a new memory, defaulting to the whole project and every target', () => {
     expect(read([{ op: 'add', text: ' O SSO não funciona. ' }])).toEqual([
       { op: 'add', text: 'O SSO não funciona.', scope: 'project', target: 'all' },

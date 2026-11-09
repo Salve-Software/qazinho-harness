@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { MEMORY_LIMIT } from '@/contract';
 
 export const KEEP_ANSWER = z.object({
   ops: z
@@ -7,7 +8,7 @@ export const KEEP_ANSWER = z.object({
         op: z
           .enum(['add', 'replace', 'delete'])
           .describe(
-            'add: a new subject; replace: different or more on the subject of a memory; delete: the QA said to forget one.',
+            'add: a new subject; replace: different or more on the subject of a memory; delete: the QA said to forget one, or to make room when the memories are full.',
           ),
         id: z
           .string()
@@ -29,7 +30,7 @@ export const KEEP_ANSWER = z.object({
           .string()
           .nullish()
           .describe(
-            'For add and replace: the memory, one short fact an agent understands alone.',
+            `For add and replace: the memory, one short fact an agent understands alone, at most ${MEMORY_LIMIT.chars} characters.`,
           ),
       }),
     )
