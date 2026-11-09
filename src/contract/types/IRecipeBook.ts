@@ -1,6 +1,10 @@
 import type { ICaseRecipe } from './ICaseRecipe';
 
-/** Todo caso de um workspace que pode ser andado de novo sem o agente. */
+/**
+ * Os casos de um workspace que andam de novo sem o agente, e em `partial` os que andam
+ * só até o passo em que pararam, que ficam nesta máquina.
+ */
 export interface IRecipeBook {
   cases: ICaseRecipe[];
+  partial?: ICaseRecipe[];
 }

@@ -2,6 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { readBook } from '@/engine/walk/library';
 
 describe('readBook', () => {
+  it('reads how far a case got back from the file', () => {
+    expect(readBook(JSON.stringify({ cases: [], partial: [] }))).toEqual({
+      cases: [],
+      partial: [],
+    });
+  });
+
   it('reads the recipes a workspace kept', () => {
     expect(readBook('{"cases":[{"caseId":"TC-01"}]}').cases).toHaveLength(1);
   });

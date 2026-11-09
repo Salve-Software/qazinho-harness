@@ -12,6 +12,35 @@ const recipe = (caseId: string, runId: string): ICaseRecipe => ({
 });
 
 describe('bookWith', () => {
+  it('keeps how far a case got, and only the latest of it', () => {
+    expect(
+      bookWith({
+        book: { cases: [], partial: [recipe('TC-1', 'old'), recipe('TC-2', 'kept')] },
+        recipes: [],
+        partial: [recipe('TC-1', 'new')],
+      }).partial,
+    ).toEqual([recipe('TC-2', 'kept'), recipe('TC-1', 'new')]);
+  });
+
+  it('drops how far a case got once it is recorded whole', () => {
+    expect(
+      bookWith({
+        book: { cases: [], partial: [recipe('TC-1', 'old')] },
+        recipes: [recipe('TC-1', 'whole')],
+      }),
+    ).toEqual({ cases: [recipe('TC-1', 'whole')] });
+  });
+
+  it('never lets a partial stand beside a whole recipe of the same case', () => {
+    expect(
+      bookWith({
+        book: { cases: [recipe('TC-1', 'whole')] },
+        recipes: [],
+        partial: [recipe('TC-1', 'failed')],
+      }),
+    ).toEqual({ cases: [recipe('TC-1', 'whole')] });
+  });
+
   it('puts a new recipe in place of the one its case had, and keeps the others', () => {
     expect(
       bookWith({

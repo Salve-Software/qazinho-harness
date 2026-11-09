@@ -9,6 +9,8 @@ export * from './keptBugId';
 export * from './maskedBody';
 export * from './missingValuesOf';
 export * from './outcomeOfReport';
+export * from './partialFor';
+export * from './partialRecipeOf';
 export * from './privateUrlOf';
 export * from './proofHolds';
 export * from './proofLinesOf';

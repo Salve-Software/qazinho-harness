@@ -10,7 +10,12 @@ export function readBook(text: string | null): IRecipeBook {
   try {
     const read = JSON.parse(text) as Partial<IRecipeBook>;
 
-    return Array.isArray(read.cases) ? { cases: read.cases } : { cases: [] };
+    return Array.isArray(read.cases)
+      ? {
+          cases: read.cases,
+          ...(Array.isArray(read.partial) ? { partial: read.partial } : {}),
+        }
+      : { cases: [] };
   } catch {
     return { cases: [] };
   }
