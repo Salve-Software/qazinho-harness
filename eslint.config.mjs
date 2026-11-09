@@ -246,5 +246,10 @@ export default config(
     ...configs.disableTypeChecked,
   },
 
+  {
+    files: ['src/engine/devices/WebDriver/constants/PDF_ENGINE.ts'],
+    rules: { 'import-x/default': 'off' },
+  },
+
   prettier,
 );

@@ -1,4 +1,4 @@
-import type { IWebAccess, IWebDriver, IWebScreen } from './types';
+import type { IWebAccess, IWebDriver, IWebScreen, WebDownload } from './types';
 import type {
   DialogAnswer,
   IActionMotion,
@@ -14,12 +14,13 @@ import type { IDeviceDriver, IShot, ShrinkImage } from '@/engine/devices/types';
 import type {
   BrowserContext,
   CDPSession,
+  Download,
   Locator,
   Page,
   Request,
   Response,
 } from 'playwright-core';
-import { rm } from 'node:fs/promises';
+import { readFile, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { chromium } from 'playwright-core';
@@ -28,11 +29,16 @@ import { withinLimit } from '@/engine/library/withinLimit';
 import {
   CHROME_DISABLED_FEATURES,
   FIELD_FORMATS,
+  FILE_VIEWER,
   MOTION_PROBE,
   WEB_DRIVER,
 } from './constants';
 import {
+  describeDownloads,
+  describeFilePage,
   describePage,
+  downloadNamed,
+  fileKindOf,
   gotoAddressOf,
   describeScreens,
   findLocator,
@@ -44,6 +50,7 @@ import {
   pagesOf,
   pressChecked,
   screenBoxOf,
+  showFile,
   summarizeMotion,
   uploadFilesOf,
   writeChromePrefs,
@@ -68,6 +75,7 @@ export class WebDriver implements IDeviceDriver {
   private readonly answers = new Map<number, Response>();
   private context: BrowserContext | null = null;
   private accounts: BrowserContext[] = [];
+  private downloads: WebDownload[] = [];
   private screens: IWebScreen[] = [];
   private nextScreen = 1;
   private moving: Promise<void> = Promise.resolve();
@@ -208,6 +216,13 @@ export class WebDriver implements IDeviceDriver {
       return;
     }
 
+    if (action.kind === 'open_download') {
+      this.lastMotion = null;
+      await this.openDownload(action.target);
+
+      return;
+    }
+
     this.lastMotion = null;
     this.dialogAnswer = action.dialog ?? 'ok';
     this.promptText = action.promptText ?? null;
@@ -286,24 +301,28 @@ export class WebDriver implements IDeviceDriver {
   }
 
   /**
-   * O que a página mostra, e os diálogos que ela abriu desde a última olhada, com como
-   * cada um foi respondido.
+   * O que a página mostra, os diálogos que ela abriu desde a última olhada, com como
+   * cada um foi respondido, e os arquivos que o navegador baixou.
    */
   public async describe(): Promise<string> {
     if (!this.page) return '';
 
     const page = await withinLimit({
-      work: describePage(this.page),
+      work: this.page.url().startsWith(FILE_VIEWER.origin)
+        ? describeFilePage(this.page)
+        : describePage(this.page),
       ms: WEB_DRIVER.readLimitMs,
       said: WEB_DRIVER.readLimitWords,
     });
     const shown = this.dialogs.splice(0);
     const screens = describeScreens(this.openScreens());
+    const saved = describeDownloads(this.downloads);
 
     return [
       ...(screens === null ? [] : [screens, '']),
       page,
       ...(shown.length === 0 ? [] : ['DIALOGS:', ...shown]),
+      ...(saved === null ? [] : [saved]),
     ].join('\n');
   }
 
@@ -574,6 +593,60 @@ export class WebDriver implements IDeviceDriver {
     await this.moving;
   }
 
+  /** Abre um arquivo baixado numa tela nova, e deixa o agente nela. */
+  private async openDownload(name: string): Promise<void> {
+    const current = this.screens.find(({ page }) => page === this.page);
+
+    if (!current) throw new Error('The browser is not open.');
+
+    const saved = await this.savedDownload(name);
+
+    if (saved.size > FILE_VIEWER.maxBytes)
+      throw new Error(`${saved.name} is too big to open here.`);
+
+    const bytes = await readFile(saved.path);
+    const kind = fileKindOf({ name: saved.name, bytes });
+
+    if (kind === null)
+      throw new Error(
+        `${saved.name} is not a PDF, an image or a text file, so it cannot be shown. Report what depends on its content as blocked, and name the file.`,
+      );
+
+    const page = await current.page.context().newPage();
+
+    this.addScreen({ page, account: current.account, opener: current.page });
+    await page.setViewportSize(this.viewport);
+    await this.show(page);
+
+    try {
+      await showFile({ page, file: { name: saved.name, kind, bytes } });
+    } catch (reason) {
+      await page.close().catch(() => undefined);
+      await this.moving;
+
+      throw reason;
+    }
+
+    this.tellScreens();
+  }
+
+  /** Espera o arquivo pedido chegar, por um tempo; o que não vem diz por quê. */
+  private async savedDownload(
+    name: string,
+  ): Promise<Extract<WebDownload, { state: 'saved' }>> {
+    const until = Date.now() + FILE_VIEWER.arrivalLimitMs;
+
+    for (;;) {
+      const pick = downloadNamed({ downloads: this.downloads, name });
+
+      if (pick.kind === 'saved') return pick.file;
+
+      if (pick.kind === 'refused' || Date.now() >= until) throw new Error(pick.why);
+
+      await new Promise((wake) => setTimeout(wake, FILE_VIEWER.arrivalPollMs));
+    }
+  }
+
   /** Abre um navegador limpo, que não divide login nem dados com o outro. */
   private async newAccount(): Promise<BrowserContext> {
     const browser = this.context?.browser();
@@ -639,7 +712,12 @@ export class WebDriver implements IDeviceDriver {
   private noteRequest(request: Request): void {
     const url = request.url();
 
-    if (!/^https?:/i.test(url) || this.entries.length >= WEB_DRIVER.networkLimit) return;
+    if (
+      !/^https?:/i.test(url) ||
+      url.startsWith(FILE_VIEWER.origin) ||
+      this.entries.length >= WEB_DRIVER.networkLimit
+    )
+      return;
 
     const entry: INetworkEntry = {
       id: this.entries.length + 1,
@@ -707,8 +785,8 @@ export class WebDriver implements IDeviceDriver {
   }
 
   /**
-   * Guarda cada site que uma aba abriu, para um começo do zero limpar o que cada um
-   * guardou, e responde os diálogos, OK a menos que a ação mande cancelar.
+   * Guarda os sites de uma aba, para um começo do zero limpá-los, responde os diálogos,
+   * OK a menos que a ação mande cancelar, e anota os downloads.
    */
   private follow(page: Page): void {
     page.on('framenavigated', (frame) => {
@@ -722,6 +800,9 @@ export class WebDriver implements IDeviceDriver {
 
       this.tellScreens();
     });
+    page.on('download', (download) => {
+      this.noteDownload(download);
+    });
     page.on('dialog', (dialog) => {
       const isOk = this.dialogAnswer === 'ok';
       const typed = dialog.type() === 'prompt' ? this.promptText : null;
@@ -734,6 +815,28 @@ export class WebDriver implements IDeviceDriver {
         isOk ? dialog.accept(typed ?? dialog.defaultValue()) : dialog.dismiss()
       ).catch(() => undefined);
     });
+  }
+
+  private noteDownload(download: Download): void {
+    const list = this.downloads;
+    const name = download.suggestedFilename();
+    const index = list.push({ state: 'saving', name }) - 1;
+
+    void download
+      .path()
+      .then(async (path): Promise<WebDownload> => {
+        const { size } = await stat(path);
+
+        return { state: 'saved', name, path, size };
+      })
+      .catch((reason: unknown): WebDownload => ({
+        state: 'failed',
+        name,
+        failure: reason instanceof Error ? reason.message : String(reason),
+      }))
+      .then((settled) => {
+        list[index] = settled;
+      });
   }
 
   private tellAddress(page: Page): void {
@@ -772,6 +875,7 @@ export class WebDriver implements IDeviceDriver {
     await page.setViewportSize(this.viewport);
 
     if (props.isCleared) {
+      this.downloads = [];
       await context.clearCookies();
       await context.clearPermissions();
 

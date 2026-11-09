@@ -1,5 +1,9 @@
+export * from './describeDownloads';
+export * from './describeFilePage';
 export * from './describePage';
 export * from './describeScreens';
+export * from './downloadNamed';
+export * from './fileKindOf';
 export * from './findLocator';
 export * from './frameRootsOf';
 export * from './listControls';
@@ -10,6 +14,7 @@ export * from './originOf';
 export * from './pagesOf';
 export * from './pressChecked';
 export * from './screenBoxOf';
+export * from './showFile';
 export * from './summarizeMotion';
 export * from './uploadFilesOf';
 export * from './webAccessOf';

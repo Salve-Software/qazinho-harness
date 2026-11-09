@@ -1,3 +1,8 @@
+declare module '*?raw' {
+  const text: string;
+  export default text;
+}
+
 interface ImportMeta {
   glob: (
     pattern: string,
