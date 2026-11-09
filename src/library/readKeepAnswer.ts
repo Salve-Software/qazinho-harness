@@ -1,14 +1,18 @@
-import type { IMemoryBrief, MemoryOp } from '@/contract';
+import type { IMemoryBrief, KeepEvent, MemoryOp } from '@/contract';
+import { KEEP_LIMIT } from '@/constants';
 import { MEMORY_LIMIT } from '@/contract';
 import { KEEP_ANSWER } from '@/schemas/KEEP_ANSWER';
 
+const VARIABLE_MENTION = /\$\{[^}]*\}/g;
+
 /**
- * As mudanças que o agente pediu, conferidas contra o schema e as memórias que leu; null
- * quando não é uma resposta. A que nomeia uma que ele não leu, ou passa do tamanho, sai.
+ * As mudanças que o agente pediu, conferidas contra o que ele leu; null quando não é uma
+ * resposta. Sai a que cita uma memória ou variável que ele não leu, ou passa do tamanho.
  */
 export function readKeepAnswer(props: {
   text: string;
   memories: IMemoryBrief[];
+  events: KeepEvent[];
 }): MemoryOp[] | null {
   try {
     const read = KEEP_ANSWER.safeParse(JSON.parse(props.text));
@@ -16,13 +20,17 @@ export function readKeepAnswer(props: {
     if (!read.success) return null;
 
     const known = new Set(props.memories.map(({ id }) => id));
+    const heard = JSON.stringify([props.memories, props.events]);
     const kept: MemoryOp[] = [];
 
     for (const asked of read.data.ops) {
-      const text = asked.text?.trim() ?? '';
+      const text = (asked.text ?? '').replace(/\s+/g, ' ').trim();
       const id = asked.id?.trim() ?? '';
       const isTaken = kept.some((one) => one.op !== 'add' && one.id === id);
-      const fits = text !== '' && text.length <= MEMORY_LIMIT.chars;
+      const fits =
+        text !== '' &&
+        text.length <= MEMORY_LIMIT.chars &&
+        (text.match(VARIABLE_MENTION) ?? []).every((name) => heard.includes(name));
 
       if (asked.op === 'add' && fits)
         kept.push({
@@ -42,7 +50,7 @@ export function readKeepAnswer(props: {
         kept.push({ op: 'delete', id });
     }
 
-    return kept;
+    return kept.slice(0, KEEP_LIMIT.ops);
   } catch {
     return null;
   }

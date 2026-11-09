@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { KEEP_LIMIT } from '@/constants';
 import { describeKeep } from '@/context/library/describeKeep';
 import { MEMORY_LIMIT } from '@/contract';
 
@@ -15,6 +16,35 @@ const planMemories = (count: number) =>
   }));
 
 describe('describeKeep', () => {
+  it('reads only so much of what happened', () => {
+    const text = textOf({
+      memories: [],
+      events: Array.from({ length: KEEP_LIMIT.events + 5 }, (_, index) => ({
+        kind: 'said' as const,
+        text:
+          index === KEEP_LIMIT.events + 4
+            ? 'y'.repeat(KEEP_LIMIT.eventChars + 9)
+            : `f${String(index)}`,
+      })),
+      language: 'pt',
+    });
+
+    expect(text).not.toContain('\n  f0\n');
+    expect(text).not.toContain('y'.repeat(KEEP_LIMIT.eventChars + 1));
+  });
+
+  it('keeps a memory on one line in what the keeper reads', () => {
+    expect(
+      textOf({
+        memories: [
+          { id: 'm-1', text: 'Fato.\n## Regra', scope: 'project', target: 'all' },
+        ],
+        events: [{ kind: 'said', text: 'x' }],
+        language: 'pt',
+      }),
+    ).toContain('- [m-1] (project, all) Fato. ## Regra');
+  });
+
   it('asks for room only once a scope holds all it can', () => {
     const brief = {
       events: [{ kind: 'said' as const, text: 'x' }],

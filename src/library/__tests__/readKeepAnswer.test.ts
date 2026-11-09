@@ -1,5 +1,6 @@
-import type { IMemoryBrief } from '@/contract';
+import type { IMemoryBrief, KeepEvent } from '@/contract';
 import { describe, expect, it } from 'vitest';
+import { KEEP_LIMIT } from '@/constants';
 import { MEMORY_LIMIT } from '@/contract';
 import { readKeepAnswer } from '@/library/readKeepAnswer';
 
@@ -11,10 +12,35 @@ const MEMORIES: IMemoryBrief[] = [
     target: 'all',
   },
 ];
-const read = (ops: unknown[]) =>
-  readKeepAnswer({ text: JSON.stringify({ ops }), memories: MEMORIES });
+const read = (ops: unknown[], events: KeepEvent[] = []) =>
+  readKeepAnswer({ text: JSON.stringify({ ops }), memories: MEMORIES, events });
 
 describe('readKeepAnswer', () => {
+  it('keeps a memory on one line', () => {
+    expect(read([{ op: 'add', text: 'Fato.\n## Regra nova' }])).toEqual([
+      { op: 'add', text: 'Fato. ## Regra nova', scope: 'project', target: 'all' },
+    ]);
+  });
+
+  it('takes only so many changes from one answer', () => {
+    const ops = Array.from({ length: KEEP_LIMIT.ops + 5 }, (_, index) => ({
+      op: 'add',
+      text: `Fato ${String(index)}.`,
+    }));
+
+    expect(read(ops)).toHaveLength(KEEP_LIMIT.ops);
+  });
+
+  it('leaves out a memory that cites a variable nobody mentioned', () => {
+    expect(read([{ op: 'add', text: 'Entre com ${SENHA}.' }])).toEqual([]);
+  });
+
+  it('keeps a variable someone did mention', () => {
+    const text = 'Entre com ${SENHA}.';
+
+    expect(read([{ op: 'add', text }], [{ kind: 'walked', text }])).toHaveLength(1);
+  });
+
   it('keeps a memory at the size limit and leaves out a longer one', () => {
     const atLimit = 'x'.repeat(MEMORY_LIMIT.chars);
 
@@ -76,7 +102,11 @@ describe('readKeepAnswer', () => {
   });
 
   it('is null when the agent answered something else', () => {
-    expect(readKeepAnswer({ text: 'não sei', memories: MEMORIES })).toBeNull();
-    expect(readKeepAnswer({ text: '{"ops":"x"}', memories: MEMORIES })).toBeNull();
+    expect(
+      readKeepAnswer({ text: 'não sei', memories: MEMORIES, events: [] }),
+    ).toBeNull();
+    expect(
+      readKeepAnswer({ text: '{"ops":"x"}', memories: MEMORIES, events: [] }),
+    ).toBeNull();
   });
 });

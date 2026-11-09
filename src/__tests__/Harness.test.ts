@@ -822,6 +822,7 @@ describe('Harness', () => {
             ops: [{ op: 'replace', id: 'm-1', text: 'Ficam em Relatórios.' }],
           }),
           memories: KEEP.memories,
+          events: KEEP.events,
         }),
       ).toEqual([{ op: 'replace', id: 'm-1', text: 'Ficam em Relatórios.' }]);
     });

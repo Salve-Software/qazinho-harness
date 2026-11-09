@@ -11,6 +11,7 @@ import type {
   IJiraStoryCopy,
   IKnownBug,
   IMemoryBrief,
+  KeepEvent,
   ITargetUnderTest,
   IVariableBrief,
   IViewport,
@@ -351,7 +352,11 @@ export class Harness {
    * O que o agente pediu para mudar no que o QAzinho guarda, conferido contra as memórias
    * que ele leu; null quando ele respondeu outra coisa.
    */
-  public readKeep(props: { text: string; memories: IMemoryBrief[] }): MemoryOp[] | null {
+  public readKeep(props: {
+    text: string;
+    memories: IMemoryBrief[];
+    events: KeepEvent[];
+  }): MemoryOp[] | null {
     return readKeepAnswer(props);
   }
 

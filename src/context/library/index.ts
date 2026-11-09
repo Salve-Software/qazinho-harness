@@ -23,6 +23,7 @@ export * from './describeSize';
 export * from './describeStory';
 export * from './describeVariables';
 export * from './fillSections';
+export * from './memoryLineOf';
 export * from './parseCorpusFile';
 export * from './renderSections';
 export * from './sectionsFor';

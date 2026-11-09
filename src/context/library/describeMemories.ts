@@ -1,5 +1,6 @@
 import type { IMemoryBrief } from '@/contract';
 import { MEMORY_WORDS } from '@/constants';
+import { memoryLineOf } from './memoryLineOf';
 
 /**
  * O que o QAzinho já aprendeu sobre o app, como o agente de uma run o lê, com as que o QA
@@ -17,7 +18,8 @@ export function describeMemories(props: {
         '',
         MEMORY_WORDS.lead,
         ...props.memories.map(
-          ({ id, text }) => `- [${id}] ${text}${heard.has(id) ? MEMORY_WORDS.heard : ''}`,
+          ({ id, text }) =>
+            `- [${id}] ${memoryLineOf(text)}${heard.has(id) ? MEMORY_WORDS.heard : ''}`,
         ),
         MEMORY_WORDS.walk,
       ];

@@ -1,7 +1,9 @@
 import type { IHarnessSection } from '@/context/types';
 import type { IMemoryBrief, KeepEvent } from '@/contract';
 import type { IKeepBrief } from '@/types';
+import { KEEP_LIMIT } from '@/constants';
 import { MEMORY_LIMIT } from '@/contract';
+import { memoryLineOf } from './memoryLineOf';
 
 const SCOPES = ['project', 'plan'] as const;
 
@@ -19,14 +21,17 @@ export function describeKeep(brief: IKeepBrief): IHarnessSection[] {
           : [
               ...brief.memories.map(
                 ({ id, scope, target, text }) =>
-                  `- [${id}] (${scope}, ${target}) ${text}`,
+                  `- [${id}] (${scope}, ${target}) ${memoryLineOf(text)}`,
               ),
               ...SCOPES.flatMap((scope) =>
                 fullLinesOf({ memories: brief.memories, scope }),
               ),
             ],
     },
-    { title: 'What just happened', lines: brief.events.flatMap(linesOf) },
+    {
+      title: 'What just happened',
+      lines: brief.events.slice(-KEEP_LIMIT.events).flatMap(linesOf),
+    },
   ];
 }
 
@@ -61,6 +66,7 @@ function linesOf(event: KeepEvent): string[] {
 
 function quoted(text: string): string[] {
   return text
+    .slice(0, KEEP_LIMIT.eventChars)
     .replace(/<\/?qazinho>/gi, '[qazinho]')
     .split('\n')
     .map((line) => `  ${line}`);
