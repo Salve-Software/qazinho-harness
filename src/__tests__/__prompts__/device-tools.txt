@@ -572,7 +572,7 @@
   },
   {
     "name": "ask_qa",
-    "description": "Ask the QA a question and wait for the answer, when you cannot go on without them: data nothing you were given holds, such as a code sent to their phone, a choice only they can make, or something on screen only they can judge, that the step leaves open. The run holds until they answer. Never ask whether a screen that differs from what the step expects is right: report the step failed.",
+    "description": "Ask the QA a question and wait for the answer, when you cannot go on without them: data nothing you were given holds, such as a code sent to their phone, a choice only they can make, or something on screen only they can judge, that the step leaves open. The run holds until they answer. The QA only watches the device you drive: they cannot click, type or attach anything on it, so never ask them to do something there and never offer an option such as \"I did it myself\". What has to happen on screen is yours to do; when you cannot do it, report the step blocked. They answer in words only: for a file, ask for its full path, never for them to attach it. Never ask whether a screen that differs from what the step expects is right: report the step failed.",
     "inputSchema": {
       "type": "object",
       "properties": {
