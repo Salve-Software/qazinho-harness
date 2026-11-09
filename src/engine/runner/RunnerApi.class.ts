@@ -46,6 +46,20 @@ export class RunnerApi implements IRunnerApi {
     await pipeline(Readable.fromWeb(response.body), createWriteStream(file));
   }
 
+  /** Baixa um arquivo que as gravações da org sobem; false quando a org não o tem. */
+  public async file(props: { sha256: string; file: string }): Promise<boolean> {
+    const response = await this.answered({
+      method: 'GET',
+      path: `/api/runner/files/${props.sha256}`,
+    }).catch(() => null);
+
+    if (response?.body === null || response === null) return false;
+
+    await pipeline(Readable.fromWeb(response.body), createWriteStream(props.file));
+
+    return true;
+  }
+
   public async progress(progress: {
     phase: string;
     done: number;

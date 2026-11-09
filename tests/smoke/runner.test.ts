@@ -21,6 +21,7 @@ const ROOT = fileURLToPath(new URL('../..', import.meta.url));
 const PAGE = `<!doctype html><html><head><title>Loja</title></head><body>
 <h1>Carrinho</h1><p>1 item</p>
 <button onclick="pay()">Pagar com Pix</button><p id="code"></p>
+<label>Anexar <input type="file" multiple onchange="document.getElementById('sent').textContent = 'Enviados: ' + [...this.files].map((file) => file.name).join(', ')"></label><p id="sent"></p>
 <script>
 async function pay() {
   const answer = await fetch('/app/api/charge', { method: 'POST' });
@@ -49,6 +50,14 @@ const CASES = [
     preconditions: '',
     steps: [{ action: 'Aplicar OFF10', expected: 'O total cai 10%' }],
   },
+  {
+    id: 'lote',
+    title: 'Enviar o lote',
+    priority: 'P1',
+    goal: '',
+    preconditions: '',
+    steps: [{ action: 'Anexar capa.html e logo.png', expected: 'Os dois aparecem' }],
+  },
 ];
 
 interface IKept {
@@ -56,6 +65,8 @@ interface IKept {
   path: string;
   body: unknown;
 }
+
+const FILE_SHA = 'c'.repeat(64);
 
 const kept: IKept[] = [];
 const uploads = new Map<string, number>();
@@ -107,6 +118,30 @@ function jobOf() {
         ],
         recordedAt: new Date().toISOString(),
       },
+      {
+        planId: 'plan-1',
+        caseId: 'lote',
+        fingerprint: fingerprintOf({
+          targetKind: 'web',
+          steps: flatStepsOf(CASES).filter(({ caseId }) => caseId === 'lote'),
+        }),
+        targetKind: 'web',
+        steps: [
+          {
+            number: 1,
+            actions: [
+              {
+                kind: 'upload',
+                target: 'Anexar',
+                value: 'capa.html, logo.png',
+                files: [`${FILE_SHA}/capa.html`, '/Users/quem-gravou/lote/logo.png'],
+              },
+            ],
+            proof: 'Enviados: capa.html, logo.png',
+          },
+        ],
+        recordedAt: new Date().toISOString(),
+      },
     ],
     bugs: [],
     variables: [],
@@ -148,6 +183,13 @@ async function serve(request: IncomingMessage, response: ServerResponse) {
   });
 
   if (path === '/api/runner/job') return json(200, jobOf());
+
+  if (path === `/api/runner/files/${FILE_SHA}`) {
+    response.writeHead(200, { 'content-type': 'application/octet-stream' });
+    response.end('<h1>Capa de verdade</h1>');
+
+    return;
+  }
 
   if (path === '/api/runner/evidence') {
     const key = `ev-${String(kept.filter((one) => one.path === path).length)}`;
@@ -231,10 +273,16 @@ describe('the CI runner, on real Chrome against a fake API', () => {
     expect(body.cases.map(({ id, verdict }) => [id, verdict])).toEqual([
       ['pix', 'passed'],
       ['cupom', 'skipped'],
+      ['lote', 'passed'],
     ]);
     expect(
       body.cases[0]?.steps.every(({ by, shot }) => by === 'replay' && shot !== null),
     ).toBe(true);
+  });
+
+  it('fetches the file the org keeps, and stands in a sample for the one it does not', () => {
+    expect(callsTo(`/files/${FILE_SHA}`)).toHaveLength(1);
+    expect(kept.filter(({ path }) => path.includes('/files/'))).toHaveLength(1);
   });
 
   it('uploads each screen and the requests the page made, before the run that names them', () => {
@@ -243,7 +291,7 @@ describe('the CI runner, on real Chrome against a fake API', () => {
       network: string | null;
     };
 
-    expect(kinds).toEqual(['screenshot', 'screenshot', 'network']);
+    expect(kinds).toEqual(['screenshot', 'screenshot', 'screenshot', 'network']);
     expect(run.network).not.toBeNull();
     expect(uploads.get(run.network ?? '') ?? 0).toBeGreaterThan(0);
     expect(kept.findIndex(({ path }) => path === '/api/runner/evidence')).toBeLessThan(

@@ -5,6 +5,7 @@ export const RUNNER = {
   network: 'network.json',
   video: 'run.mp4',
   build: 'build',
+  files: 'files',
   profile: 'profile',
   runs: 'runs',
 } as const;

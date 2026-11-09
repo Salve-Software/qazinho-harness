@@ -92,6 +92,7 @@ function fakeApi(
     },
     progress: (progress) => said('progress', progress),
     whyDiverged: () => Promise.resolve(null),
+    file: () => Promise.resolve(false),
     evidence: async (file) => {
       await said('evidence', file);
       keys += 1;

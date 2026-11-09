@@ -24,6 +24,7 @@ const ACTION = z.object({
   locator: z.string().optional(),
   toLocator: z.string().optional(),
   option: z.string().optional(),
+  files: z.array(z.string()).optional(),
 });
 
 export const RUNNER_JOB_SCHEMA = z.object({

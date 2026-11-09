@@ -37,6 +37,22 @@ describe('recipeBookOf', () => {
     });
   });
 
+  /** Sem os arquivos, o CI pegaria uma amostra e aprovaria o caso com o arquivo errado. */
+  it("keeps the QA's files an upload names", () => {
+    const upload = {
+      number: 1,
+      actions: [
+        { kind: 'upload', target: 'Anexar', value: 'a.png', files: ['/qa/a.png'] },
+      ],
+      proof: 'a.png',
+    };
+
+    expect(
+      recipeBookOf({ recordings: [recording('plan-1', [upload])], planId: 'plan-1' })
+        .cases[0]?.steps,
+    ).toEqual([upload]);
+  });
+
   it('leaves out a recording whose steps do not read as one', () => {
     expect(
       recipeBookOf({

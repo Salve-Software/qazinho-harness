@@ -16,6 +16,7 @@ import { mkdir, stat, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { RUN_VIDEO_FILES } from '@/engine/devices/constants';
 import { WEB_DRIVER } from '@/engine/devices/WebDriver/constants';
+import { fileRefsIn, readFileRef } from '@/engine/walk/library';
 import { PlanWalker } from '@/engine/walk/PlanWalker.class';
 import { RUNNER } from './constants';
 import {
@@ -137,6 +138,10 @@ export class JobRunner {
           values,
           bugs: knownBugsOf({ bugs: job.bugs, planId: plan.id }),
           memories: memoriesOfPlan({ memories: job.memories, planId: plan.id }),
+          fileRefs: fileRefsIn(
+            recipeBookOf({ recordings: job.recordings, planId: plan.id }).cases,
+          ),
+          fetchFile: (ref) => this.fetchFile(ref),
           whyDiverged: (at) => this.api.whyDiverged(at),
           answers: job.answers.filter(({ planId }) => planId === plan.id),
           shotDir,
@@ -235,6 +240,20 @@ export class JobRunner {
    * Grava o dispositivo: os frames de um navegador pelo ffmpeg da máquina, senão o
    * próprio celular.
    */
+  private async fetchFile(ref: string): Promise<string | null> {
+    const read = readFileRef(ref);
+
+    if (read === null) return null;
+
+    const file = join(this.workDir, RUNNER.files, read.sha256, read.name);
+
+    if ((await stat(file).catch(() => null))?.isFile() === true) return file;
+
+    await mkdir(dirname(file), { recursive: true });
+
+    return (await this.api.file({ sha256: read.sha256, file })) ? file : null;
+  }
+
   private async record(driver: IDeviceDriver): Promise<Recording> {
     const frames = this.frames;
     const file = join(this.workDir, RUNNER.video);

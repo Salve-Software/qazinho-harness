@@ -29,6 +29,8 @@ export interface IPlanWalker {
   values: IVariableValue[];
   bugs: IKnownBug[];
   memories?: IMemoryBrief[];
+  fileRefs?: string[];
+  fetchFile?: ((ref: string) => Promise<string | null>) | undefined;
   whyDiverged?: (at: IReplayDivergence) => Promise<DivergenceCause | null>;
   answers?: { caseId: string; question: string; answer: string }[];
   shotDir: string;

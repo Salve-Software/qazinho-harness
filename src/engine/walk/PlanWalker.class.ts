@@ -31,7 +31,9 @@ import type {
   IStepFinding,
   IStepReport,
 } from '@/tools/servers/device/types';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { WEB_DRIVER } from '@/engine/devices/WebDriver/constants';
 import { RUN_WALK, UNWALKED } from './constants';
 import {
   casesOf,
@@ -49,6 +51,8 @@ import {
   replayedOutcome,
   stepCarryOn,
   unwalkedOutcome,
+  readFileRef,
+  runnerUploadPathOf,
   variablePort,
 } from './library';
 
@@ -68,6 +72,8 @@ export class PlanWalker {
   private readonly values: IVariableValue[];
   private readonly bugs: IKnownBug[];
   private readonly memories: IMemoryBrief[];
+  private readonly fileRefs: string[];
+  private readonly fetchFile: IPlanWalker['fetchFile'];
   private readonly whyDiverged: IPlanWalker['whyDiverged'];
   private readonly answers: { caseId: string; question: string; answer: string }[];
   private readonly shotDir: string;
@@ -88,6 +94,8 @@ export class PlanWalker {
     this.values = props.values;
     this.bugs = props.bugs;
     this.memories = props.memories ?? [];
+    this.fileRefs = props.fileRefs ?? [];
+    this.fetchFile = props.fetchFile;
     this.whyDiverged = props.whyDiverged;
     this.answers = props.answers ?? [];
     this.shotDir = props.shotDir;
@@ -201,7 +209,7 @@ export class PlanWalker {
     const pending = [...props.steps];
     const actions = new Map<number, IStepAction[]>();
     const proofs = new Map<number, string>();
-    const device = variablePort({ device: this.driver, values: this.values });
+    const device = this.port();
     let began = Date.now();
     let hasFailed = false;
     let isOver = false;
@@ -434,6 +442,11 @@ export class PlanWalker {
         filed: [...props.filed],
         known: this.bugs,
         memories: this.memories,
+        uploadsAreSamples: this.fileRefs.length === 0,
+        uploads: this.fileRefs.map((ref) => ({
+          name: readFileRef(ref)?.name ?? ref,
+          path: ref,
+        })),
         variables: this.values.map(({ name, description }) => ({ name, description })),
         design: null,
         told: this.answers.filter(({ caseId }) => caseId === first?.step.caseId),
@@ -478,6 +491,18 @@ export class PlanWalker {
    * Anda um caso de novo sem o agente, do jeito que a gravação diz, conferindo a prova de
    * cada passo; os passos só são contados quando o caso inteiro valeu.
    */
+  private port(): IDevicePort {
+    return variablePort({
+      device: this.driver,
+      values: this.values,
+      uploadPath: runnerUploadPathOf({
+        refs: this.fileRefs,
+        fetchFile: this.fetchFile,
+        folder: join(tmpdir(), WEB_DRIVER.samplesFolder, 'named'),
+      }),
+    });
+  }
+
   /**
    * Anda a gravação e, quando ela falha, pergunta por quê: uma instabilidade anda de novo
    * uma vez, e um dado que falta não chama o agente.
@@ -510,7 +535,7 @@ export class PlanWalker {
     recipe: ICaseRecipe;
   }): Promise<'replayed' | 'diverged' | 'stopped'> {
     const outcomes: IStepOutcome[] = [];
-    const device = variablePort({ device: this.driver, values: this.values });
+    const device = this.port();
 
     for (const { step, index } of props.steps) {
       if (this.isStopped) return 'stopped';

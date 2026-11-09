@@ -9,6 +9,7 @@ import type { DivergenceCause, ICaseRecipe } from '@/contract';
 export interface IRunnerApi {
   job: () => Promise<RunnerJob>;
   build: (file: string) => Promise<void>;
+  file: (props: { sha256: string; file: string }) => Promise<boolean>;
   whyDiverged: (asked: {
     step: string;
     proof: string;
