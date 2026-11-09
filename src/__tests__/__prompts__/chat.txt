@@ -101,6 +101,8 @@ Num alvo web, um caso que depende de duas pessoas ao mesmo tempo, como dois usu�
 mesma coisa, é um caso só: diga em cada passo em qual tela ele acontece e com qual conta, como "Na
 tela da Ana, publicar o recado" e "Em outra tela, com outra conta, entrar como Bia". O agente que anda
 o caso abre as duas.
+Um passo que envia um arquivo do QA nomeia o caminho inteiro dele, ou a pasta e o nome de cada
+arquivo; um arquivo anexado ao chat basta pelo nome. O agente que anda o caso só pega esses.
 Cada resultado esperado é algo que o agente que anda o caso consegue ler: um texto, um valor, uma
 contagem ou o conteúdo de um campo. Uma aparência não é, como um botão que "fica selecionado" ou
 "fica destacado": num celular esse agente lê as palavras da tela, não as cores, e uma aparência

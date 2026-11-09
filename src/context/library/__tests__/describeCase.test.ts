@@ -152,6 +152,32 @@ describe('describeCase', () => {
     ).not.toContain('already answered');
   });
 
+  it('lists the files the QA attached by name and path, and nothing when there are none', () => {
+    const base = {
+      steps: [STEP],
+      screen: 'Sign in',
+      language: 'en' as const,
+      filed: [],
+      known: [],
+      variables: [],
+      design: null,
+    };
+
+    expect(
+      describeCase({
+        ...base,
+        uploads: [{ name: 'nota.pdf', path: '/data/w1/ab12cd34-nota.pdf' }],
+      }),
+    ).toContain(
+      'Files of this plan, to pick with upload when a step needs one:\n- nota.pdf: /data/w1/ab12cd34-nota.pdf',
+    );
+    expect(describeCase(base)).not.toContain('Files of this plan');
+    expect(describeCase({ ...base, uploadsAreSamples: true })).toContain(
+      'upload with "paths" picks a sample of the same type under the same name',
+    );
+    expect(describeCase(base)).not.toContain('picks a sample of the same type');
+  });
+
   it('tells the agent to stop at once when there is nothing to walk', () => {
     expect(
       describeCase({

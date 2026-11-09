@@ -482,6 +482,8 @@ export class Harness {
     isUnderWay?: boolean;
     memories?: IMemoryBrief[];
     heardMemories?: string[];
+    uploads?: { name: string; path: string }[];
+    uploadsAreSamples?: boolean;
   }): string {
     return describeCase(props);
   }

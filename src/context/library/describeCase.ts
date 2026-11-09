@@ -27,9 +27,12 @@ export function describeCase(props: {
   isUnderWay?: boolean;
   memories?: IMemoryBrief[];
   heardMemories?: string[];
+  uploads?: { name: string; path: string }[];
+  uploadsAreSamples?: boolean;
 }): string {
   const { steps, screen, language, filed, known, variables, design } = props;
   const told = props.told ?? [];
+  const uploads = props.uploads ?? [];
   const [first] = steps;
   const framed = design !== null && steps.some(({ frame }) => frame !== undefined);
 
@@ -60,6 +63,19 @@ export function describeCase(props: {
     ]),
     `Write what you report and note in ${LANGUAGE_NAMES[language]}, whatever language these steps are in.`,
     ...describeVariables(variables),
+    ...(props.uploadsAreSamples === true
+      ? [
+          '',
+          'This machine holds none of the files the QA picked: upload with "paths" picks a sample of the same type under the same name. Judge only that the app took it, never what the file holds.',
+        ]
+      : []),
+    ...(uploads.length === 0
+      ? []
+      : [
+          '',
+          'Files of this plan, to pick with upload when a step needs one:',
+          ...uploads.map(({ name, path }) => `- ${name}: ${path}`),
+        ]),
     ...describeMemories({
       memories: props.memories ?? [],
       heard: props.heardMemories ?? [],
