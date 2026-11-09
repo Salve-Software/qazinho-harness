@@ -25,4 +25,5 @@ export interface IStepAction {
   locator?: string;
   toLocator?: string;
   option?: string;
+  files?: string[];
 }
