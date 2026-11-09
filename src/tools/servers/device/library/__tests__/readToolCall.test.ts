@@ -52,6 +52,25 @@ describe('readToolCall', () => {
         kind: 'act',
         action: { kind: 'upload', target: 'Avatar', value: 'image' },
       });
+      expect(
+        readToolCall({
+          name: 'upload',
+          args: { target: 'Anexar', paths: ['/qa/lote/a.html', 'C:\\qa\\b.png'] },
+        }),
+      ).toEqual({
+        kind: 'act',
+        action: {
+          kind: 'upload',
+          target: 'Anexar',
+          value: 'a.html, b.png',
+          files: ['/qa/lote/a.html', 'C:\\qa\\b.png'],
+        },
+      });
+      expect(readToolCall({ name: 'upload', args: { target: 'Avatar' } })).toEqual({
+        kind: 'refused',
+        error:
+          '"upload" needs "paths" with the QA\'s files, or "file" with a sample kind.',
+      });
       expect(readToolCall({ name: 'long_press', args: { target: 'Row 3' } })).toEqual({
         kind: 'act',
         action: { kind: 'long_press', target: 'Row 3', value: '' },

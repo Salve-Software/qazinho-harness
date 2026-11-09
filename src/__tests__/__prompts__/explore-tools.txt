@@ -281,7 +281,7 @@
   },
   {
     "name": "upload",
-    "description": "Pick a sample file in a file field, or in the button that opens the file picker. In a browser only.",
+    "description": "Pick files in a file field, or in the button that opens the file picker. In a browser only. When a step names the QA's own files, or the case lists files of this plan, give them in \"paths\": several at once when the step sends them together. Only those files can be picked. Give \"file\" for a sample only when the step does not say which file.",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -289,6 +289,16 @@
           "type": "string",
           "minLength": 1,
           "description": "The file field or the button that opens the picker."
+        },
+        "paths": {
+          "minItems": 1,
+          "maxItems": 10,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Each of the QA's files to pick, as the step or the list writes it."
         },
         "file": {
           "type": "string",
@@ -298,12 +308,11 @@
             "csv",
             "text"
           ],
-          "description": "The kind of sample file to pick."
+          "description": "The kind of sample file to pick, when the step names no file."
         }
       },
       "required": [
-        "target",
-        "file"
+        "target"
       ],
       "$schema": "http://json-schema.org/draft-07/schema#"
     },

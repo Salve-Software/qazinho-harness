@@ -19,11 +19,11 @@ import type {
   Request,
   Response,
 } from 'playwright-core';
-import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 import { chromium } from 'playwright-core';
-import { describeMeasure, sampleFileOf } from '@/engine/devices/library';
+import { describeMeasure } from '@/engine/devices/library';
 import { withinLimit } from '@/engine/library/withinLimit';
 import {
   CHROME_DISABLED_FEATURES,
@@ -45,6 +45,7 @@ import {
   pressChecked,
   screenBoxOf,
   summarizeMotion,
+  uploadFilesOf,
   writeChromePrefs,
 } from './library';
 
@@ -857,11 +858,10 @@ export class WebDriver implements IDeviceDriver {
     }
 
     if (action.kind === 'upload') {
-      const sample = sampleFileOf(action.value);
-      const file = join(tmpdir(), WEB_DRIVER.samplesFolder, sample.name);
-
-      await mkdir(dirname(file), { recursive: true });
-      await writeFile(file, sample.bytes);
+      const files = await uploadFilesOf({
+        action,
+        folder: join(tmpdir(), WEB_DRIVER.samplesFolder),
+      });
 
       const isField = await locator
         .evaluate((element) => {
@@ -872,7 +872,7 @@ export class WebDriver implements IDeviceDriver {
         .catch(() => false);
 
       if (isField) {
-        await locator.setInputFiles(file, { timeout });
+        await locator.setInputFiles(files, { timeout });
 
         return;
       }
@@ -882,7 +882,7 @@ export class WebDriver implements IDeviceDriver {
         locator.click({ timeout }),
       ]);
 
-      await chooser.setFiles(file);
+      await chooser.setFiles(files);
 
       return;
     }

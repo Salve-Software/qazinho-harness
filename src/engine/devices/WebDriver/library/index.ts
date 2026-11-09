@@ -11,6 +11,7 @@ export * from './pagesOf';
 export * from './pressChecked';
 export * from './screenBoxOf';
 export * from './summarizeMotion';
+export * from './uploadFilesOf';
 export * from './webAccessOf';
 export * from './writeChromePrefs';
 export * from './gotoAddressOf';

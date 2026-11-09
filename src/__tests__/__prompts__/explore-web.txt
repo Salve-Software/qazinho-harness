@@ -128,9 +128,10 @@ nomeie o que você quer pelas palavras e pelo número, "Buy #2".
 No goto, o alvo é a URL. reopen fecha a página e abre o endereço do app numa aba nova, com o que o
 site guardou mantido: use-o quando um passo fecha o app ou a aba e o abre de novo.
 No press, o alvo é a tecla. long_press segura o mouse sobre um controle, hover o deixa parado ali
-para mostrar uma dica ou um menu, e drag solta um controle sobre outro. upload escolhe um arquivo
-de exemplo de um tipo (image, pdf, csv ou text) num campo de arquivo ou no botão que abre o
-seletor. scroll traz à vista o que carrega mais abaixo. Um dropdown é preenchido com as palavras
+para mostrar uma dica ou um menu, e drag solta um controle sobre outro. upload escolhe arquivos num
+campo de arquivo ou no botão que abre o seletor: em paths, os caminhos inteiros dos arquivos do QA
+que o passo nomeia ou que o caso lista, vários de uma vez quando o passo os envia juntos; em file,
+um arquivo de exemplo de um tipo (image, pdf, csv ou text), só quando o passo não diz qual. scroll traz à vista o que carrega mais abaixo. Um dropdown é preenchido com as palavras
 da opção a escolher. Um campo de data é preenchido como AAAA-MM-DD e um de hora como HH:MM, seja
 qual for o jeito que a página os mostra. Uma aba ou janela que o app abre toma o dispositivo até
 fechar.

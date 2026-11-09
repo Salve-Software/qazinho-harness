@@ -150,4 +150,57 @@ describe('variablePort', () => {
       );
     });
   });
+
+  describe('act, for a file of the QA', () => {
+    const upload: IStepAction = {
+      kind: 'upload',
+      target: 'Anexar',
+      value: 'nota.pdf',
+      files: ['/qa/nota.pdf'],
+    };
+
+    it('picks the path the run hands over, which may be a copy under the real name', async () => {
+      const { device, typed } = fakeDevice();
+      const port = variablePort({
+        device,
+        values: [],
+        uploadPath: (file) => Promise.resolve(`/tmp/copia${file}`),
+      });
+
+      await port.act(upload);
+
+      expect(typed[0]?.files).toEqual(['/tmp/copia/qa/nota.pdf']);
+    });
+
+    it('touches nothing when a file was not given to the run', async () => {
+      const { device, typed } = fakeDevice();
+      const port = variablePort({
+        device,
+        values: [],
+        uploadPath: () => Promise.resolve(null),
+      });
+
+      await expect(port.act(upload)).rejects.toThrow(
+        '/qa/nota.pdf was not given to this run',
+      );
+      expect(typed).toEqual([]);
+    });
+
+    it('says a machine with no files of the QA has only samples', async () => {
+      const { device, typed } = fakeDevice();
+      const port = variablePort({ device, values: [] });
+
+      await expect(port.act(upload)).rejects.toThrow("none of the QA's own files");
+      expect(typed).toEqual([]);
+    });
+
+    it('leaves a sample alone', async () => {
+      const { device, typed } = fakeDevice();
+      const port = variablePort({ device, values: [] });
+
+      await port.act({ kind: 'upload', target: 'Foto', value: 'image' });
+
+      expect(typed[0]?.value).toBe('image');
+    });
+  });
 });

@@ -1,3 +1,4 @@
+import type { IStepAction } from '@/contract';
 import type { IDeviceDriver } from '@/engine/devices/types';
 import type { IVariableValue } from '@/engine/types';
 import type { IDevicePort } from '@/tools/servers/device/types';
@@ -8,8 +9,8 @@ import { maskedBody } from './maskedBody';
 import { resolvedAction } from './resolvedAction';
 
 /**
- * O dispositivo como uma run o alcança: um ${NAME} digitado como o seu valor, e todo
- * valor mostrado lido de volta como o seu nome.
+ * O dispositivo como uma run o alcança: um ${NAME} digitado como o seu valor, todo valor
+ * mostrado lido como o seu nome, e só os arquivos que o QA deu à run podem subir.
  */
 export function variablePort(props: {
   device: Pick<
@@ -17,8 +18,9 @@ export function variablePort(props: {
     'describe' | 'inspect' | 'glance' | 'motion' | 'act' | 'apiCalls' | 'responseBody'
   >;
   values: IVariableValue[];
+  uploadPath?: (file: string) => Promise<string | null>;
 }): IDevicePort {
-  const { device, values } = props;
+  const { device, values, uploadPath } = props;
   let actedAt = Date.now();
   const lineOf = (call: Parameters<typeof callLineOf>[0]['call']) =>
     callLineOf({ call, values, bodyChars: RUN_WALK.callBodyChars });
@@ -87,10 +89,44 @@ export function variablePort(props: {
       actedAt = Date.now();
 
       try {
-        await device.act(resolvedAction({ action, values }));
+        await device.act(
+          await withUploadPaths({
+            action: resolvedAction({ action, values }),
+            uploadPath,
+          }),
+        );
       } catch (reason) {
         throw hidden(reason);
       }
     },
   };
+}
+
+async function withUploadPaths(props: {
+  action: IStepAction;
+  uploadPath: ((file: string) => Promise<string | null>) | undefined;
+}): Promise<IStepAction> {
+  const { action, uploadPath } = props;
+
+  if (action.files === undefined) return action;
+
+  if (uploadPath === undefined)
+    throw new Error(
+      "This machine holds none of the QA's own files, only samples. Report the step blocked and name the file it needs.",
+    );
+
+  const files: string[] = [];
+
+  for (const file of action.files) {
+    const path = await uploadPath(file);
+
+    if (path === null)
+      throw new Error(
+        `${file} was not given to this run: QAzinho only picks files the QA attached to the chat, the plan names or the QA told you in words. Ask the QA for its full path with ask_qa, or report the step blocked and name the file.`,
+      );
+
+    files.push(path);
+  }
+
+  return { ...action, files };
 }

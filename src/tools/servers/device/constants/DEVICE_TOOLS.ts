@@ -179,18 +179,36 @@ export const DEVICE_TOOLS = [
   {
     name: 'upload',
     description:
-      'Pick a sample file in a file field, or in the button that opens the file picker. In a browser only.',
-    input: z.object({
-      target: textNamed({
-        message: '"upload" needs a target: say what the file field or button is.',
-        description: 'The file field or the button that opens the picker.',
+      'Pick files in a file field, or in the button that opens the file picker. In a browser only. When a step names the QA\'s own files, or the case lists files of this plan, give them in "paths": several at once when the step sends them together. Only those files can be picked. Give "file" for a sample only when the step does not say which file.',
+    input: z
+      .object({
+        target: textNamed({
+          message: '"upload" needs a target: say what the file field or button is.',
+          description: 'The file field or the button that opens the picker.',
+        }),
+        paths: z
+          .array(
+            z
+              .string({ error: '"paths" is a list of full file paths.' })
+              .trim()
+              .min(1, { error: '"paths" holds full file paths, none of them blank.' }),
+            { error: '"paths" is a list of full file paths.' },
+          )
+          .min(1, { error: '"paths" needs at least one file.' })
+          .max(10, { error: '"paths" holds ten files at most.' })
+          .describe("Each of the QA's files to pick, as the step or the list writes it.")
+          .optional(),
+        file: z
+          .enum(['image', 'pdf', 'csv', 'text'], {
+            error: '"file" is image, pdf, csv or text.',
+          })
+          .describe('The kind of sample file to pick, when the step names no file.')
+          .optional(),
+      })
+      .refine(({ paths, file }) => paths !== undefined || file !== undefined, {
+        error:
+          '"upload" needs "paths" with the QA\'s files, or "file" with a sample kind.',
       }),
-      file: z
-        .enum(['image', 'pdf', 'csv', 'text'], {
-          error: '"upload" needs "file": image, pdf, csv or text.',
-        })
-        .describe('The kind of sample file to pick.'),
-    }),
   },
   {
     name: 'tab',

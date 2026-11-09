@@ -131,6 +131,7 @@ export function readToolCall(props: {
     until?: string;
     to?: string;
     file?: string;
+    paths?: string[];
     dialog?: DialogAnswer;
     promptText?: string;
   };
@@ -140,7 +141,14 @@ export function readToolCall(props: {
     action: {
       kind: tool.name,
       target: tool.name === 'scroll' ? (args.until ?? '') : (args.target ?? ''),
-      value: args.direction ?? args.to ?? args.file ?? args.value ?? '',
+      value:
+        args.paths?.map((path) => path.split(/[\\/]/).at(-1) ?? path).join(', ') ??
+        args.direction ??
+        args.to ??
+        args.file ??
+        args.value ??
+        '',
+      ...(args.paths === undefined ? {} : { files: args.paths }),
       ...(args.dialog === undefined ? {} : { dialog: args.dialog }),
       ...(args.promptText === undefined ? {} : { promptText: args.promptText }),
     },
