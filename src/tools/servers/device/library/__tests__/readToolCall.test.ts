@@ -39,6 +39,17 @@ describe('readToolCall', () => {
       });
     });
 
+    it('reads opening a download by name, or the latest with none', () => {
+      expect(readToolCall({ name: 'open_download', args: { target: 'a.pdf' } })).toEqual({
+        kind: 'act',
+        action: { kind: 'open_download', target: 'a.pdf', value: '' },
+      });
+      expect(readToolCall({ name: 'open_download', args: {} })).toEqual({
+        kind: 'act',
+        action: { kind: 'open_download', target: '', value: '' },
+      });
+    });
+
     it('reads a drag with where it drops, and an upload with the kind of sample', () => {
       expect(
         readToolCall({ name: 'drag', args: { target: 'Card A', to: 'Done' } }),

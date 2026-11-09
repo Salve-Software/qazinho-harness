@@ -101,7 +101,9 @@ async function answerOf(props: {
     const done =
       read.action.kind === 'reopen'
         ? 'Done: the app closed completely and opened again.'
-        : 'Done.';
+        : read.action.kind === 'open_download'
+          ? 'Done: the file is open on a new screen. Scroll for the rest, and tab with "close" goes back to the app.'
+          : 'Done.';
 
     const left =
       device.endsAt === undefined ? '' : ` ${timeLeftOf(device.endsAt - Date.now())}`;

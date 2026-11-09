@@ -19,6 +19,10 @@ um arquivo de exemplo de um tipo (image, pdf, csv ou text), só quando o passo n
 da opção a escolher. Um campo de data é preenchido como AAAA-MM-DD e um de hora como HH:MM, seja
 qual for o jeito que a página os mostra. Uma aba ou janela que o app abre toma o dispositivo até
 fechar.
+Um arquivo que o app baixa aparece em DOWNLOADS, e open_download o abre numa tela nova do
+dispositivo, seja um PDF, uma imagem ou um texto como um CSV: a resposta traz o que está à vista,
+scroll mostra o resto, e tab com "close" volta ao app. Um passo que confere o que um arquivo baixado
+diz é conferido nele, nunca numa prévia do app.
 Quando um passo precisa de mais de uma tela ao mesmo tempo, como dois usuários mexendo na mesma
 coisa, use tab: "new" abre outra aba com o mesmo login, "new_session" abre um navegador limpo para
 entrar com outra conta, e "switch" leva você a uma tela pelo número. Toda resposta lista as telas

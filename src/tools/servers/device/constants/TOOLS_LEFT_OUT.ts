@@ -2,7 +2,7 @@ import type { DevicePurpose } from '@/tools/servers/device/types';
 
 export const TOOLS_LEFT_OUT: Record<DevicePurpose, readonly string[]> = {
   walk: ['screen', 'finish'],
-  explore: ['report', 'tab'],
+  explore: ['report', 'tab', 'open_download'],
   learn: [
     'report',
     'bug',
@@ -13,6 +13,7 @@ export const TOOLS_LEFT_OUT: Record<DevicePurpose, readonly string[]> = {
     'screen',
     'finish',
     'upload',
+    'open_download',
     'long_press',
     'drag',
     'reopen',

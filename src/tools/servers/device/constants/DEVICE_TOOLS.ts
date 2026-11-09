@@ -211,6 +211,18 @@ export const DEVICE_TOOLS = [
       }),
   },
   {
+    name: 'open_download',
+    description:
+      'Open a file the browser downloaded on a new screen of the device, to read it: a PDF, an image or a text file such as a CSV. In a browser only. Every answer lists DOWNLOADS once the browser saved a file. Use it whenever a step checks what a downloaded file says or looks like: never settle for a preview in the app, and never ask the QA to open it. The answer reads the part in view: scroll shows the rest, and tab with "close" goes back to the app.',
+    input: z.object({
+      target: z
+        .string()
+        .trim()
+        .describe('The file as DOWNLOADS lists it. Leave it out for the latest one.')
+        .optional(),
+    }),
+  },
+  {
     name: 'tab',
     description:
       'Work on more than one screen at once, as two people at two computers would: only when a step needs it, such as two users editing the same thing. In a browser only. "new" opens another tab with the same login, "new_session" opens a clean browser that shares nothing with this one, to sign in with another account, "switch" moves you to the screen numbered in "value", and "close" closes the screen numbered in "value", or this one. Every answer lists the screens open and the one you are on.',
