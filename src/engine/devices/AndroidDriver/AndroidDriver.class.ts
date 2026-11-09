@@ -109,7 +109,12 @@ export class AndroidDriver implements IDeviceDriver {
       return;
     }
 
-    if (action.kind === 'hover' || action.kind === 'upload' || action.kind === 'tab')
+    if (
+      action.kind === 'hover' ||
+      action.kind === 'upload' ||
+      action.kind === 'open_download' ||
+      action.kind === 'tab'
+    )
       throw new Error(ANDROID.notOnPhone[action.kind]);
 
     const nodes = await this.read();

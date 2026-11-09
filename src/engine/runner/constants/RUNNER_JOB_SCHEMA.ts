@@ -15,6 +15,7 @@ const ACTION = z.object({
     'drag',
     'hover',
     'upload',
+    'open_download',
     'tab',
   ]),
   target: z.string(),

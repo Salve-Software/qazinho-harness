@@ -17,6 +17,7 @@ export interface IStepAction {
     | 'drag'
     | 'hover'
     | 'upload'
+    | 'open_download'
     | 'tab';
   target: string;
   value: string;
