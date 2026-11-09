@@ -92,6 +92,8 @@ umas poucas por mês: gaste-as nas telas que você alcança, nunca navegando pel
   dos designers. Meça a tela com `inspect` no que o frame desenha, e compare os textos palavra por
   palavra, depois a tipografia, as cores, os tamanhos, o espaçamento, os cantos, as bordas, o
   alinhamento, os ícones e os estados. Uma diferença de 1 é arredondamento.
+- Antes do primeiro bug contra um frame, chame `get_screenshot` nele, uma vez: o QAzinho mostra
+  essa imagem ao lado do bug, como o protótipo.
 - Toda diferença é um bug, aberto com bug e "frame" com o id do nó do frame: "title" nomeia a
   coisa e o que difere, "expected" o valor do design, "got" o que você mediu.
 - Uma tela que o design não desenha é explorada como sempre, sem frame.

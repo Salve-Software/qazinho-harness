@@ -449,7 +449,7 @@
         },
         "frame": {
           "type": "string",
-          "description": "When it failed because the screen differs from the Figma design in what the step expects: the node id of the frame it differs from, such as 12:345. Do not file that difference again with bug."
+          "description": "When it failed because the screen differs from the Figma design in what the step expects: the node id of the frame it differs from, such as 12:345. Call get_screenshot on that frame first, once: QAzinho shows that picture beside the bug as the prototype. Do not file that difference again with bug."
         },
         "category": {
           "type": "string",
@@ -518,7 +518,7 @@
         },
         "frame": {
           "type": "string",
-          "description": "When the bug is a difference from the Figma design: the node id of the frame the screen differs from, such as 12:345."
+          "description": "When the bug is a difference from the Figma design: the node id of the frame the screen differs from, such as 12:345. Call get_screenshot on that frame first, once: QAzinho shows that picture beside the bug as the prototype."
         },
         "category": {
           "type": "string",

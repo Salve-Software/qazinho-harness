@@ -378,7 +378,7 @@
         },
         "frame": {
           "type": "string",
-          "description": "When the bug is a difference from the Figma design: the node id of the frame the screen differs from, such as 12:345."
+          "description": "When the bug is a difference from the Figma design: the node id of the frame the screen differs from, such as 12:345. Call get_screenshot on that frame first, once: QAzinho shows that picture beside the bug as the prototype."
         },
         "category": {
           "type": "string",

@@ -109,8 +109,9 @@ passo: um relato de falha termina o seu turno na hora, e um bug aberto depois de
 - Leia o frame pelas ferramentas do Figma do próprio QA, com o fileKey do caso e o id do nó do
   passo: `get_design_context` dá os tamanhos, espaçamento, cores, tipografia, textos, estados e
   as anotações dos designers; `get_variable_defs`, os tokens que ele nomeia. Chame
-  `get_screenshot` só quando esses deixarem você em dúvida. O Figma conta cada leitura: leia cada
-  frame uma vez no caso.
+  `get_screenshot` quando esses deixarem você em dúvida, e sempre antes do primeiro bug contra um
+  frame: o QAzinho mostra essa imagem ao lado do bug, como o protótipo. O Figma conta cada leitura:
+  leia cada frame uma vez no caso.
 - As ferramentas do Figma podem pedir que você crie uma sessão antes: crie, uma vez. Elas também
   podem indicar um guia para carregar: você não precisa de nenhum, leia o frame direto.
 - Meça a tela com `inspect`, no que o frame desenha: títulos, textos, campos, botões, ícones, e o
