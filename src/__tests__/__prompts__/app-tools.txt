@@ -152,13 +152,10 @@
         "section": {
           "type": "string",
           "enum": [
-            "agents",
-            "devices",
-            "integrations",
-            "mcps",
-            "appearance",
+            "agent",
+            "connections",
+            "general",
             "storage",
-            "shortcuts",
             "about"
           ]
         }
