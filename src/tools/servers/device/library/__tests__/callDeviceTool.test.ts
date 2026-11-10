@@ -1,4 +1,4 @@
-import type { IActionMotion, IDeviceImage, IStepAction } from '@/contract';
+import type { IDeviceImage, IStepAction } from '@/contract';
 import type {
   IAttachDevice,
   IStepFinding,
@@ -18,7 +18,6 @@ function fakeDevice(
     onReport?: IAttachDevice['onReport'];
     onFinding?: IAttachDevice['onFinding'];
     image?: IDeviceImage | null;
-    motion?: IActionMotion | null;
     blind?: boolean;
     failed?: string[];
   } = {},
@@ -40,7 +39,7 @@ function fakeDevice(
         if (props.blind === true) throw new Error('no screencap');
         return props.image === undefined ? PICTURE : props.image;
       },
-      motion: async () => props.motion ?? null,
+      motion: async () => null,
       act: async (action) => {
         if (props.fails !== undefined) throw new Error(props.fails);
         acted.push(action);
@@ -289,26 +288,8 @@ describe('callDeviceTool', () => {
       }
     });
 
-    it('says how the page moved while it acted', async () => {
-      const { device } = fakeDevice({
-        motion: {
-          shift: 0.31,
-          unexpectedShift: 0.31,
-          shifts: 2,
-          longFrames: 1,
-          slowestFrameMs: 180,
-        },
-      });
-      const answer = await callDeviceTool({
-        device,
-        call: { name: 'click', args: { target: 'Apply' } },
-      });
-
-      expect(text(answer)).toMatch(/^Done\. While it acted, the layout shifted 0\.31/);
-    });
-
-    it('says nothing about motion for a device that cannot measure it', async () => {
-      const { device } = fakeDevice({ motion: null });
+    it('answers an action with what the device shows next', async () => {
+      const { device } = fakeDevice();
       const answer = await callDeviceTool({
         device,
         call: { name: 'click', args: { target: 'Apply' } },

@@ -4,7 +4,6 @@ import { WEB_DRIVER } from '@/engine/devices/WebDriver/constants';
 import { withinLimit } from '@/engine/library/withinLimit';
 import { stripAnsi } from '@/library';
 import { LEARNING_NOTE } from '@/tools/servers/device/constants';
-import { describeMotion } from './describeMotion';
 import { readToolCall } from './readToolCall';
 import { timeLeftOf } from './timeLeftOf';
 
@@ -91,7 +90,6 @@ async function answerOf(props: {
 
     await device.driver.act(read.action);
 
-    const motion = describeMotion(await device.driver.motion());
     const failed = await device.driver.failedCalls().catch(() => []);
     const calls =
       failed.length === 0
@@ -110,7 +108,7 @@ async function answerOf(props: {
 
     return await shown({
       device,
-      lead: `${done}${motion === null ? '' : ` ${motion}`}${left}${calls} The device now shows:\n`,
+      lead: `${done}${left}${calls} The device now shows:\n`,
     });
   } catch (reason) {
     const message = reason instanceof Error ? reason.message : String(reason);

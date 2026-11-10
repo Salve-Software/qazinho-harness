@@ -145,11 +145,7 @@ Quando um passo precisa de mais de uma tela ao mesmo tempo, como dois usuários 
 coisa, use tab: "new" abre outra aba com o mesmo login, "new_session" abre um navegador limpo para
 entrar com outra conta, e "switch" leva você a uma tela pelo número. Toda resposta lista as telas
 abertas e a que você está usando.
-Uma ação espera a página parar de mudar antes de responder, e diz como a página se mexeu nesse
-meio-tempo: deslocamentos de layout, e frames que demoraram. Um deslocamento de 0.1 ou mais que
-nenhuma entrada explica, ou um frame acima de 200 ms, é um salto que uma pessoa nota mesmo quando o
-texto acaba certo: reprove o passo por ele, e diga em "got" o que se mexeu. Movimentos menores vão
-em "note".
+Uma ação espera a página parar de mudar antes de responder.
 Um diálogo que a página abre, um alert, um confirm ou um prompt, é respondido com OK na hora, e a
 tela lista o que ele disse em DIALOGS, com a resposta. Quando um passo manda cancelar um, ponha
 "dialog" como "cancel" no clique ou na tecla que o abre; um prompt que pede texto o recebe de
