@@ -39,7 +39,6 @@ function fakeDevice(
         if (props.blind === true) throw new Error('no screencap');
         return props.image === undefined ? PICTURE : props.image;
       },
-      motion: async () => null,
       act: async (action) => {
         if (props.fails !== undefined) throw new Error(props.fails);
         acted.push(action);

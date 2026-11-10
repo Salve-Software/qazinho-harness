@@ -61,7 +61,6 @@ function turnOn(overrides: Partial<ICaseTurn> = {}) {
 
       return Promise.resolve();
     },
-    motion: () => Promise.resolve(null),
   };
   const turn: ICaseTurn = {
     scope: 'plan-1',

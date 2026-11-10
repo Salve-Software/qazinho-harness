@@ -401,7 +401,6 @@ export class PlanWalker {
       failedCalls: () => device.failedCalls(),
       calls: (ask) => device.calls(ask),
       glance: () => device.glance(),
-      motion: () => device.motion(),
       act: async (action) => {
         await device.act(action);
 

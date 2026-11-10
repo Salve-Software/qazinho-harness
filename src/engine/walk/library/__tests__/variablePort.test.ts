@@ -15,7 +15,6 @@ function fakeDevice(failing = false) {
     inspect: (target) =>
       Promise.resolve(`"${typed.at(-1)?.value ?? ''}" (${target}), measured in CSS px:`),
     glance: () => Promise.resolve(null),
-    motion: () => Promise.resolve(null),
     act: (action) => {
       typed.push(action);
 

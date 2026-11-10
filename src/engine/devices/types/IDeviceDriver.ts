@@ -1,6 +1,5 @@
 import type { IShot } from './IShot';
 import type {
-  IActionMotion,
   IDeviceImage,
   INetworkEntry,
   IRunVideo,
@@ -21,7 +20,6 @@ export interface IDeviceDriver {
   inspect: (target: string) => Promise<string>;
   locate?: (target: string) => Promise<IScreenBox | null>;
   glance: () => Promise<IDeviceImage | null>;
-  motion: () => Promise<IActionMotion | null>;
   resize: (viewport: IViewport) => Promise<void>;
   focus: (isFocused: boolean) => Promise<void>;
   shoot: (file: string) => Promise<IShot | null>;

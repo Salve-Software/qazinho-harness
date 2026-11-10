@@ -32,7 +32,6 @@ const port: IDevicePort = {
   calls: () => Promise.resolve(''),
   glance: () => Promise.resolve(null),
   act: () => Promise.resolve(),
-  motion: () => Promise.resolve(null),
 };
 
 const turnOf = (prompt: string): ICaseTurn => ({

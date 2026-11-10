@@ -55,7 +55,6 @@ function fakeDevice(screen: { text: string }) {
     describe: () => Promise.resolve(screen.text),
     inspect: () => Promise.resolve(''),
     glance: () => Promise.resolve(null),
-    motion: () => Promise.resolve(null),
     resize: () => Promise.resolve(),
     focus: () => Promise.resolve(),
     shoot: (file) => {

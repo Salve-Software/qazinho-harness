@@ -129,7 +129,6 @@ function fakeDriver(props: { isBrowser: boolean }) {
     describe: () => Promise.resolve('Cart: 1 item'),
     inspect: () => Promise.resolve(''),
     glance: () => Promise.resolve(null),
-    motion: () => Promise.resolve(null),
     resize: () => Promise.resolve(),
     focus: () => Promise.resolve(),
     shoot: async (file) => {

@@ -15,7 +15,7 @@ import { resolvedAction } from './resolvedAction';
 export function variablePort(props: {
   device: Pick<
     IDeviceDriver,
-    'describe' | 'inspect' | 'glance' | 'motion' | 'act' | 'apiCalls' | 'responseBody'
+    'describe' | 'inspect' | 'glance' | 'act' | 'apiCalls' | 'responseBody'
   >;
   values: IVariableValue[];
   uploadPath?: (file: string) => Promise<string | null>;
@@ -84,7 +84,6 @@ export function variablePort(props: {
         : `The latest API calls, oldest first:\n${listed.map(lineOf).join('\n')}\nGive "id" to read what one answered.`;
     },
     glance: () => device.glance(),
-    motion: () => device.motion(),
     act: async (action) => {
       actedAt = Date.now();
 

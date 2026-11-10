@@ -6,6 +6,6 @@ export * from './FILE_TEXT_IN_VIEW';
 export * from './FILE_VIEWER';
 export * from './FILE_VIEWER_PAGE';
 export * from './FILE_VIEWER_SCRIPT';
-export * from './MOTION_PROBE';
+export * from './PAGE_PROBE';
 export * from './PDF_ENGINE';
 export * from './WEB_DRIVER';

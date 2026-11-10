@@ -1,6 +1,5 @@
 import type { IIosDriver } from './types';
 import type {
-  IActionMotion,
   IDeviceImage,
   IRunVideo,
   IScreenBox,
@@ -218,14 +217,6 @@ export class IosDriver implements IDeviceDriver {
     } finally {
       await rm(file, { force: true });
     }
-  }
-
-  /**
-   * Um simulador não tem linha do tempo de deslocamento de layout para ler, então não diz
-   * nada sobre movimento.
-   */
-  public async motion(): Promise<IActionMotion | null> {
-    return Promise.resolve(null);
   }
 
   /**

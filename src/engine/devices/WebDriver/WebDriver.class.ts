@@ -1,7 +1,6 @@
 import type { IWebAccess, IWebDriver, IWebScreen, WebDownload } from './types';
 import type {
   DialogAnswer,
-  IActionMotion,
   IDeviceImage,
   IDeviceScreen,
   INetworkEntry,
@@ -30,7 +29,7 @@ import {
   CHROME_DISABLED_FEATURES,
   FIELD_FORMATS,
   FILE_VIEWER,
-  MOTION_PROBE,
+  PAGE_PROBE,
   WEB_DRIVER,
 } from './constants';
 import {
@@ -51,7 +50,6 @@ import {
   pressChecked,
   screenBoxOf,
   showFile,
-  summarizeMotion,
   uploadFilesOf,
   writeChromePrefs,
 } from './library';
@@ -83,7 +81,6 @@ export class WebDriver implements IDeviceDriver {
   private page: Page | null = null;
   private cdp: CDPSession | null = null;
   private onFrame: ((jpeg: Buffer, screen?: number) => void) | null = null;
-  private lastMotion: IActionMotion | null = null;
   private resolved: {
     locator: string;
     toLocator: string | null;
@@ -192,8 +189,7 @@ export class WebDriver implements IDeviceDriver {
   }
 
   /**
-   * Executa uma ação, respondendo os diálogos que ela abre do jeito que ela diz, e guarda
-   * como a página se mexeu para o `motion`.
+   * Executa uma ação, responde os diálogos dela como ela diz e espera a página parar.
    */
   public async act(action: IStepAction): Promise<void> {
     const page = this.page;
@@ -217,19 +213,15 @@ export class WebDriver implements IDeviceDriver {
     }
 
     if (action.kind === 'open_download') {
-      this.lastMotion = null;
       await this.openDownload(action.target);
 
       return;
     }
 
-    this.lastMotion = null;
     this.dialogAnswer = action.dialog ?? 'ok';
     this.promptText = action.promptText ?? null;
 
     try {
-      const before = await this.markOf(page);
-
       await this.perform({ page, action });
 
       const acted = await this.markOf(page);
@@ -239,26 +231,10 @@ export class WebDriver implements IDeviceDriver {
 
       if (action.kind !== 'wait' && acted !== null)
         await this.waitForQuiet({ page, from: acted });
-
-      const after = await this.markOf(page);
-
-      this.lastMotion = await this.motionSince({
-        page,
-        since: after?.origin === before?.origin ? (before?.at ?? 0) : 0,
-      });
     } finally {
       this.dialogAnswer = 'ok';
       this.promptText = null;
     }
-  }
-
-  /** Como a página se mexeu durante a última ação, entregue uma vez. */
-  public async motion(): Promise<IActionMotion | null> {
-    const motion = this.lastMotion;
-
-    this.lastMotion = null;
-
-    return motion;
   }
 
   /**
@@ -686,7 +662,7 @@ export class WebDriver implements IDeviceDriver {
         route.continue({ headers: { ...route.request().headers(), ...headers } }),
       );
 
-    await context.addInitScript(MOTION_PROBE);
+    await context.addInitScript(PAGE_PROBE);
     context.on('request', (request) => {
       this.noteRequest(request);
     });
@@ -859,7 +835,6 @@ export class WebDriver implements IDeviceDriver {
 
     await this.cdp?.detach().catch(() => undefined);
     this.cdp = null;
-    this.lastMotion = null;
 
     for (const account of this.accounts) await account.close().catch(() => undefined);
 
@@ -1144,27 +1119,6 @@ export class WebDriver implements IDeviceDriver {
 
       await page.waitForTimeout(WEB_DRIVER.quietPollMs);
     }
-  }
-
-  private async motionSince(props: {
-    page: Page;
-    since: number;
-  }): Promise<IActionMotion | null> {
-    const probed = await props.page
-      .evaluate<{
-        shifts: { at: number; value: number; hadInput: boolean }[];
-        frames: { at: number; ms: number }[];
-      } | null>(
-        'window.__qazinho ? { shifts: window.__qazinho.shifts, frames: window.__qazinho.frames } : null',
-      )
-      .catch(() => null);
-
-    if (!probed) return null;
-
-    return summarizeMotion({
-      shifts: probed.shifts.filter(({ at }) => at >= props.since),
-      frames: probed.frames.filter(({ at }) => at >= props.since),
-    });
   }
 
   private async session(): Promise<CDPSession | null> {

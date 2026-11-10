@@ -2,7 +2,6 @@ export type * from './AppToolCall';
 export type * from './BugCategory';
 export type * from './BuildPlatform';
 export type * from './DialogAnswer';
-export type * from './IActionMotion';
 export type * from './IAppProjectBrief';
 export type * from './IAppRunBrief';
 export type * from './IAppSnapshot';

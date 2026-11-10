@@ -1,6 +1,5 @@
 import type { IAndroidDriver } from './types';
 import type {
-  IActionMotion,
   IDeviceImage,
   IRunVideo,
   IScreenBox,
@@ -214,14 +213,6 @@ export class AndroidDriver implements IDeviceDriver {
     const image = await this.raw(['exec-out', 'screencap', '-p']);
 
     return phoneGlance({ image, shrink: this.shrink });
-  }
-
-  /**
-   * Um celular não tem linha do tempo de deslocamento de layout para ler, então não diz
-   * nada sobre movimento.
-   */
-  public async motion(): Promise<IActionMotion | null> {
-    return Promise.resolve(null);
   }
 
   /**
