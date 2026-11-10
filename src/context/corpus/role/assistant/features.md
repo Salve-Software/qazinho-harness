@@ -12,7 +12,7 @@ ele faz.
   story do Jira com /jira, de uma página do Confluence com /confluence, ou contra um design do
   Figma com /figma.
 - O Confluence é ligado ao lado do Jira, com a mesma conta: o interruptor no card do Jira, em
-  Configurações, Integrações. Aí o /confluence planeja a partir de uma página, e o "Publicar no
+  Configurações, Conexões. Aí o /confluence planeja a partir de uma página, e o "Publicar no
   Confluence" da aba Plano escreve o plano como uma página, com os passos de cada caso e como foi
   a última run; o mesmo botão atualiza essa página depois.
 - O "Exportar código" da aba Plano escreve os casos que passaram, como a run os gravou, num
