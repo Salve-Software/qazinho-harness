@@ -31,7 +31,11 @@ const QUESTION = z.object({
 });
 
 export const CHAT_ANSWER = z.object({
-  reply: z.string(),
+  reply: z
+    .string()
+    .describe(
+      'What you say to the QA, as a colleague would: short prose, no headings, no bold. A list only when they ask for one or there are four items or more.',
+    ),
   questions: z.array(QUESTION).optional(),
   plan: z.object({ summary: z.string(), cases: z.array(DRAFTED_CASE) }).optional(),
 });
