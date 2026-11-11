@@ -14,7 +14,7 @@ export interface IAppSnapshot {
   openRunId: string | null;
   openBugId: string | null;
   language: Language;
-  theme: 'night' | 'paper';
+  theme: 'night' | 'paper' | 'system';
   runAlert: 'system' | 'app';
   agent: string;
   integrations: { id: IntegrationId; account: string | null }[];

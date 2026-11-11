@@ -371,8 +371,10 @@ export const APP_TOOLS = [
       'Change how QAzinho looks and calls the QA back: the theme, the language, and how a finished run calls them.',
     input: z.object({
       theme: z
-        .enum(['night', 'paper'], { error: '"theme" is night or paper.' })
-        .describe('night is dark, paper is light.')
+        .enum(['night', 'paper', 'system'], {
+          error: '"theme" is night, paper or system.',
+        })
+        .describe('night is dark, paper is light, system follows the computer.')
         .optional(),
       language: z
         .enum(['en', 'pt'], { error: '"language" is en or pt.' })

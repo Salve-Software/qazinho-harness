@@ -98,7 +98,7 @@ export type AppToolCall =
   | {
       name: 'change_settings';
       args: {
-        theme?: 'night' | 'paper';
+        theme?: 'night' | 'paper' | 'system';
         language?: Language;
         runAlert?: 'system' | 'app';
       };

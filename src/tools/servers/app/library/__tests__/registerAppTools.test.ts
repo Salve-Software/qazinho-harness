@@ -59,7 +59,7 @@ describe('registerAppTools', () => {
     });
 
     expect(result.isError).toBe(true);
-    expect(textOf(result)).toContain('"theme" is night or paper.');
+    expect(textOf(result)).toContain('"theme" is night, paper or system.');
     expect(calls).toEqual([]);
   });
 

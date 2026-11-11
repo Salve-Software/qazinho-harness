@@ -765,9 +765,10 @@
             "type": "string",
             "enum": [
               "night",
-              "paper"
+              "paper",
+              "system"
             ],
-            "description": "night is dark, paper is light."
+            "description": "night is dark, paper is light, system follows the computer."
           },
           "language": {
             "type": "string",
