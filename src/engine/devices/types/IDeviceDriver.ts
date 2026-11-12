@@ -19,6 +19,7 @@ export interface IDeviceDriver {
   describe: () => Promise<string>;
   inspect: (target: string) => Promise<string>;
   locate?: (target: string) => Promise<IScreenBox | null>;
+  reveal?: (target: string) => Promise<boolean>;
   glance: () => Promise<IDeviceImage | null>;
   resize: (viewport: IViewport) => Promise<void>;
   focus: (isFocused: boolean) => Promise<void>;

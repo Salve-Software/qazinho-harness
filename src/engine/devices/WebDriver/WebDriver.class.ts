@@ -316,6 +316,52 @@ export class WebDriver implements IDeviceDriver {
     return describeMeasure(await measureLocator(locator));
   }
 
+  /** Rola até uma coisa fora da tela, centrada, antes de a tela virar a prova. */
+  public async reveal(target: string): Promise<boolean> {
+    if (!this.page) return false;
+
+    const locator = await findLocator({ page: this.page, target, kind: 'click' });
+
+    if (locator === null) return false;
+
+    return locator
+      .evaluate((element) => {
+        const web = globalThis as unknown as {
+          innerHeight: number;
+          innerWidth: number;
+          requestAnimationFrame: (paint: () => void) => void;
+        };
+        const node = element as unknown as {
+          getBoundingClientRect: () => {
+            top: number;
+            bottom: number;
+            left: number;
+            right: number;
+          };
+          scrollIntoView: (options: object) => void;
+        };
+        const box = node.getBoundingClientRect();
+        const isShown =
+          box.top >= 0 &&
+          box.bottom <= web.innerHeight &&
+          box.left >= 0 &&
+          box.right <= web.innerWidth;
+
+        if (isShown) return false;
+
+        node.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
+
+        return new Promise<boolean>((painted) => {
+          web.requestAnimationFrame(() => {
+            web.requestAnimationFrame(() => {
+              painted(true);
+            });
+          });
+        });
+      })
+      .catch(() => false);
+  }
+
   /** Onde uma coisa da página está na tela agora; nada quando não está à vista. */
   public async locate(target: string): Promise<IScreenBox | null> {
     if (!this.page) return null;
