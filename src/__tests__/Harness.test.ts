@@ -209,6 +209,100 @@ const APP: IAppSnapshot = {
 };
 
 describe('Harness', () => {
+  describe('writeSkill', () => {
+    it('briefs whoever writes a skill with the QA, in their language, and nothing of a chat', async () => {
+      const writing = harness.writeSkill({
+        text: 'Our cases are Gherkin.',
+        attachments: null,
+        current: null,
+        language: 'pt',
+      });
+
+      await expect(writing.systemPrompt).toMatchFileSnapshot(
+        './__prompts__/skill-writer.txt',
+      );
+      await expect(writing.schema).toMatchFileSnapshot('./__prompts__/skill-schema.txt');
+      expect(writing.systemPrompt).not.toContain('## Planejando com o QA');
+      expect(writing.prompt).toBe('Our cases are Gherkin.');
+      expect(writing.readDirs).toEqual([]);
+    });
+
+    it('hands the files the QA attached, and the skill as it is when the QA changes one', () => {
+      const writing = harness.writeSkill({
+        text: 'Add the edge cases.',
+        attachments: {
+          root: '/data/skills/new',
+          files: [{ name: 'cts.pdf', path: '/data/skills/new/cts.pdf', isImage: false }],
+        },
+        current: {
+          name: 'cases-gherkin',
+          description: 'When writing cases',
+          body: '## Format\nGherkin.',
+        },
+        language: 'en',
+      });
+
+      expect(writing.prompt).toContain('## The skill as it is now\nname: cases-gherkin');
+      expect(writing.prompt).toContain('  ## Format');
+      expect(writing.prompt).toContain('- cts.pdf (file): /data/skills/new/cts.pdf');
+      expect(writing.readDirs).toEqual(['/data/skills/new']);
+    });
+
+    it('reads the skill the agent wrote, with a name QAzinho can keep', () => {
+      expect(
+        harness.readSkill(
+          JSON.stringify({
+            reply: 'Pronto.',
+            skill: {
+              name: 'Casos Gherkin!',
+              description: ' Ao escrever casos ',
+              body: ' ## Formato ',
+            },
+          }),
+        ),
+      ).toEqual({
+        reply: 'Pronto.',
+        questions: [],
+        skill: {
+          name: 'casos-gherkin',
+          description: 'Ao escrever casos',
+          body: '## Formato',
+        },
+      });
+    });
+
+    it('reads a round of questions, and NOT a skill without instructions or prose', () => {
+      expect(
+        harness.readSkill(
+          JSON.stringify({
+            reply: 'Uma pergunta.',
+            questions: [
+              {
+                header: 'Prioridade',
+                question: 'Como vocês dão prioridade?',
+                options: [{ label: 'Pelo risco', description: 'Pagamento primeiro' }],
+                multiSelect: false,
+              },
+            ],
+            skill: { name: 'x', description: 'y', body: ' ' },
+          }),
+        ),
+      ).toEqual({
+        reply: 'Uma pergunta.',
+        questions: [
+          {
+            header: 'Prioridade',
+            question: 'Como vocês dão prioridade?',
+            options: [{ label: 'Pelo risco', description: 'Pagamento primeiro' }],
+            isMultiSelect: false,
+          },
+        ],
+        skill: null,
+      });
+      expect(harness.readSkill('Just prose.')).toBeNull();
+    });
+  });
+
   describe('chat', () => {
     it('keeps the corpus alone in the system prompt, the one a resumed session holds on to', async () => {
       const chat = harness.chat(EMPTY_CHAT);

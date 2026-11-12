@@ -38,6 +38,8 @@ export type * from './IReviewSighting';
 export type * from './IRunFinding';
 export type * from './IRunVideo';
 export type * from './IScreenBox';
+export type * from './ISkillDraft';
+export type * from './ISkillDraftAnswer';
 export type * from './IssueTracker';
 export type * from './IStepAction';
 export type * from './IStepAsked';

@@ -10,3 +10,5 @@ export * from './REVIEW_ANSWER';
 export * from './REVIEW_SCHEMA';
 export * from './KEEP_ANSWER';
 export * from './KEEP_SCHEMA';
+export * from './SKILL_DRAFT';
+export * from './SKILL_SCHEMA';

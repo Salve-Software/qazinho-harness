@@ -5,3 +5,4 @@ export * from './readPullAnswer';
 export * from './readReviewAnswer';
 export * from './stripAnsi';
 export * from './readKeepAnswer';
+export * from './readSkillDraft';

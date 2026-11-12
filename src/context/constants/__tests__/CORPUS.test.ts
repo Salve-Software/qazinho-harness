@@ -30,6 +30,7 @@ describe('CORPUS', () => {
       'reader',
       'reporter',
       'runner',
+      'skill-writer',
     ]);
   });
 

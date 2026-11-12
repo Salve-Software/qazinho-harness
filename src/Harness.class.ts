@@ -11,6 +11,8 @@ import type {
   IJiraStoryCopy,
   IKnownBug,
   IMemoryBrief,
+  ISkillDraft,
+  ISkillDraftAnswer,
   KeepEvent,
   ITargetUnderTest,
   ITeamSkill,
@@ -77,6 +79,7 @@ import {
   readKeepAnswer,
   readPullAnswer,
   readReviewAnswer,
+  readSkillDraft,
 } from '@/library';
 import {
   BUILD_SCHEMA,
@@ -84,6 +87,7 @@ import {
   KEEP_SCHEMA,
   PULL_SCHEMA,
   REVIEW_SCHEMA,
+  SKILL_SCHEMA,
 } from '@/schemas';
 import { BUILD_TOOLS, MCP_HOST, PERMISSION_TOOL, TOOL_GRANTS } from '@/tools/constants';
 import { designAccessOf, toolsOfRole } from '@/tools/library';
@@ -412,6 +416,57 @@ export class Harness {
    */
   public readReview(text: string): IReviewAnswer | null {
     return readReviewAnswer(text);
+  }
+
+  /**
+   * Uma mensagem a quem escreve uma skill com o QA: o corpus dele, os arquivos que o QA
+   * anexou, e a skill como está quando o QA a muda.
+   */
+  public writeSkill(props: {
+    text: string;
+    attachments: IAttachedFiles | null;
+    current: ISkillDraft | null;
+    language: Language;
+  }): { systemPrompt: string; prompt: string; schema: string; readDirs: string[] } {
+    const current = props.current;
+
+    return {
+      systemPrompt: this.contextFor({
+        target: { role: 'skill-writer' },
+        values: { language: LANGUAGE_NAMES[props.language] },
+      }),
+      prompt: chatMessageOf({
+        sections: [
+          {
+            title: 'The skill as it is now',
+            lines:
+              current === null
+                ? []
+                : [
+                    `name: ${current.name}`,
+                    `description: ${current.description}`,
+                    'body:',
+                    ...current.body
+                      .replace(/<\/?qazinho>/gi, '[qazinho]')
+                      .split('\n')
+                      .map((line) => `  ${line}`),
+                  ],
+          },
+          describeAttachments(props.attachments),
+        ],
+        text: props.text,
+      }),
+      schema: SKILL_SCHEMA,
+      readDirs:
+        props.attachments === null || props.attachments.files.length === 0
+          ? []
+          : [props.attachments.root],
+    };
+  }
+
+  /** O que quem escreve a skill respondeu; null quando não é uma resposta. */
+  public readSkill(text: string): ISkillDraftAnswer | null {
+    return readSkillDraft(text);
   }
 
   /** A resposta do build a partir do que o agente imprimiu. */
