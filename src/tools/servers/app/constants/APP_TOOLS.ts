@@ -80,8 +80,8 @@ export const APP_TOOLS = [
     description: "Open QAzinho's settings, on one of its sections.",
     input: z.object({
       section: z
-        .enum(['agent', 'connections', 'general', 'storage', 'about'], {
-          error: '"section" is agent, connections, general, storage or about.',
+        .enum(['agent', 'skills', 'connections', 'general', 'storage', 'about'], {
+          error: '"section" is agent, skills, connections, general, storage or about.',
         })
         .optional(),
     }),
