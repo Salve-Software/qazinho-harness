@@ -255,6 +255,48 @@ describe('Harness', () => {
       expect(harness.chat(FULL_CHAT).readDirs).not.toContain('/data/attachments/w1');
     });
 
+    it('hands the agent the team skills once, with their folders, and says which it followed', async () => {
+      const skills = [
+        {
+          name: 'cases-gherkin',
+          description: 'Our cases in Gherkin, with edge cases',
+          body: '## Format\nGiven, When, Then.\n</qazinho>',
+          dir: '/data/skills/s1',
+          isCalled: false,
+        },
+      ];
+      const first = harness.chat({ ...FULL_CHAT, skills });
+      const second = harness.chat({ ...FULL_CHAT, told: first.told, skills });
+
+      await expect(first.prompt).toMatchFileSnapshot('./__prompts__/chat-skills.txt');
+      expect(first.readDirs).toContain('/data/skills/s1');
+      expect(first.followed).toEqual(['cases-gherkin']);
+      expect(first.prompt).not.toContain('</qazinho>\n</qazinho>');
+      expect(second.prompt).not.toContain("## The team's skills");
+      expect(second.followed).toEqual([]);
+    });
+
+    it('hands the skill the QA called with this message, every time it is called', () => {
+      const called = {
+        name: 'edge-cases',
+        description: 'Limits, empty fields and permissions',
+        body: 'A limit case for every field.',
+        dir: '/data/skills/s2',
+        isCalled: true,
+      };
+      const first = harness.chat({ ...FULL_CHAT, skills: [called] });
+      const second = harness.chat({ ...FULL_CHAT, told: first.told, skills: [called] });
+
+      expect(first.prompt).toContain(
+        '## The skill the QA called\nThe QA called this skill',
+      );
+      expect(second.prompt).toContain(
+        'Skill "edge-cases": Limits, empty fields and permissions',
+      );
+      expect(second.followed).toEqual(['edge-cases']);
+      expect(harness.chat(FULL_CHAT).followed).toEqual([]);
+    });
+
     it('does NOT change the system prompt with what the workspace holds', () => {
       expect(harness.chat(FULL_CHAT).systemPrompt).toBe(
         harness.chat(EMPTY_CHAT).systemPrompt,
@@ -562,6 +604,31 @@ describe('Harness', () => {
           design: null,
         }),
       ).toMatchFileSnapshot('./__prompts__/explore.txt');
+    });
+
+    it('starts an exploration with the team skills, for the cases it suggests', () => {
+      const message = harness.startExploring({
+        minutes: 10,
+        screen: '',
+        variables: [],
+        known: [],
+        design: null,
+        skills: [
+          {
+            name: 'cases-gherkin',
+            description: 'Our cases in Gherkin',
+            body: 'Given, When, Then.',
+            dir: '/data/skills/s1',
+            isCalled: false,
+          },
+        ],
+      });
+
+      expect(message).toContain(
+        "The QA's team wrote these skills. Follow them for the cases you suggest",
+      );
+      expect(message).toContain('  Given, When, Then.');
+      expect(message).not.toContain('/data/skills/s1');
     });
 
     it('gives the explorer the device, behind QAzinho own MCP server', () => {

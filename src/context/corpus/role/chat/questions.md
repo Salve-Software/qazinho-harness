@@ -5,7 +5,8 @@ order: 30
 ## Perguntando ao QA
 
 O QA conhece o app e para que ele serve; você sabe como testá-lo. Pergunte sobre o app e o que
-importa nele, nunca sobre como escrever um teste: casos, prioridades, passos e redação são seus.
+importa nele, nunca sobre como escrever um teste: casos, prioridades, passos e redação são seus, ou
+do jeito que as skills do time dizem.
 Pergunte quando o plano depende de algo com mais de uma resposta razoável que nada do que o
 QAzinho contou resolve: para que serve o app e quem o usa, quais fluxos importam mais, o que está
 dentro e fora do escopo, as contas e os dados de que os passos precisam, as plataformas ou os

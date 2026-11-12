@@ -13,6 +13,7 @@ import type {
   IMemoryBrief,
   KeepEvent,
   ITargetUnderTest,
+  ITeamSkill,
   IVariableBrief,
   IViewport,
   Language,
@@ -44,6 +45,7 @@ import {
   chatMessageOf,
   describeApp,
   describeAttachments,
+  describeCalledSkill,
   describeBuild,
   describeCase,
   describeChatMemories,
@@ -63,6 +65,7 @@ import {
   describeScreen,
   describeSender,
   describeSize,
+  describeSkills,
   describeStory,
   fillSections,
   renderSections,
@@ -146,6 +149,7 @@ export class Harness {
     isFromAgent?: boolean;
     attachments?: IAttachedFiles | null;
     memories?: IMemoryBrief[];
+    skills?: ITeamSkill[];
   }): {
     systemPrompt: string;
     prompt: string;
@@ -155,7 +159,11 @@ export class Harness {
     design: IDesignAccess;
     readDirs: string[];
     permissionTool: string;
+    followed: string[];
   } {
+    const skills = props.skills ?? [];
+    const kept = describeSkills(skills);
+    const called = describeCalledSkill(skills);
     const news = changedSections({
       sections: [
         {
@@ -169,6 +177,7 @@ export class Harness {
           ],
         },
         describeKeptVariables(props.variables),
+        kept,
         describeChatMemories(props.memories ?? []),
         describeRuns(props.runs),
         describeLook(props.look),
@@ -198,6 +207,7 @@ export class Harness {
       prompt: chatMessageOf({
         sections: [
           ...news.changed,
+          called,
           describeReferences(props.references),
           describeAttachments(props.attachments ?? null),
           describeSender(props.isFromAgent === true),
@@ -217,8 +227,15 @@ export class Harness {
         ...((props.attachments?.files.length ?? 0) > 0 && props.attachments
           ? [props.attachments.root]
           : []),
+        ...skills.map(({ dir }) => dir),
       ],
       permissionTool: PERMISSION_TOOL.granted,
+      followed: skills
+        .filter(
+          ({ isCalled }) =>
+            isCalled || news.changed.some(({ title }) => title === kept.title),
+        )
+        .map(({ name }) => name),
     };
   }
 
@@ -462,6 +479,7 @@ export class Harness {
     design: IDesignLink | null;
     plan?: IFlatStep[];
     memories?: IMemoryBrief[];
+    skills?: ITeamSkill[];
   }): string {
     return describeExploration(props);
   }

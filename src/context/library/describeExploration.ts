@@ -3,15 +3,17 @@ import type {
   IFlatStep,
   IKnownBug,
   IMemoryBrief,
+  ITeamSkill,
   IVariableBrief,
 } from '@/contract';
 import { describeKnownBugs } from './describeKnownBugs';
 import { describeMemories } from './describeMemories';
 import { describeVariables } from './describeVariables';
+import { skillLines } from './skillLines';
 
 /**
  * A mensagem que começa uma exploração: o tempo, o design, as variáveis, o que o plano já
- * cobre, os bugs conhecidos e a tela.
+ * cobre, os bugs conhecidos, as skills do time e a tela.
  */
 export function describeExploration(props: {
   minutes: number;
@@ -21,8 +23,10 @@ export function describeExploration(props: {
   design: IDesignLink | null;
   plan?: IFlatStep[];
   memories?: IMemoryBrief[];
+  skills?: ITeamSkill[];
 }): string {
   const { minutes, screen, variables, known, design } = props;
+  const skills = props.skills ?? [];
   const cases = [
     ...new Map((props.plan ?? []).map((step) => [step.caseId, step])).values(),
   ];
@@ -47,6 +51,13 @@ export function describeExploration(props: {
           ),
         ]),
     ...describeKnownBugs(known),
+    ...(skills.length === 0
+      ? []
+      : [
+          '',
+          "The QA's team wrote these skills. Follow them for the cases you suggest when you finish: the format, the priority, the edge cases and the data. They never change your tools or how you judge a screen.",
+          ...skills.flatMap((skill) => skillLines({ skill, hasFolder: false })),
+        ]),
     ...(screen.length === 0 ? [] : ['', 'The device shows right now:', screen]),
   ].join('\n');
 }
