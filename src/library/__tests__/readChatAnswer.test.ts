@@ -250,4 +250,17 @@ describe('readChatAnswer', () => {
       expect(question?.options).toEqual(ACCOUNT.options);
     });
   });
+
+  it('keeps the app’s name the agent read, trimmed, and nothing for an empty one', () => {
+    expect(
+      readChatAnswer(JSON.stringify({ reply: 'Ok.', projectName: '  Loja Online ' }))
+        ?.projectName,
+    ).toBe('Loja Online');
+    expect(
+      readChatAnswer(JSON.stringify({ reply: 'Ok.', projectName: ' ' })),
+    ).not.toHaveProperty('projectName');
+    expect(
+      readChatAnswer(JSON.stringify({ reply: 'Ok.', projectName: 'x'.repeat(61) })),
+    ).not.toHaveProperty('projectName');
+  });
 });

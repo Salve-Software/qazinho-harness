@@ -7,6 +7,7 @@ export * from './KEEP_LIMIT';
 export * from './KNOWN_BUGS';
 export * from './LANGUAGE_NAMES';
 export * from './MEMORY_WORDS';
+export * from './NAMING_SECTION';
 export * from './PAGE_SECTION';
 export * from './PULL_SECTION';
 export * from './SCREEN_NAMES';

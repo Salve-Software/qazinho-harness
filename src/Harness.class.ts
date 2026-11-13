@@ -75,6 +75,7 @@ import {
   describeSize,
   describeSkills,
   describeStory,
+  describeUnnamedProject,
   fillSections,
   renderSections,
   sectionsFor,
@@ -163,6 +164,7 @@ export class Harness {
     memories?: IMemoryBrief[];
     skills?: ITeamSkill[];
     doubts?: IPlanDoubt[];
+    isProjectUnnamed?: boolean;
   }): {
     systemPrompt: string;
     prompt: string;
@@ -207,6 +209,7 @@ export class Harness {
           wasTold: (props.told[STORY_SECTION.title] ?? '') !== '',
         }),
         describeDoubts(props.doubts ?? []),
+        describeUnnamedProject(props.isProjectUnnamed === true),
         describePage(props.page),
         describeDesign({
           design: props.design,

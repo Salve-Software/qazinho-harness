@@ -324,6 +324,19 @@ describe('Harness', () => {
       expect(harness.chat(FULL_CHAT).prompt).not.toContain('Who wrote this message');
     });
 
+    it('asks for the app’s name while the project has none, and once', () => {
+      const first = harness.chat({ ...FULL_CHAT, isProjectUnnamed: true });
+      const again = harness.chat({
+        ...FULL_CHAT,
+        isProjectUnnamed: true,
+        told: first.told,
+      });
+
+      expect(first.prompt).toContain("## The project's name");
+      expect(again.prompt).not.toContain("## The project's name");
+      expect(harness.chat(FULL_CHAT).prompt).not.toContain("## The project's name");
+    });
+
     it('hands the agent the files the QA attached, and the folder to read them from', () => {
       const chat = harness.chat({
         ...FULL_CHAT,

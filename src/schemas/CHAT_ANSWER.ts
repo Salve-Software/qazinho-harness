@@ -37,6 +37,13 @@ export const CHAT_ANSWER = z.object({
       'What you say to the QA, as a colleague would: short prose, no headings, no bold. A list only when they ask for one or there are four items or more.',
     ),
   questions: z.array(QUESTION).optional(),
+  projectName: z
+    .string()
+    .max(60)
+    .describe(
+      "Only while the message says the project has no name: the app's name, the way the app or the team calls it, in a few words. Never a description of the app.",
+    )
+    .optional(),
   plan: z
     .object({
       summary: z.string(),

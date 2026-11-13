@@ -30,6 +30,7 @@ export * from './describeSender';
 export * from './describeSize';
 export * from './describeSkills';
 export * from './describeStory';
+export * from './describeUnnamedProject';
 export * from './describeVariables';
 export * from './fillSections';
 export * from './memoryLineOf';

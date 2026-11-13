@@ -27,6 +27,9 @@ export function readChatAnswer(text: string): IChatAnswer | null {
     written
       .extend({ strategy: written.shape.strategy.optional() })
       .safeParse(withoutNullIds(field('plan'))).data ?? null;
+  const projectName = CHAT_ANSWER.shape.projectName
+    .safeParse(field('projectName'))
+    .data?.trim();
 
   return {
     reply: reply.trim(),
@@ -40,6 +43,7 @@ export function readChatAnswer(text: string): IChatAnswer | null {
       isMultiSelect: multiSelect,
     })),
     plan: plan !== null && plan.cases.length > 0 ? plan : null,
+    ...(projectName === undefined || projectName === '' ? {} : { projectName }),
   };
 }
 
