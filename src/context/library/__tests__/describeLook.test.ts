@@ -57,10 +57,10 @@ describe('describeLook', () => {
         kind: 'ios',
         where: 'Visitas.app',
         isOpen: false,
-        reason: 'this machine has no iOS simulator with idb',
+        reason: 'this machine has no iOS simulator with AXe',
       }).lines,
     ).toEqual([
-      'QAzinho tried to open Visitas.app on an iOS simulator before this message and could not: this machine has no iOS simulator with idb',
+      'QAzinho tried to open Visitas.app on an iOS simulator before this message and could not: this machine has no iOS simulator with AXe',
     ]);
   });
 

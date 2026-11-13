@@ -9,8 +9,8 @@ import { numberDuplicates } from '@/engine/devices/library';
 export function describeIosScreen(props: {
   elements: IScreenElement[];
   app: string;
+  isHome: boolean;
 }): string {
-  const isHome = props.elements.some(({ isLaunchIcon }) => isLaunchIcon);
   const labelled = props.elements.filter((one) => one.label.length > 0);
 
   const text = labelled
@@ -23,7 +23,7 @@ export function describeIosScreen(props: {
     .map((one) => `${one.role.toLowerCase()}: ${one.label.slice(0, IOS.labelLimit)}`);
 
   return [
-    isHome ? `APP: the home screen, ${props.app} is not open` : `APP: ${props.app}`,
+    props.isHome ? `APP: the home screen, ${props.app} is not open` : `APP: ${props.app}`,
     'TEXT:',
     text,
     'CONTROLS:',

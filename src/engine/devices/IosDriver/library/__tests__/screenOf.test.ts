@@ -17,7 +17,7 @@ describe('screenOf', () => {
     });
   });
 
-  it('gives null when idb lists no app, or said nothing', () => {
+  it('gives null when axe lists no app, or said nothing', () => {
     expect(screenOf(JSON.stringify([BUTTON]))).toBeNull();
     expect(screenOf('')).toBeNull();
   });

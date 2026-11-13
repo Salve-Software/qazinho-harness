@@ -28,25 +28,28 @@ import {
   bundleOfPlist,
   describeIosScreen,
   findElement,
+  launchPidOf,
   parseBooted,
   parseElements,
+  rootPidOf,
   runTool,
   screenOf,
 } from './library';
 
-/** Dirige um simulador iOS. O simctl liga e instala; só o idb toca a tela. */
+/** Dirige um simulador iOS. O simctl liga e instala; o AXe lê a tela e toca. */
 export class IosDriver implements IDeviceDriver {
-  private readonly idb: string;
+  private readonly axe: string;
   private readonly udid: string;
   private readonly app: string;
   private readonly shrink: ShrinkImage | null;
   private bundle = '';
+  private pid: number | null = null;
   private isOurs = false;
   private recording: { process: ChildProcess; file: string; startedAt: number } | null =
     null;
 
   public constructor(props: IIosDriver) {
-    this.idb = props.idb;
+    this.axe = props.axe;
     this.udid = props.udid;
     this.app = props.app;
     this.shrink = props.shrink ?? null;
@@ -83,7 +86,7 @@ export class IosDriver implements IDeviceDriver {
     }
 
     if (action.kind === 'press') {
-      await this.ui([
+      await this.run([
         'key',
         IOS.keys[action.target.toLowerCase()] ?? IOS.keys.enter ?? '40',
       ]);
@@ -93,7 +96,7 @@ export class IosDriver implements IDeviceDriver {
     }
 
     if (action.kind === 'goto') {
-      await this.simctl(['launch', this.udid, this.bundle]);
+      this.pid = launchPidOf(await this.simctl(['launch', this.udid, this.bundle]));
       await this.settle();
 
       return;
@@ -101,7 +104,7 @@ export class IosDriver implements IDeviceDriver {
 
     if (action.kind === 'reopen') {
       await this.simctl(['terminate', this.udid, this.bundle]).catch(() => '');
-      await this.simctl(['launch', this.udid, this.bundle]);
+      this.pid = launchPidOf(await this.simctl(['launch', this.udid, this.bundle]));
       await this.settle();
       await this.expectOpen();
 
@@ -128,11 +131,13 @@ export class IosDriver implements IDeviceDriver {
     if (!element) throw new Error(`Nothing on the screen answers to "${action.target}".`);
 
     if (action.kind === 'long_press') {
-      await this.ui([
+      await this.run([
         'tap',
+        '-x',
         String(element.x),
+        '-y',
         String(element.y),
-        '--duration',
+        '--hold',
         String(IOS.longPressSec),
       ]);
       await this.settle();
@@ -145,9 +150,16 @@ export class IosDriver implements IDeviceDriver {
 
       if (!drop) throw new Error(`Nothing on the screen answers to "${action.value}".`);
 
-      await this.ui([
-        'swipe',
-        ...[element.x, element.y, drop.x, drop.y].map(String),
+      await this.run([
+        'drag',
+        '--start-x',
+        String(element.x),
+        '--start-y',
+        String(element.y),
+        '--end-x',
+        String(drop.x),
+        '--end-y',
+        String(drop.y),
         '--duration',
         String(IOS.dragSec),
       ]);
@@ -156,18 +168,24 @@ export class IosDriver implements IDeviceDriver {
       return;
     }
 
-    await this.ui(['tap', String(element.x), String(element.y)]);
+    await this.run(['tap', '-x', String(element.x), '-y', String(element.y)]);
 
     if (action.kind === 'fill') {
       await this.settle();
-      await this.ui(['text', action.value]);
+      await this.run(['type', action.value]);
     }
 
     await this.settle();
   }
 
   public async describe(): Promise<string> {
-    return describeIosScreen({ elements: await this.read(), app: this.bundle });
+    const described = await this.run(['describe-ui']);
+
+    return describeIosScreen({
+      elements: parseElements(described),
+      app: this.bundle,
+      isHome: this.atHome(described),
+    });
   }
 
   /**
@@ -194,7 +212,7 @@ export class IosDriver implements IDeviceDriver {
 
   /** Onde uma coisa da tela está agora, em frações dela; nada quando não está lá. */
   public async locate(target: string): Promise<IScreenBox | null> {
-    const described = await this.ui(['describe-all']);
+    const described = await this.run(['describe-ui']);
     const element = findElement({ elements: parseElements(described), target });
     const screen = screenOf(described);
 
@@ -331,7 +349,7 @@ export class IosDriver implements IDeviceDriver {
   }
 
   private async scroll(props: { direction: string; until: string }): Promise<void> {
-    const size = screenOf(await this.ui(['describe-all']).catch(() => ''));
+    const size = screenOf(await this.run(['describe-ui']).catch(() => ''));
 
     if (size === null)
       throw new Error('The simulator did not say how big its screen is.');
@@ -339,9 +357,16 @@ export class IosDriver implements IDeviceDriver {
     const { from, to } = swipeOf({ size, direction: props.direction });
     const until = props.until.trim();
     const swipe = async () => {
-      await this.ui([
+      await this.run([
         'swipe',
-        ...[from.x, from.y, to.x, to.y].map(String),
+        '--start-x',
+        String(from.x),
+        '--start-y',
+        String(from.y),
+        '--end-x',
+        String(to.x),
+        '--end-y',
+        String(to.y),
         '--duration',
         String(IOS.swipeSec),
       ]);
@@ -381,29 +406,39 @@ export class IosDriver implements IDeviceDriver {
   }
 
   private async expectOpen(): Promise<void> {
-    let isHome = false;
+    let atHome = false;
 
     for (let tries = 0; tries < IOS.openChecks; tries += 1) {
-      const elements = await this.read();
+      const described = await this.run(['describe-ui']).catch(() => '');
 
-      isHome = elements.some(({ isLaunchIcon }) => isLaunchIcon);
+      atHome = this.atHome(described);
 
-      if (!isHome && elements.some(({ label }) => label.trim().length > 0)) return;
+      if (
+        !atHome &&
+        parseElements(described).some(({ label }) => label.trim().length > 0)
+      )
+        return;
 
       await new Promise((wake) => setTimeout(wake, IOS.settleMs));
     }
 
-    if (isHome)
+    if (atHome)
       throw new Error(
         'The app closed right after it opened: the simulator shows its home screen.',
       );
+  }
+
+  private atHome(described: string): boolean {
+    const pid = rootPidOf(described);
+
+    return this.pid !== null && pid !== null && pid !== this.pid;
   }
 
   private async installFresh(): Promise<void> {
     await this.simctl(['terminate', this.udid, this.bundle]).catch(() => '');
     await this.simctl(['uninstall', this.udid, this.bundle]).catch(() => '');
     await this.simctl(['install', this.udid, this.app]);
-    await this.simctl(['launch', this.udid, this.bundle]);
+    this.pid = launchPidOf(await this.simctl(['launch', this.udid, this.bundle]));
     await this.settle();
   }
 
@@ -422,7 +457,7 @@ export class IosDriver implements IDeviceDriver {
   }
 
   private async read() {
-    return parseElements(await this.ui(['describe-all']));
+    return parseElements(await this.run(['describe-ui']));
   }
 
   private async isBooted(): Promise<boolean> {
@@ -431,8 +466,8 @@ export class IosDriver implements IDeviceDriver {
     return parseBooted(listed).includes(this.udid);
   }
 
-  private async ui(args: string[]): Promise<string> {
-    return runTool({ command: this.idb, args: ['ui', ...args, '--udid', this.udid] });
+  private async run(args: string[]): Promise<string> {
+    return runTool({ command: this.axe, args: [...args, '--udid', this.udid] });
   }
 
   private async simctl(args: string[]): Promise<string> {

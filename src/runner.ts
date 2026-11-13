@@ -56,19 +56,19 @@ async function deviceFor(props: {
     return new AndroidDriver({ sdkRoot: env.androidSdk, avd, apk: build });
   }
 
-  const idb = env.idb ?? onPath('idb');
+  const axe = env.axe ?? onPath('axe');
   const udid = env.simulator ?? (await listSimulators()).at(-1);
   const app = await appOfZip({ zip: build, folder: join(workDir, 'app') });
 
-  if (idb === null)
-    throw new Error('This machine has no idb to touch the simulator with.');
+  if (axe === null)
+    throw new Error('This machine has no AXe to touch the simulator with.');
 
   if (udid === undefined)
     throw new Error('This machine has no iOS simulator to walk on.');
 
   if (app === null) throw new Error('The build holds no simulator app.');
 
-  return new IosDriver({ idb, udid, app });
+  return new IosDriver({ axe, udid, app });
 }
 
 function agentFor(props: {

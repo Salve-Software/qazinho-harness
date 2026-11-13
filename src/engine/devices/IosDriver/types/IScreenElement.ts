@@ -1,8 +1,8 @@
 import type { IBox } from '@/engine/devices/types';
 
 /**
- * Um elemento da árvore de acessibilidade, com a caixa em pontos, o ponto em que um dedo
- * pousaria, e se é o ícone de um app na tela inicial.
+ * Um elemento da árvore de acessibilidade, com a caixa em pontos e o ponto em que um dedo
+ * pousaria.
  */
 export interface IScreenElement {
   label: string;
@@ -10,5 +10,4 @@ export interface IScreenElement {
   x: number;
   y: number;
   box: IBox;
-  isLaunchIcon: boolean;
 }

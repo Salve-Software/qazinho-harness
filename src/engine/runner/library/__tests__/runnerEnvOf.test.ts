@@ -22,7 +22,7 @@ describe('runnerEnvOf', () => {
       androidSdk: '/opt/android',
       avd: 'Pixel_9',
       simulator: null,
-      idb: null,
+      axe: null,
     });
   });
 

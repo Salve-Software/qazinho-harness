@@ -119,7 +119,7 @@ host que só pergunta ao agente (a API) nunca carregue o Playwright.
 - **`devices/`** guarda cada dispositivo que uma run dirige, atrás de `IDeviceDriver`: o
   `WebDriver` dirige o Chrome pelo playwright-core, um perfil por workspace, anota cada
   requisição que o app faz e avisa o endereço da aba à vista a cada navegação (`onAddress`); o `AndroidDriver` dirige um AVD pelo `adb` e pelo `uiautomator`; o
-  `IosDriver`, um simulador pelo `simctl` e pelo idb. Um celular grava a si mesmo na pasta da run
+  `IosDriver`, um simulador pelo `simctl` e pelo AXe. Um celular grava a si mesmo na pasta da run
   (`RUN_VIDEO_FILES`).
 - O Chrome abre sem copiar o próprio app (`CHROME_DISABLED_FEATURES`): no macOS, a cópia feita
   debaixo do QAzinho pedia a permissão de gerenciar apps, e o sistema avisava que o QAzinho tentou

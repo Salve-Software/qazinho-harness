@@ -16,21 +16,19 @@ describe('parseElements', () => {
     });
   });
 
-  it('reads one element per line as well as one document', () => {
-    const lines = [JSON.stringify(ONE), JSON.stringify({ ...ONE, AXLabel: 'Cancel' })];
+  it('flattens the tree, so a control nested under the app is reachable too', () => {
+    const tree = [
+      {
+        type: 'Application',
+        AXLabel: null,
+        frame: { x: 0, y: 0, width: 402, height: 874 },
+        children: [{ ...ONE, AXLabel: 'Cancel' }],
+      },
+    ];
 
-    expect(parseElements(lines.join('\n')).map(({ label }) => label)).toEqual([
-      'Sign in',
+    expect(parseElements(JSON.stringify(tree)).map(({ label }) => label)).toContain(
       'Cancel',
-    ]);
-  });
-
-  it("tells an app's icon on the home screen from the app's own controls", () => {
-    const icon = { ...ONE, AXLabel: 'Safari', traits: ['Scrollable', 'LaunchIcon'] };
-
-    expect(
-      parseElements(JSON.stringify([ONE, icon])).map(({ isLaunchIcon }) => isLaunchIcon),
-    ).toEqual([false, true]);
+    );
   });
 
   it('falls back to the value when an element carries no label', () => {
@@ -49,13 +47,11 @@ describe('parseElements', () => {
     expect(parseElements(JSON.stringify([flat]))).toEqual([]);
   });
 
-  it('a line that is not an element is skipped, and the rest still read', () => {
-    const mixed = ['not json', JSON.stringify(ONE)].join('\n');
-
-    expect(parseElements(mixed)).toHaveLength(1);
+  it('output that is not JSON is an empty screen, not a crash', () => {
+    expect(parseElements('axe: no running simulator with that udid')).toEqual([]);
   });
 
-  it('idb saying nothing is an empty screen, not a crash', () => {
+  it('axe saying nothing is an empty screen, not a crash', () => {
     expect(parseElements('')).toEqual([]);
   });
 });

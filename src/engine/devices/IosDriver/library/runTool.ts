@@ -5,7 +5,8 @@ import { IOS } from '@/engine/devices/IosDriver/constants';
 const run = promisify(execFile);
 
 /**
- * Toda palavra que o QAzinho diz a um simulador passa por aqui, idb e simctl igualmente.
+ * Toda palavra que o QAzinho diz a um simulador passa por aqui, o AXe e o simctl
+ * igualmente.
  */
 export async function runTool(props: {
   command: string;

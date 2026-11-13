@@ -1,28 +1,38 @@
 import type { IScreenElement } from '@/engine/devices/IosDriver/types';
 
-type Described = {
+type Node = {
   AXLabel?: unknown;
   AXValue?: unknown;
   type?: unknown;
-  traits?: unknown;
   frame?: { x?: unknown; y?: unknown; width?: unknown; height?: unknown };
+  children?: unknown;
 };
 
 /**
- * O `idb ui describe-all` já respondeu tanto com um array JSON quanto com um objeto por
- * linha; aceite os dois.
+ * O `axe describe-ui` devolve uma árvore: a raiz é o app e cada nó traz os filhos dele.
+ * Achata tudo num nível só, um controle por nó com rótulo e caixa.
  */
 export function parseElements(described: string): IScreenElement[] {
-  const trimmed = described.trim();
-  const whole = readJson(trimmed);
+  const nodes: Node[] = [];
 
-  if (Array.isArray(whole)) return (whole as Described[]).flatMap(toElement);
+  collect(readJson(described.trim()), nodes);
 
-  return trimmed
-    .split('\n')
-    .map(readJson)
-    .filter((one) => one !== null)
-    .flatMap((one) => toElement(one as Described));
+  return nodes.flatMap(toElement);
+}
+
+function collect(value: unknown, out: Node[]): void {
+  if (Array.isArray(value)) {
+    for (const item of value) collect(item, out);
+
+    return;
+  }
+
+  if (value !== null && typeof value === 'object') {
+    const node = value as Node;
+
+    out.push(node);
+    collect(node.children, out);
+  }
 }
 
 function read(value: unknown): number {
@@ -37,7 +47,7 @@ function readJson(text: string): unknown {
   }
 }
 
-function toElement(one: Described): IScreenElement[] {
+function toElement(one: Node): IScreenElement[] {
   const label =
     [one.AXLabel, one.AXValue].find((value) => typeof value === 'string') ?? '';
   const [x, y, width, height] = [
@@ -56,7 +66,6 @@ function toElement(one: Described): IScreenElement[] {
       x: Math.round(x + width / 2),
       y: Math.round(y + height / 2),
       box: { x, y, width, height },
-      isLaunchIcon: Array.isArray(one.traits) && one.traits.includes('LaunchIcon'),
     },
   ];
 }

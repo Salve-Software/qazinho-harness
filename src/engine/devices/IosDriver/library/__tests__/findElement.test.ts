@@ -7,7 +7,6 @@ const ELEMENTS = [
     role: 'Button',
     x: 10,
     y: 10,
-    isLaunchIcon: false,
     box: { x: 0, y: 0, width: 10, height: 10 },
   },
   {
@@ -15,7 +14,6 @@ const ELEMENTS = [
     role: 'Button',
     x: 20,
     y: 20,
-    isLaunchIcon: false,
     box: { x: 0, y: 0, width: 10, height: 10 },
   },
   {
@@ -23,7 +21,6 @@ const ELEMENTS = [
     role: 'Other',
     x: 30,
     y: 30,
-    isLaunchIcon: false,
     box: { x: 0, y: 0, width: 10, height: 10 },
   },
 ];
@@ -44,7 +41,6 @@ describe('findElement', () => {
         role: 'Button',
         x: 1,
         y: 1,
-        isLaunchIcon: false,
         box: { x: 0, y: 0, width: 10, height: 10 },
       },
       {
@@ -52,7 +48,6 @@ describe('findElement', () => {
         role: 'Button',
         x: 2,
         y: 2,
-        isLaunchIcon: false,
         box: { x: 0, y: 0, width: 10, height: 10 },
       },
     ];

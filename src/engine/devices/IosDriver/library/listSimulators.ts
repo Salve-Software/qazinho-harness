@@ -3,7 +3,7 @@ import { runTool } from './runTool';
 
 /**
  * Os simuladores que o QA já tem. O QAzinho nunca cria um, do mesmo jeito que nunca
- * instala o idb.
+ * instala o AXe.
  */
 export async function listSimulators(): Promise<string[]> {
   const listed = await runTool({
