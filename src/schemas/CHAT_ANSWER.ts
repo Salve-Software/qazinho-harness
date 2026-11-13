@@ -41,7 +41,7 @@ export const CHAT_ANSWER = z.object({
     .string()
     .max(60)
     .describe(
-      "Only while the message says the project has no name: the app's name, the way the app or the team calls it, in a few words. Never a description of the app.",
+      "Only while the message says the project has no name: a name for it in two or three words. The app's name when anything says it, otherwise what is being tested, the way a team would call the project. Never a sentence.",
     )
     .optional(),
   plan: z
