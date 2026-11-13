@@ -1,3 +1,4 @@
+import type { IDeviceFrame } from './IDeviceFrame';
 import type { IShot } from './IShot';
 import type {
   DeviceInput,
@@ -38,5 +39,5 @@ export interface IDeviceDriver {
   apiCalls?: (since: number) => INetworkEntry[];
   responseBody?: (id: number) => Promise<string | null>;
   touch?: (input: DeviceInput) => Promise<void>;
-  snapshot?: () => Promise<Buffer | null>;
+  snapshot?: () => Promise<IDeviceFrame | null>;
 }

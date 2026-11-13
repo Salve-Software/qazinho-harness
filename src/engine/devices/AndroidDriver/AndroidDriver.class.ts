@@ -7,12 +7,18 @@ import type {
   IStepAction,
   IViewport,
 } from '@/contract';
-import type { IDeviceDriver, IShot, ShrinkImage } from '@/engine/devices/types';
+import type {
+  IDeviceDriver,
+  IDeviceFrame,
+  IShot,
+  ShrinkImage,
+} from '@/engine/devices/types';
 import { readdir, stat, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { RUN_VIDEO_FILES } from '@/engine/devices/constants';
 import {
   describeMeasure,
+  phoneFrameOf,
   phoneGlance,
   fractionBoxOf,
   phoneMeasureOf,
@@ -175,14 +181,14 @@ export class AndroidDriver implements IDeviceDriver {
     for (const args of adbInputOf({ input, size: this.size })) await this.shell(args);
   }
 
-  /** A tela do emulador agora, como JPEG, para o QA vê-la enquanto a dirige. */
-  public async snapshot(): Promise<Buffer | null> {
+  /** A tela do emulador agora, como um quadro, para o QA vê-la enquanto a dirige. */
+  public async snapshot(): Promise<IDeviceFrame | null> {
     if (this.serial.length === 0) return null;
 
-    return phoneShot({
+    return phoneFrameOf({
       image: await this.raw(['exec-out', 'screencap', '-p']),
       shrink: this.shrink,
-    }).bytes;
+    });
   }
 
   public async describe(): Promise<string> {

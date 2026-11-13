@@ -7,7 +7,12 @@ import type {
   IStepAction,
   IViewport,
 } from '@/contract';
-import type { IDeviceDriver, IShot, ShrinkImage } from '@/engine/devices/types';
+import type {
+  IDeviceDriver,
+  IDeviceFrame,
+  IShot,
+  ShrinkImage,
+} from '@/engine/devices/types';
 import type { ChildProcess } from 'node:child_process';
 import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
@@ -18,6 +23,7 @@ import { RUN_VIDEO_FILES } from '@/engine/devices/constants';
 import {
   describeMeasure,
   mp4FactsOf,
+  phoneFrameOf,
   phoneGlance,
   fractionBoxOf,
   phoneMeasureOf,
@@ -183,14 +189,14 @@ export class IosDriver implements IDeviceDriver {
     for (const args of idbInputOf({ input, size: this.size })) await this.ui(args);
   }
 
-  /** A tela do simulador agora, como JPEG, para o QA vê-la enquanto a dirige. */
-  public async snapshot(): Promise<Buffer | null> {
+  /** A tela do simulador agora, como um quadro, para o QA vê-la enquanto a dirige. */
+  public async snapshot(): Promise<IDeviceFrame | null> {
     const file = join(tmpdir(), `qazinho-frame-${randomUUID()}.png`);
 
     try {
       await this.simctl(['io', this.udid, 'screenshot', file]);
 
-      return phoneShot({ image: await readFile(file), shrink: this.shrink }).bytes;
+      return phoneFrameOf({ image: await readFile(file), shrink: this.shrink });
     } finally {
       await rm(file, { force: true });
     }

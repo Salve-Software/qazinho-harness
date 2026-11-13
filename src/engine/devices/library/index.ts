@@ -7,6 +7,7 @@ export * from './hexOfColor';
 export * from './mp4FactsOf';
 export * from './numberDuplicates';
 export * from './ordinalOf';
+export * from './phoneFrameOf';
 export * from './phoneGlance';
 export * from './phoneMeasureOf';
 export * from './phoneShot';
