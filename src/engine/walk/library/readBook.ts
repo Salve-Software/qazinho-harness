@@ -14,6 +14,7 @@ export function readBook(text: string | null): IRecipeBook {
       ? {
           cases: read.cases,
           ...(Array.isArray(read.partial) ? { partial: read.partial } : {}),
+          ...(Array.isArray(read.preps) ? { preps: read.preps } : {}),
         }
       : { cases: [] };
   } catch {

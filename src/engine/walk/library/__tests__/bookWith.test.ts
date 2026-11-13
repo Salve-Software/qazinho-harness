@@ -50,6 +50,15 @@ describe('bookWith', () => {
     ).toEqual(['TC-02 r-01', 'TC-01 r-02']);
   });
 
+  it('keeps the preparations of the cases walked by hand', () => {
+    expect(
+      bookWith({
+        book: { cases: [], preps: [recipe('TC-07', 'prep')] },
+        recipes: [recipe('TC-01', 'r-01')],
+      }).preps,
+    ).toEqual([recipe('TC-07', 'prep')]);
+  });
+
   it('leaves the book as it was with nothing new', () => {
     expect(bookWith({ book: { cases: [recipe('TC-01', 'r-01')] }, recipes: [] })).toEqual(
       {

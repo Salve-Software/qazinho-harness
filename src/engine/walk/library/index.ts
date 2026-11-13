@@ -1,4 +1,5 @@
 export * from './bookWith';
+export * from './bookWithPrep';
 export * from './callLineOf';
 export * from './casesOf';
 export * from './expectedValuesOf';
@@ -13,6 +14,8 @@ export * from './missingValuesOf';
 export * from './outcomeOfReport';
 export * from './partialFor';
 export * from './partialRecipeOf';
+export * from './prepFor';
+export * from './prepStepOf';
 export * from './privateUrlOf';
 export * from './proofHolds';
 export * from './proofLinesOf';

@@ -50,6 +50,7 @@ import {
   describeCalledSkill,
   describeBuild,
   describeCase,
+  describePrep,
   describeChatMemories,
   describeCode,
   describeDesign,
@@ -559,5 +560,19 @@ export class Harness {
     uploadsAreSamples?: boolean;
   }): string {
     return describeCase(props);
+  }
+
+  /**
+   * A mensagem que prepara um caso que o QA anda à mão: o agente leva o app às
+   * pré-condições e para onde o primeiro passo começa.
+   */
+  public prepare(props: {
+    steps: IFlatStep[];
+    screen: string;
+    language: Language;
+    variables: IVariableBrief[];
+    memories?: IMemoryBrief[];
+  }): string {
+    return describePrep(props);
   }
 }

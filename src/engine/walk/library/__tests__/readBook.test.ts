@@ -9,6 +9,10 @@ describe('readBook', () => {
     });
   });
 
+  it('reads the preparations of the cases walked by hand back too', () => {
+    expect(readBook('{"cases":[],"preps":[{"caseId":"TC-07"}]}').preps).toHaveLength(1);
+  });
+
   it('reads the recipes a workspace kept', () => {
     expect(readBook('{"cases":[{"caseId":"TC-01"}]}').cases).toHaveLength(1);
   });

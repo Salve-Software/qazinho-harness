@@ -17,6 +17,7 @@ export * from './describeLook';
 export * from './describeMemories';
 export * from './describePage';
 export * from './describePlan';
+export * from './describePrep';
 export * from './describePull';
 export * from './describeReferences';
 export * from './describeReview';
