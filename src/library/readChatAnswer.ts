@@ -22,8 +22,11 @@ export function readChatAnswer(text: string): IChatAnswer | null {
   const questions =
     CHAT_ANSWER.shape.questions.safeParse(withoutNullVariables(field('questions')))
       .data ?? [];
+  const written = CHAT_ANSWER.shape.plan.unwrap();
   const plan =
-    CHAT_ANSWER.shape.plan.safeParse(withoutNullIds(field('plan'))).data ?? null;
+    written
+      .extend({ strategy: written.shape.strategy.optional() })
+      .safeParse(withoutNullIds(field('plan'))).data ?? null;
 
   return {
     reply: reply.trim(),

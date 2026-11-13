@@ -127,6 +127,27 @@ describe('readChatAnswer', () => {
     ]);
   });
 
+  it('keeps the strategy of a plan, and reads a plan the agent wrote without one', () => {
+    const strategy = {
+      covers: 'Coupons at checkout',
+      leavesOut: 'The admin',
+      where: 'Staging, web',
+      data: 'A valid and an expired coupon',
+      risks: 'Stacking',
+    };
+    const planOf = (extra: Record<string, unknown>) =>
+      readChatAnswer(
+        JSON.stringify({
+          reply: 'One case.',
+          plan: { summary: 'One case.', cases: [CASE], ...extra },
+        }),
+      )?.plan;
+
+    expect(planOf({ strategy })?.strategy).toEqual(strategy);
+    expect(planOf({})?.cases).toHaveLength(1);
+    expect(planOf({ strategy: null })?.strategy).toBeUndefined();
+  });
+
   it('reads the questions the agent puts to the QA', () => {
     const answer = readChatAnswer(
       JSON.stringify({ reply: 'Two things first.', questions: [QUESTION] }),

@@ -50,9 +50,8 @@ export const CHAT_ANSWER = z.object({
           risks: z.string().describe('The risks the cases aim at first.'),
         })
         .describe(
-          'How the plan tests, as the confirmation said it, in the language of the plan.',
-        )
-        .optional(),
+          'How the plan tests, on every plan, as the confirmation said it, in the language of the plan.',
+        ),
     })
     .describe(
       "The plan, written the way the team's skills in the message say, when it has them.",
