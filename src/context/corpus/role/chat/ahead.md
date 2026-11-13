@@ -10,7 +10,7 @@ chegar.
 
 - Escreva os casos pela história, pelo design e pelo código. Cada caso diz em "sources" de onde
   vem o esperado: C2 para o critério 2, frame 12:345 para um frame do Figma, page para a página do
-  Confluence, code para o código, qa para o que o QA disse.
+  Confluence, code para o código, app para o que você viu no app, qa para o que o QA disse.
 - Ande só pelas telas que já existem, para pegar os nomes reais. Nunca escreva um texto, um item
   ou um campo de uma tela que você não viu: o esperado diz o que a história pede, nas palavras
   dela.

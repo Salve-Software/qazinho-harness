@@ -5,9 +5,8 @@ export const PLANNED_CASE = DRAFTED_CASE.extend({
   sources: z
     .array(z.string())
     .describe(
-      'Where its expected results come from: a criterion of the story as C2, a Figma frame as frame 12:345, the Confluence page as page, the code as code, or the QA as qa.',
-    )
-    .optional(),
+      'Where its expected results come from, at least one on every case: a criterion of the story as C2, a Figma frame as frame 12:345, the Confluence page as page, the code as code, the app you walked as app, or the QA as qa.',
+    ),
   blockedBy: z
     .array(z.string())
     .describe(

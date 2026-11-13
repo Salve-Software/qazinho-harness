@@ -89,9 +89,9 @@ function withoutNullIds(plan: unknown): unknown {
       return {
         ...(one as Record<string, unknown>),
         ...(fieldOf({ value: one, key: 'id' }) === null ? { id: undefined } : {}),
-        ...(fieldOf({ value: one, key: 'sources' }) === null
-          ? { sources: undefined }
-          : {}),
+        ...(Array.isArray(fieldOf({ value: one, key: 'sources' }))
+          ? {}
+          : { sources: [] }),
         ...(fieldOf({ value: one, key: 'blockedBy' }) === null
           ? { blockedBy: undefined }
           : {}),

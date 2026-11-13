@@ -53,7 +53,7 @@ describe('readChatAnswer', () => {
       }),
     );
 
-    expect(answer?.plan?.cases).toEqual([CASE]);
+    expect(answer?.plan?.cases).toEqual([{ ...CASE, sources: [] }]);
   });
 
   it('keeps the id of a case the agent kept, so its runs and bugs stay with it', () => {
@@ -105,6 +105,28 @@ describe('readChatAnswer', () => {
     ]);
   });
 
+  /**
+   * O schema pede de onde vem o esperado em todo caso, mas um caso que veio sem a lista,
+   * ou com o null do Codex, não pode derrubar o plano inteiro.
+   */
+  it('keeps where each case came from, and reads a case with no list as from nowhere', () => {
+    const answer = readChatAnswer(
+      JSON.stringify({
+        reply: 'Two cases from the story.',
+        plan: {
+          summary: 'Two cases.',
+          cases: [{ ...CASE, sources: ['C1', 'qa'] }, { ...CASE, sources: null }, CASE],
+        },
+      }),
+    );
+
+    expect(answer?.plan?.cases.map(({ sources }) => sources)).toEqual([
+      ['C1', 'qa'],
+      [],
+      [],
+    ]);
+  });
+
   it('reads the questions the agent puts to the QA', () => {
     const answer = readChatAnswer(
       JSON.stringify({ reply: 'Two things first.', questions: [QUESTION] }),
@@ -143,7 +165,7 @@ describe('readChatAnswer', () => {
     );
 
     expect(answer?.questions).toEqual([]);
-    expect(answer?.plan?.cases).toEqual([CASE]);
+    expect(answer?.plan?.cases).toEqual([{ ...CASE, sources: [] }]);
   });
 
   it('reads the nulls Codex sends for what it left out', () => {
