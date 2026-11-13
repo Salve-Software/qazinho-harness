@@ -32,4 +32,5 @@ export const WEB_DRIVER = {
   apiRequests: ['fetch', 'xhr'],
   bodyChars: 4_000,
   answersKept: 300,
+  dragSteps: 12,
 } as const;

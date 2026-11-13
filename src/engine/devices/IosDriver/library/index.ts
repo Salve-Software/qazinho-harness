@@ -1,6 +1,7 @@
 export * from './bundleOfPlist';
 export * from './describeIosScreen';
 export * from './findElement';
+export * from './idbInputOf';
 export * from './listSimulators';
 export * from './parseBooted';
 export * from './parseElements';

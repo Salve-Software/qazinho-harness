@@ -11,6 +11,7 @@ export * from './phoneGlance';
 export * from './phoneMeasureOf';
 export * from './phoneShot';
 export * from './pngSizeOf';
+export * from './pointOf';
 export * from './sampleFileOf';
 export * from './swipeOf';
 export * from './withoutRole';

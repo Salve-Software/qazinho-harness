@@ -1,5 +1,6 @@
 import type { IAndroidDriver } from './types';
 import type {
+  DeviceInput,
   IDeviceImage,
   IRunVideo,
   IScreenBox,
@@ -21,6 +22,7 @@ import {
 import { spawnCommand } from '@/engine/library';
 import { ANDROID } from './constants';
 import {
+  adbInputOf,
   adbTextsOf,
   bootArgs,
   densityOf,
@@ -49,6 +51,7 @@ export class AndroidDriver implements IDeviceDriver {
   private isOurs = false;
   private recording: { file: string; startedAt: number } | null = null;
   private density: number | null = null;
+  private size: { width: number; height: number } | null = null;
 
   public constructor(props: IAndroidDriver) {
     this.sdkRoot = props.sdkRoot;
@@ -158,6 +161,28 @@ export class AndroidDriver implements IDeviceDriver {
     }
 
     await this.settle();
+  }
+
+  /** Um gesto do QA no emulador: o toque, a rolagem, o arrasto, o texto ou a tecla. */
+  public async touch(input: DeviceInput): Promise<void> {
+    if (this.serial.length === 0) throw new Error('The emulator is not open.');
+
+    this.size ??= screenSizeOf(await this.shell(['wm', 'size']).catch(() => ''));
+
+    if (this.size === null)
+      throw new Error('The emulator did not say how big its screen is.');
+
+    for (const args of adbInputOf({ input, size: this.size })) await this.shell(args);
+  }
+
+  /** A tela do emulador agora, como JPEG, para o QA vê-la enquanto a dirige. */
+  public async snapshot(): Promise<Buffer | null> {
+    if (this.serial.length === 0) return null;
+
+    return phoneShot({
+      image: await this.raw(['exec-out', 'screencap', '-p']),
+      shrink: this.shrink,
+    }).bytes;
   }
 
   public async describe(): Promise<string> {

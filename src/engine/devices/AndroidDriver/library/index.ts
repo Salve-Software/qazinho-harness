@@ -1,3 +1,4 @@
+export * from './adbInputOf';
 export * from './adbTextsOf';
 export * from './bootArgs';
 export * from './boxOfBounds';

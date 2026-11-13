@@ -2,6 +2,8 @@ export type * from './AppToolCall';
 export type * from './BugCategory';
 export type * from './BuildPlatform';
 export type * from './DialogAnswer';
+export type * from './DeviceInput';
+export type * from './DeviceKey';
 export type * from './DivergenceCause';
 export type * from './IAppProjectBrief';
 export type * from './IAppRunBrief';
