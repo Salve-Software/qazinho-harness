@@ -9,6 +9,7 @@ export function describeUnnamedProject(isUnnamed: boolean): IHarnessSection {
       ? [
           'The project has no name yet: QAzinho shows it as "New project". Give it one in projectName, in this answer.',
           'Use the app\'s name when anything you read says it: the story, the page, the design, the tests or the app itself. When nothing says it, name what is being tested in two or three words of the QA\'s language, the way a team would call the project, like "Checkout" or "Online shop". Never a sentence.',
+          'QAzinho tells the QA the name on its own: leave it out of your reply.',
         ]
       : [],
   };

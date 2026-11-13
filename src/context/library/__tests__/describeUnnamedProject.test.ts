@@ -19,6 +19,13 @@ describe('describeUnnamedProject', () => {
     );
   });
 
+  /** O QAzinho já conta o nome no chat; o Haiku também o dizia na resposta. */
+  it('keeps the name out of the reply', () => {
+    expect(describeUnnamedProject(true).lines.join(' ')).toContain(
+      'leave it out of your reply',
+    );
+  });
+
   /** Sem linhas, a seção não vai, e uma sessão que a leu fica sabendo que mudou. */
   it('says nothing once the project has a name', () => {
     expect(describeUnnamedProject(false).lines).toEqual([]);
