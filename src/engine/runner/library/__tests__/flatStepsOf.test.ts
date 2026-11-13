@@ -18,6 +18,14 @@ describe('flatStepsOf', () => {
     ]);
   });
 
+  it('marks every step of a case the QA walks by hand, and no other', () => {
+    expect(
+      flatStepsOf([{ ...PLAN.cases[0]!, isManual: true }, PLAN.cases[1]!]).map(
+        ({ caseIsManual }) => caseIsManual === true,
+      ),
+    ).toEqual([true, true, true, false]);
+  });
+
   it('carries the case a step belongs to, and the Figma frame it names', () => {
     const [step] = flatStepsOf([
       {

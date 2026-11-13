@@ -407,6 +407,35 @@ describe('PlanWalker', () => {
     ).toMatchObject({ outcome: { why: UNWALKED.noAgent } });
   });
 
+  it('leaves a case the QA walks by hand out of the run, every step saying why', async () => {
+    const agent = passingAgent();
+    const { steps, events, device } = await walkWith({
+      agent,
+      steps: STEPS.map((step) =>
+        step.caseId === 'cart' ? { ...step, caseIsManual: true } : step,
+      ),
+    });
+
+    expect(steps).toEqual([
+      ['cart', 1, 'skipped', 'agent'],
+      ['cart', 2, 'skipped', 'agent'],
+      ['login', 1, 'passed', 'agent'],
+      ['login', 2, 'passed', 'agent'],
+    ]);
+    expect(agent.turns).toHaveLength(1);
+    expect(device.restarts()).toBe(0);
+    expect(
+      events.flatMap((event) =>
+        event.kind === 'step' && event.outcome.caseId === 'cart'
+          ? [[event.outcome.unwalked, event.outcome.why]]
+          : [],
+      ),
+    ).toEqual([
+      ['manual', UNWALKED.manual],
+      ['manual', UNWALKED.manual],
+    ]);
+  });
+
   /** Um ensaio no CI sem as variáveis: o agente chutou a senha cinco vezes, e gastou com isso. */
   it('does NOT start a case that types a variable the run has no value for', async () => {
     const agent = passingAgent();

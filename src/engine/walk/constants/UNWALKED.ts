@@ -8,4 +8,5 @@ export const UNWALKED = {
   noValue: 'Skipped: this case types a variable this run has no value for:',
   noData:
     'Blocked: the environment does not hold the data this recording expects, so check the test data.',
+  manual: 'Not walked here: the QA walks this case by hand.',
 } as const;
