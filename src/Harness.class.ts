@@ -1,6 +1,8 @@
 import type { IAttachedFiles, ICorpusFile } from '@/context/types';
 import type {
   IAppSnapshot,
+  IChangeBrief,
+  IChangeRead,
   IChatAnswer,
   IChatReference,
   ICodeCopy,
@@ -50,6 +52,7 @@ import {
   describeAttachments,
   describeCalledSkill,
   describeBuild,
+  describeChange,
   describeCase,
   describePrep,
   describeChatMemories,
@@ -78,6 +81,7 @@ import {
 } from '@/context/library';
 import {
   readBuildAnswer,
+  readChangeRead,
   readChatAnswer,
   readKeepAnswer,
   readPullAnswer,
@@ -88,6 +92,7 @@ import {
   BUILD_SCHEMA,
   CHAT_SCHEMA,
   KEEP_SCHEMA,
+  CHANGE_READ_SCHEMA,
   PULL_SCHEMA,
   REVIEW_SCHEMA,
   SKILL_SCHEMA,
@@ -384,6 +389,36 @@ export class Harness {
     events: KeepEvent[];
   }): MemoryOp[] | null {
     return readKeepAnswer(props);
+  }
+
+  /**
+   * Uma leitura do que mudou numa fonte do plano por um agente sem ferramentas: o antes
+   * e o depois, os casos e as dúvidas.
+   */
+  public readChange(brief: IChangeBrief): {
+    systemPrompt: string;
+    prompt: string;
+    schema: string;
+  } {
+    return {
+      systemPrompt: this.contextFor({
+        target: { role: 'watcher' },
+        values: { language: LANGUAGE_NAMES[brief.language] },
+      }),
+      prompt: chatMessageOf({
+        sections: describeChange(brief),
+        text: 'What does this change do to the plan?',
+      }),
+      schema: CHANGE_READ_SCHEMA,
+    };
+  }
+
+  /** O que o leitor de uma mudança propôs, conferido contra o que leu; ou null. */
+  public readChangeAnswer(props: {
+    text: string;
+    brief: IChangeBrief;
+  }): IChangeRead | null {
+    return readChangeRead(props);
   }
 
   /**

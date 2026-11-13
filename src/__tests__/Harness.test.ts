@@ -989,6 +989,69 @@ describe('Harness', () => {
     });
   });
 
+  describe('readChange', () => {
+    const CHANGE = {
+      changes: [
+        {
+          kind: 'story' as const,
+          key: 'SHOP-878',
+          url: 'https://shop.atlassian.net/browse/SHOP-878',
+          at: '2026-11-11 18:40',
+          before: 'C3. Bloquear depois de 3 tentativas erradas',
+          after: 'C3. Bloquear depois de 5 tentativas erradas',
+          comments: [],
+        },
+      ],
+      cases: [
+        {
+          id: 'TC-04',
+          title: 'Cupom inválido bloqueia',
+          priority: 'P1' as const,
+          goal: '',
+          preconditions: '',
+          steps: [
+            { action: 'Errar o cupom 3 vezes', expected: 'Tente de novo mais tarde' },
+          ],
+          sources: ['C3'],
+        },
+      ],
+      doubts: [],
+      language: 'pt' as const,
+    };
+
+    it('briefs the watcher, and nothing of a chat, a run or the assistant', async () => {
+      const { systemPrompt, schema } = harness.readChange(CHANGE);
+
+      await expect(systemPrompt).toMatchFileSnapshot('./__prompts__/watcher.txt');
+      await expect(schema).toMatchFileSnapshot('./__prompts__/change-read-schema.txt');
+      expect(systemPrompt).toContain('## Lendo uma mudança');
+      expect(systemPrompt).not.toContain('## Conversando com o QA');
+    });
+
+    it('asks what the change does to the plan, with the before, the after and the cases', async () => {
+      await expect(harness.readChange(CHANGE).prompt).toMatchFileSnapshot(
+        './__prompts__/change-message.txt',
+      );
+    });
+
+    it('reads what the watcher proposed against the cases it read', () => {
+      expect(
+        harness
+          .readChangeAnswer({
+            text: JSON.stringify({
+              summary: 'O critério 3 passou para 5.',
+              changes: [{ caseId: 'TC-04', why: 'C3', case: CHANGE.cases[0] }],
+              added: [],
+              doubts: [],
+              answered: [],
+            }),
+            brief: CHANGE,
+          })
+          ?.changes.map(({ caseId }) => caseId),
+      ).toEqual(['TC-04']);
+    });
+  });
+
   describe('readPull', () => {
     const PULL = {
       pull: {

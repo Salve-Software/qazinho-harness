@@ -31,6 +31,7 @@ describe('CORPUS', () => {
       'reporter',
       'runner',
       'skill-writer',
+      'watcher',
     ]);
   });
 

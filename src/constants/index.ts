@@ -1,3 +1,4 @@
+export * from './CHANGE_SECTION';
 export * from './CODE_SECTION';
 export * from './DESIGN_SECTION';
 export * from './DOUBTS_SECTION';

@@ -1,5 +1,6 @@
 export * from './jsonSchemaOf';
 export * from './readBuildAnswer';
+export * from './readChangeRead';
 export * from './readChatAnswer';
 export * from './readPullAnswer';
 export * from './readReviewAnswer';

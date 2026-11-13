@@ -5,6 +5,7 @@ export * from './describeApp';
 export * from './describeAttachments';
 export * from './describeBuild';
 export * from './describeCalledSkill';
+export * from './describeChange';
 export * from './describeCase';
 export * from './describeChatMemories';
 export * from './describeCode';

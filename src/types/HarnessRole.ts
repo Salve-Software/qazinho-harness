@@ -1,6 +1,6 @@
 /**
- * Quem o agente é numa chamada: chat, runner, explorer, assistant, builder,
- * reporter, reader, keeper ou o que escreve uma skill com o QA.
+ * Quem o agente é numa chamada: chat, runner, explorer, assistant, builder, reporter,
+ * reader, keeper, watcher ou o que escreve uma skill com o QA.
  */
 export type HarnessRole =
   | 'chat'
@@ -11,4 +11,5 @@ export type HarnessRole =
   | 'reporter'
   | 'reader'
   | 'keeper'
+  | 'watcher'
   | 'skill-writer';
