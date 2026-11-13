@@ -62,5 +62,6 @@ export type * from './OutsideToolCall';
 export type * from './ReviewVerdict';
 export type * from './Severity';
 export type * from './StepVerdict';
+export type * from './StoryReadiness';
 export type * from './TargetKind';
 export type * from './UnwalkedReason';
