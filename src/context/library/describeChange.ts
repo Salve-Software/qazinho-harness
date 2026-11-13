@@ -27,6 +27,12 @@ export function describeChange(brief: IChangeBrief): IHarnessSection[] {
 }
 
 function linesOf(change: ISourceChange): string[] {
+  if (change.kind === 'meeting')
+    return [
+      `The transcript of a meeting the QA brought, "${change.name}", from ${change.at}:`,
+      ...quoted(cut(change.text, CHANGE_SECTION.transcriptChars)),
+    ];
+
   if (change.kind === 'code') {
     let room: number = CHANGE_SECTION.totalPatchLines;
 

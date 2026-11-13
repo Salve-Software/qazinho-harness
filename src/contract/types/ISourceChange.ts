@@ -1,6 +1,6 @@
 /**
- * O que mudou numa fonte do plano depois que ele foi escrito: a história, a página ou a
- * branch, com o antes e o depois que o QAzinho leu sem IA.
+ * O que mudou numa fonte do plano depois que ele foi escrito: a história, a página, a
+ * branch, ou a transcrição de uma reunião que o QA trouxe.
  */
 export type ISourceChange =
   | {
@@ -20,6 +20,7 @@ export type ISourceChange =
       before: string;
       after: string;
     }
+  | { kind: 'meeting'; name: string; at: string; text: string }
   | {
       kind: 'code';
       repository: string;

@@ -102,4 +102,24 @@ describe('describeChange', () => {
     );
     expect(changed?.lines).not.toContain('New comments, oldest first:');
   });
+
+  it('quotes a meeting transcript the QA brought, with no before', () => {
+    const [changed] = describeChange({
+      ...BRIEF,
+      changes: [
+        {
+          kind: 'meeting',
+          name: 'alinhamento-cupons.vtt',
+          at: '2026-11-12',
+          text: 'Rui: fica 5 tentativas.\nLia: e se for 10?',
+        },
+      ],
+    });
+
+    expect(changed?.lines).toEqual([
+      'The transcript of a meeting the QA brought, "alinhamento-cupons.vtt", from 2026-11-12:',
+      '  Rui: fica 5 tentativas.',
+      '  Lia: e se for 10?',
+    ]);
+  });
 });
