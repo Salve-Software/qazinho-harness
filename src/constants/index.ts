@@ -1,5 +1,6 @@
 export * from './CODE_SECTION';
 export * from './DESIGN_SECTION';
+export * from './DOUBTS_SECTION';
 export * from './IMPORT_SECTION';
 export * from './KEEP_LIMIT';
 export * from './KNOWN_BUGS';

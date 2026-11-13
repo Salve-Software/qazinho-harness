@@ -80,12 +80,21 @@ function withoutNullIds(plan: unknown): unknown {
 
   return {
     ...(plan as Record<string, unknown>),
+    ...(fieldOf({ value: plan, key: 'strategy' }) === null
+      ? { strategy: undefined }
+      : {}),
     cases: cases.map((one: unknown) => {
       const steps = fieldOf({ value: one, key: 'steps' });
 
       return {
         ...(one as Record<string, unknown>),
         ...(fieldOf({ value: one, key: 'id' }) === null ? { id: undefined } : {}),
+        ...(fieldOf({ value: one, key: 'sources' }) === null
+          ? { sources: undefined }
+          : {}),
+        ...(fieldOf({ value: one, key: 'blockedBy' }) === null
+          ? { blockedBy: undefined }
+          : {}),
         ...(Array.isArray(steps)
           ? {
               steps: steps.map((step: unknown) =>

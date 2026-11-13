@@ -9,6 +9,7 @@ export * from './describeCase';
 export * from './describeChatMemories';
 export * from './describeCode';
 export * from './describeDesign';
+export * from './describeDoubts';
 export * from './describeExploration';
 export * from './describeImport';
 export * from './describeKeep';

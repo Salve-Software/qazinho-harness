@@ -33,6 +33,8 @@ export type * from './IJiraStoryCopy';
 export type * from './IKnownBug';
 export type * from './IMemoryBrief';
 export type * from './INetworkEntry';
+export type * from './IPlanDoubt';
+export type * from './IPlanStrategy';
 export type * from './IntegrationId';
 export type * from './IRecipeBook';
 export type * from './IReviewBug';

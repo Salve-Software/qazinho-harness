@@ -1,5 +1,6 @@
 import type { IChatQuestion } from './IChatQuestion';
 import type { IDraftedCase } from './IDraftedCase';
+import type { IPlanStrategy } from './IPlanStrategy';
 
 /**
  * Uma resposta do chat que o main já conferiu: a resposta, as perguntas que ela faz ao
@@ -8,5 +9,9 @@ import type { IDraftedCase } from './IDraftedCase';
 export interface IChatAnswer {
   reply: string;
   questions: IChatQuestion[];
-  plan: { summary: string; cases: IDraftedCase[] } | null;
+  plan: {
+    summary: string;
+    cases: IDraftedCase[];
+    strategy?: IPlanStrategy | undefined;
+  } | null;
 }

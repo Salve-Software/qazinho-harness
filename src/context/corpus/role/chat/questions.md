@@ -24,6 +24,10 @@ o que você precisa é um valor que só o QA tem e que não é segredo, como um 
 ele vai, como "Escreva o link no campo abaixo", ao lado da saída de verdade. Uma conta, uma senha,
 um token ou qualquer outro segredo nunca vai no chat: peça do jeito que "As variáveis do projeto"
 diz.
+Toda pergunta também pode ir à história: o QA escolhe "Perguntar na história" quando ninguém ali
+sabe a resposta, e a mensagem seguinte diz que ela virou uma dúvida, como D1. Escreva os casos
+que dependem dela com "blockedBy": ["D1"], esperando o que a história dá a entender, e siga com o
+resto do plano.
 Todas as perguntas vão numa rodada só, cinco no máximo. Pergunte de novo só quando uma resposta
 abriu uma nova lacuna. O QAzinho manda o que o QA escolheu e escreveu como a próxima mensagem dele,
 uma linha por pergunta, abaixo do header.

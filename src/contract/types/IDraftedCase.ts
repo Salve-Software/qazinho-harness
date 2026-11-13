@@ -1,6 +1,6 @@
 /**
- * Um caso que o agente rascunhou: `id` nomeia o caso que ele muda, nenhum para um novo; o
- * `frame` de um passo é o nó dele no Figma.
+ * Um caso que o agente rascunhou: o caso que ele muda, de onde vem o esperado, as dúvidas
+ * que o seguram, e o nó do Figma de cada passo.
  */
 export interface IDraftedCase {
   id?: string | undefined;
@@ -9,4 +9,6 @@ export interface IDraftedCase {
   goal: string;
   preconditions: string;
   steps: { action: string; expected: string; frame?: string | undefined }[];
+  sources?: string[] | undefined;
+  blockedBy?: string[] | undefined;
 }

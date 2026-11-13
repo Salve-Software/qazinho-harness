@@ -4,20 +4,21 @@ import type {
   IChatAnswer,
   IChatReference,
   ICodeCopy,
+  IConfluencePage,
   IDesignLink,
   IFlatStep,
-  IConfluencePage,
   IImportSource,
   IJiraStoryCopy,
   IKnownBug,
   IMemoryBrief,
+  IPlanDoubt,
   ISkillDraft,
   ISkillDraftAnswer,
-  KeepEvent,
   ITargetUnderTest,
   ITeamSkill,
   IVariableBrief,
   IViewport,
+  KeepEvent,
   Language,
   MemoryOp,
 } from '@/contract';
@@ -54,6 +55,7 @@ import {
   describeChatMemories,
   describeCode,
   describeDesign,
+  describeDoubts,
   describeExploration,
   describeImport,
   describeKeep,
@@ -155,6 +157,7 @@ export class Harness {
     attachments?: IAttachedFiles | null;
     memories?: IMemoryBrief[];
     skills?: ITeamSkill[];
+    doubts?: IPlanDoubt[];
   }): {
     systemPrompt: string;
     prompt: string;
@@ -198,6 +201,7 @@ export class Harness {
           story: props.story,
           wasTold: (props.told[STORY_SECTION.title] ?? '') !== '',
         }),
+        describeDoubts(props.doubts ?? []),
         describePage(props.page),
         describeDesign({
           design: props.design,

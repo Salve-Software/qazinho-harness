@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DRAFTED_CASE } from './DRAFTED_CASE';
+import { PLANNED_CASE } from './PLANNED_CASE';
 
 const VARIABLE = z.object({
   name: z
@@ -38,7 +38,22 @@ export const CHAT_ANSWER = z.object({
     ),
   questions: z.array(QUESTION).optional(),
   plan: z
-    .object({ summary: z.string(), cases: z.array(DRAFTED_CASE) })
+    .object({
+      summary: z.string(),
+      cases: z.array(PLANNED_CASE),
+      strategy: z
+        .object({
+          covers: z.string().describe('What the plan covers, in one sentence.'),
+          leavesOut: z.string().describe('What it leaves out on purpose, and why.'),
+          where: z.string().describe('Where it runs: the app, the platform, the screen.'),
+          data: z.string().describe('The accounts and the data the cases need.'),
+          risks: z.string().describe('The risks the cases aim at first.'),
+        })
+        .describe(
+          'How the plan tests, as the confirmation said it, in the language of the plan.',
+        )
+        .optional(),
+    })
     .describe(
       "The plan, written the way the team's skills in the message say, when it has them.",
     )
