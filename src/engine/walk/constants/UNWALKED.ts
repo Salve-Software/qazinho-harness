@@ -9,4 +9,5 @@ export const UNWALKED = {
   noData:
     'Blocked: the environment does not hold the data this recording expects, so check the test data.',
   manual: 'Not walked here: the QA walks this case by hand.',
+  ended: 'Not marked: the QA ended the case before this step.',
 } as const;
