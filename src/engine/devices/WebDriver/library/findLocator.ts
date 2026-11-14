@@ -1,6 +1,6 @@
 import type { IFrameRoot } from '@/engine/devices/WebDriver/types';
 import type { Locator, Page } from 'playwright-core';
-import { countedOf, ordinalOf, placedOf, withoutRole } from '@/engine/devices/library';
+import { ordinalOf, placedOf, withoutRole } from '@/engine/devices/library';
 import { CONTROL_SELECTOR } from '@/engine/devices/WebDriver/constants';
 import { frameRootsOf } from './frameRootsOf';
 import { listControls } from './listControls';
@@ -77,11 +77,9 @@ async function findIn(props: {
   const listed = withoutRole(props.target);
   const named =
     found ?? (listed === null ? null : await locate({ ...props, target: listed }));
-  const counted = countedOf(ordinalOf(listed ?? props.target).name);
-  const worded = named ?? (counted === null ? null : await onlyOne({ frame, counted }));
   const bare = props.target.trim();
 
-  return worded ?? (BARE_TEST_ID.test(bare) ? byTestId({ frame, testId: bare }) : null);
+  return named ?? (BARE_TEST_ID.test(bare) ? byTestId({ frame, testId: bare }) : null);
 }
 
 async function inPlace(props: {
@@ -131,26 +129,6 @@ async function byTestId(props: {
     const shown = candidate.filter({ visible: true });
 
     if ((await shown.count().catch(() => 0)) > 0) return shown.first();
-  }
-
-  return null;
-}
-
-async function onlyOne(props: {
-  frame: IFrameRoot;
-  counted: RegExp;
-}): Promise<Locator | null> {
-  const { counted } = props;
-  const { root } = props.frame;
-
-  for (const candidate of [
-    root.getByRole('link', { name: counted }),
-    root.getByRole('button', { name: counted }),
-    root.getByText(counted),
-  ]) {
-    const shown = candidate.filter({ visible: true });
-
-    if ((await shown.count().catch(() => 0)) === 1) return shown;
   }
 
   return null;
