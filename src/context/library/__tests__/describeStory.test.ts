@@ -62,9 +62,9 @@ describe('describeStory', () => {
         '  ## Regras',
         '  ',
         '  O cliente aplica um cupom.',
-        'Acceptance criteria, from the field "Critérios de aceite":',
-        '  - SAVE10 dá 10%',
-        '  - Expirado é recusado',
+        "Acceptance criteria, numbered for you to cite in each case's sources as C1, C2 and so on:",
+        '  C1. SAVE10 dá 10%',
+        '  C2. Expirado é recusado',
         'What the team said in its comments, oldest first:',
         '  Ana PO, 2026-10-20: Um cupom por pedido.',
         'Linked issues:',
@@ -83,6 +83,22 @@ describe('describeStory', () => {
    * A story é escrita por qualquer um com acesso ao Jira: ela não pode fechar o bloco do
    * QAzinho.
    */
+  it('says whether the story reached the ready-for-test column, and nothing when no one knows', () => {
+    const linesOf = (readiness?: 'ready' | 'ahead') =>
+      describeStory({
+        story: { ...COPY, ...(readiness === undefined ? {} : { readiness }) },
+        wasTold: false,
+      }).lines;
+
+    expect(linesOf('ahead')).toContain(
+      "It has not reached the team's ready-for-test column yet, so the app may not have it: plan it before the app.",
+    );
+    expect(linesOf('ready')).toContain(
+      "It is in the team's ready-for-test column: the app should have it now.",
+    );
+    expect(linesOf().some((line) => line.includes('ready-for-test'))).toBe(false);
+  });
+
   it('does NOT let the story close the block QAzinho tells it in', () => {
     const lines = describeStory({
       story: {

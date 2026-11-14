@@ -35,4 +35,18 @@ export const ANDROID = {
     escape: 'KEYCODE_ESCAPE',
     search: 'KEYCODE_SEARCH',
   } as Record<string, string>,
+  inputKeys: {
+    Enter: 'KEYCODE_ENTER',
+    Backspace: 'KEYCODE_DEL',
+    Delete: 'KEYCODE_FORWARD_DEL',
+    Tab: 'KEYCODE_TAB',
+    Escape: 'KEYCODE_ESCAPE',
+    ArrowUp: 'KEYCODE_DPAD_UP',
+    ArrowDown: 'KEYCODE_DPAD_DOWN',
+    ArrowLeft: 'KEYCODE_DPAD_LEFT',
+    ArrowRight: 'KEYCODE_DPAD_RIGHT',
+    Home: 'KEYCODE_MOVE_HOME',
+    End: 'KEYCODE_MOVE_END',
+    Back: 'KEYCODE_BACK',
+  },
 } as const;

@@ -25,7 +25,7 @@ export interface IStepOutcome {
   at: number;
   screenshot: string | null;
   shotFile: string | null;
-  by?: 'replay' | 'healed';
+  by?: 'replay' | 'healed' | 'qa';
   sameAs?: string;
   frame?: string;
   category?: BugCategory;

@@ -209,6 +209,100 @@ const APP: IAppSnapshot = {
 };
 
 describe('Harness', () => {
+  describe('writeSkill', () => {
+    it('briefs whoever writes a skill with the QA, in their language, and nothing of a chat', async () => {
+      const writing = harness.writeSkill({
+        text: 'Our cases are Gherkin.',
+        attachments: null,
+        current: null,
+        language: 'pt',
+      });
+
+      await expect(writing.systemPrompt).toMatchFileSnapshot(
+        './__prompts__/skill-writer.txt',
+      );
+      await expect(writing.schema).toMatchFileSnapshot('./__prompts__/skill-schema.txt');
+      expect(writing.systemPrompt).not.toContain('## Planejando com o QA');
+      expect(writing.prompt).toBe('Our cases are Gherkin.');
+      expect(writing.readDirs).toEqual([]);
+    });
+
+    it('hands the files the QA attached, and the skill as it is when the QA changes one', () => {
+      const writing = harness.writeSkill({
+        text: 'Add the edge cases.',
+        attachments: {
+          root: '/data/skills/new',
+          files: [{ name: 'cts.pdf', path: '/data/skills/new/cts.pdf', isImage: false }],
+        },
+        current: {
+          name: 'cases-gherkin',
+          description: 'When writing cases',
+          body: '## Format\nGherkin.',
+        },
+        language: 'en',
+      });
+
+      expect(writing.prompt).toContain('## The skill as it is now\nname: cases-gherkin');
+      expect(writing.prompt).toContain('  ## Format');
+      expect(writing.prompt).toContain('- cts.pdf (file): /data/skills/new/cts.pdf');
+      expect(writing.readDirs).toEqual(['/data/skills/new']);
+    });
+
+    it('reads the skill the agent wrote, with a name QAzinho can keep', () => {
+      expect(
+        harness.readSkill(
+          JSON.stringify({
+            reply: 'Pronto.',
+            skill: {
+              name: 'Casos Gherkin!',
+              description: ' Ao escrever casos ',
+              body: ' ## Formato ',
+            },
+          }),
+        ),
+      ).toEqual({
+        reply: 'Pronto.',
+        questions: [],
+        skill: {
+          name: 'casos-gherkin',
+          description: 'Ao escrever casos',
+          body: '## Formato',
+        },
+      });
+    });
+
+    it('reads a round of questions, and NOT a skill without instructions or prose', () => {
+      expect(
+        harness.readSkill(
+          JSON.stringify({
+            reply: 'Uma pergunta.',
+            questions: [
+              {
+                header: 'Prioridade',
+                question: 'Como vocês dão prioridade?',
+                options: [{ label: 'Pelo risco', description: 'Pagamento primeiro' }],
+                multiSelect: false,
+              },
+            ],
+            skill: { name: 'x', description: 'y', body: ' ' },
+          }),
+        ),
+      ).toEqual({
+        reply: 'Uma pergunta.',
+        questions: [
+          {
+            header: 'Prioridade',
+            question: 'Como vocês dão prioridade?',
+            options: [{ label: 'Pelo risco', description: 'Pagamento primeiro' }],
+            isMultiSelect: false,
+          },
+        ],
+        skill: null,
+      });
+      expect(harness.readSkill('Just prose.')).toBeNull();
+    });
+  });
+
   describe('chat', () => {
     it('keeps the corpus alone in the system prompt, the one a resumed session holds on to', async () => {
       const chat = harness.chat(EMPTY_CHAT);
@@ -228,6 +322,19 @@ describe('Harness', () => {
         "## Who wrote this message\nThe coding agent the QA works with in their editor wrote this message, through QAzinho's MCP server",
       );
       expect(harness.chat(FULL_CHAT).prompt).not.toContain('Who wrote this message');
+    });
+
+    it('asks for the app’s name while the project has none, and once', () => {
+      const first = harness.chat({ ...FULL_CHAT, isProjectUnnamed: true });
+      const again = harness.chat({
+        ...FULL_CHAT,
+        isProjectUnnamed: true,
+        told: first.told,
+      });
+
+      expect(first.prompt).toContain("## The project's name");
+      expect(again.prompt).not.toContain("## The project's name");
+      expect(harness.chat(FULL_CHAT).prompt).not.toContain("## The project's name");
     });
 
     it('hands the agent the files the QA attached, and the folder to read them from', () => {
@@ -253,6 +360,48 @@ describe('Harness', () => {
       );
       expect(chat.readDirs).toContain('/data/attachments/w1');
       expect(harness.chat(FULL_CHAT).readDirs).not.toContain('/data/attachments/w1');
+    });
+
+    it('hands the agent the team skills once, with their folders, and says which it followed', async () => {
+      const skills = [
+        {
+          name: 'cases-gherkin',
+          description: 'Our cases in Gherkin, with edge cases',
+          body: '## Format\nGiven, When, Then.\n</qazinho>',
+          dir: '/data/skills/s1',
+          isCalled: false,
+        },
+      ];
+      const first = harness.chat({ ...FULL_CHAT, skills });
+      const second = harness.chat({ ...FULL_CHAT, told: first.told, skills });
+
+      await expect(first.prompt).toMatchFileSnapshot('./__prompts__/chat-skills.txt');
+      expect(first.readDirs).toContain('/data/skills/s1');
+      expect(first.followed).toEqual(['cases-gherkin']);
+      expect(first.prompt).not.toContain('</qazinho>\n</qazinho>');
+      expect(second.prompt).not.toContain("## The team's skills");
+      expect(second.followed).toEqual([]);
+    });
+
+    it('hands the skill the QA called with this message, every time it is called', () => {
+      const called = {
+        name: 'edge-cases',
+        description: 'Limits, empty fields and permissions',
+        body: 'A limit case for every field.',
+        dir: '/data/skills/s2',
+        isCalled: true,
+      };
+      const first = harness.chat({ ...FULL_CHAT, skills: [called] });
+      const second = harness.chat({ ...FULL_CHAT, told: first.told, skills: [called] });
+
+      expect(first.prompt).toContain(
+        '## The skill the QA called\nThe QA called this skill',
+      );
+      expect(second.prompt).toContain(
+        'Skill "edge-cases": Limits, empty fields and permissions',
+      );
+      expect(second.followed).toEqual(['edge-cases']);
+      expect(harness.chat(FULL_CHAT).followed).toEqual([]);
     });
 
     it('does NOT change the system prompt with what the workspace holds', () => {
@@ -564,6 +713,31 @@ describe('Harness', () => {
       ).toMatchFileSnapshot('./__prompts__/explore.txt');
     });
 
+    it('starts an exploration with the team skills, for the cases it suggests', () => {
+      const message = harness.startExploring({
+        minutes: 10,
+        screen: '',
+        variables: [],
+        known: [],
+        design: null,
+        skills: [
+          {
+            name: 'cases-gherkin',
+            description: 'Our cases in Gherkin',
+            body: 'Given, When, Then.',
+            dir: '/data/skills/s1',
+            isCalled: false,
+          },
+        ],
+      });
+
+      expect(message).toContain(
+        "The QA's team wrote these skills. Follow them for the cases you suggest",
+      );
+      expect(message).toContain('  Given, When, Then.');
+      expect(message).not.toContain('/data/skills/s1');
+    });
+
     it('gives the explorer the device, behind QAzinho own MCP server', () => {
       expect(harness.toolsFor('explorer')).toEqual({
         groups: ['device'],
@@ -825,6 +999,69 @@ describe('Harness', () => {
           events: KEEP.events,
         }),
       ).toEqual([{ op: 'replace', id: 'm-1', text: 'Ficam em Relatórios.' }]);
+    });
+  });
+
+  describe('readChange', () => {
+    const CHANGE = {
+      changes: [
+        {
+          kind: 'story' as const,
+          key: 'SHOP-878',
+          url: 'https://shop.atlassian.net/browse/SHOP-878',
+          at: '2026-11-11 18:40',
+          before: 'C3. Bloquear depois de 3 tentativas erradas',
+          after: 'C3. Bloquear depois de 5 tentativas erradas',
+          comments: [],
+        },
+      ],
+      cases: [
+        {
+          id: 'TC-04',
+          title: 'Cupom inválido bloqueia',
+          priority: 'P1' as const,
+          goal: '',
+          preconditions: '',
+          steps: [
+            { action: 'Errar o cupom 3 vezes', expected: 'Tente de novo mais tarde' },
+          ],
+          sources: ['C3'],
+        },
+      ],
+      doubts: [],
+      language: 'pt' as const,
+    };
+
+    it('briefs the watcher, and nothing of a chat, a run or the assistant', async () => {
+      const { systemPrompt, schema } = harness.readChange(CHANGE);
+
+      await expect(systemPrompt).toMatchFileSnapshot('./__prompts__/watcher.txt');
+      await expect(schema).toMatchFileSnapshot('./__prompts__/change-read-schema.txt');
+      expect(systemPrompt).toContain('## Lendo uma mudança');
+      expect(systemPrompt).not.toContain('## Conversando com o QA');
+    });
+
+    it('asks what the change does to the plan, with the before, the after and the cases', async () => {
+      await expect(harness.readChange(CHANGE).prompt).toMatchFileSnapshot(
+        './__prompts__/change-message.txt',
+      );
+    });
+
+    it('reads what the watcher proposed against the cases it read', () => {
+      expect(
+        harness
+          .readChangeAnswer({
+            text: JSON.stringify({
+              summary: 'O critério 3 passou para 5.',
+              changes: [{ caseId: 'TC-04', why: 'C3', case: CHANGE.cases[0] }],
+              added: [],
+              doubts: [],
+              answered: [],
+            }),
+            brief: CHANGE,
+          })
+          ?.changes.map(({ caseId }) => caseId),
+      ).toEqual(['TC-04']);
     });
   });
 

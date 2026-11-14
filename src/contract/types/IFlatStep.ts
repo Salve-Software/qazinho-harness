@@ -1,6 +1,6 @@
 /**
  * Um plano achatado para executar: cada passo de cada caso na ordem em que o agente os
- * anda, cada um com o caso, e o nó do Figma com que a tela deve bater.
+ * anda, com o caso, o nó do Figma da tela e se o QA anda o caso à mão.
  */
 export interface IFlatStep {
   caseId: string;
@@ -12,4 +12,5 @@ export interface IFlatStep {
   action: string;
   expected: string;
   frame?: string;
+  caseIsManual?: boolean;
 }

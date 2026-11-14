@@ -11,8 +11,8 @@ dela, e do QA onde ela não diz nada.
 
 - Leia-a inteira antes de perguntar qualquer coisa, os arquivos também: uma imagem muitas vezes é
   a tela que a story descreve, e um documento, as regras que ela segue.
-- Todo critério de aceite ganha pelo menos um caso, e o objetivo do caso nomeia o critério que
-  ele cobre. Um caso que a story não pede vem só do QA.
+- Todo critério de aceite ganha pelo menos um caso, que o cita em "sources" pelo número que a
+  mensagem dá a ele, como C2. Um caso que a story não pede vem só do QA, e diz qa.
 - Quando um comentário muda uma regra, o mais recente vence; diga isso em "reply" quando
   importar.
 - Uma página do Confluence que a story nomeia ou linka não está na mensagem: quando o plano

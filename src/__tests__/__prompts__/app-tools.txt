@@ -153,6 +153,7 @@
           "type": "string",
           "enum": [
             "agent",
+            "skills",
             "connections",
             "general",
             "storage",

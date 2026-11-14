@@ -11,9 +11,9 @@ SHOP-12 · Aplicar cupom no checkout
 Story, To Do, priority High. https://acme.atlassian.net/browse/SHOP-12
 Description:
   O cliente aplica um cupom de desconto no checkout.
-Acceptance criteria, from the field "Acceptance criteria":
-  - SAVE10 takes 10% off
-  - An expired coupon is refused
+Acceptance criteria, numbered for you to cite in each case's sources as C1, C2 and so on:
+  C1. SAVE10 takes 10% off
+  C2. An expired coupon is refused
 Files attached to the story, downloaded for you to read with your tools; they are deleted once the plan is written:
 - checkout.png (image/png, 47 KB) at /data/jira/w-1/SHOP-12/checkout.png
 </qazinho>

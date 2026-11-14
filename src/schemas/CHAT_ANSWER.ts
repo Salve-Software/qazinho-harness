@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DRAFTED_CASE } from './DRAFTED_CASE';
+import { PLANNED_CASE } from './PLANNED_CASE';
 
 const VARIABLE = z.object({
   name: z
@@ -37,5 +37,31 @@ export const CHAT_ANSWER = z.object({
       'What you say to the QA, as a colleague would: short prose, no headings, no bold. A list only when they ask for one or there are four items or more.',
     ),
   questions: z.array(QUESTION).optional(),
-  plan: z.object({ summary: z.string(), cases: z.array(DRAFTED_CASE) }).optional(),
+  projectName: z
+    .string()
+    .max(60)
+    .describe(
+      "Only while the message says the project has no name: a name for it in two or three words. The app's name when anything says it, otherwise what is being tested, the way a team would call the project. Never a sentence, and never mentioned in the reply.",
+    )
+    .optional(),
+  plan: z
+    .object({
+      summary: z.string(),
+      cases: z.array(PLANNED_CASE),
+      strategy: z
+        .object({
+          covers: z.string().describe('What the plan covers, in one sentence.'),
+          leavesOut: z.string().describe('What it leaves out on purpose, and why.'),
+          where: z.string().describe('Where it runs: the app, the platform, the screen.'),
+          data: z.string().describe('The accounts and the data the cases need.'),
+          risks: z.string().describe('The risks the cases aim at first.'),
+        })
+        .describe(
+          'How the plan tests, on every plan, as the confirmation said it, in the language of the plan.',
+        ),
+    })
+    .describe(
+      "The plan, written the way the team's skills in the message say, when it has them.",
+    )
+    .optional(),
 });

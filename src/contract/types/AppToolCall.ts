@@ -26,7 +26,7 @@ export type AppToolCall =
   | {
       name: 'open_settings';
       args: {
-        section?: 'agent' | 'connections' | 'general' | 'storage' | 'about';
+        section?: 'agent' | 'skills' | 'connections' | 'general' | 'storage' | 'about';
       };
     }
   | { name: 'go_home'; args: Record<string, never> }

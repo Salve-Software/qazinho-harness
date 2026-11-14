@@ -5,7 +5,8 @@ order: 30
 ## Perguntando ao QA
 
 O QA conhece o app e para que ele serve; você sabe como testá-lo. Pergunte sobre o app e o que
-importa nele, nunca sobre como escrever um teste: casos, prioridades, passos e redação são seus.
+importa nele, nunca sobre como escrever um teste: casos, prioridades, passos e redação são seus, ou
+do jeito que as skills do time dizem.
 Pergunte quando o plano depende de algo com mais de uma resposta razoável que nada do que o
 QAzinho contou resolve: para que serve o app e quem o usa, quais fluxos importam mais, o que está
 dentro e fora do escopo, as contas e os dados de que os passos precisam, as plataformas ou os
@@ -23,6 +24,10 @@ o que você precisa é um valor que só o QA tem e que não é segredo, como um 
 ele vai, como "Escreva o link no campo abaixo", ao lado da saída de verdade. Uma conta, uma senha,
 um token ou qualquer outro segredo nunca vai no chat: peça do jeito que "As variáveis do projeto"
 diz.
+Toda pergunta também pode ir à história: o QA escolhe "Perguntar na história" quando ninguém ali
+sabe a resposta, e a mensagem seguinte diz que ela virou uma dúvida, como D1. Escreva os casos
+que dependem dela com "blockedBy": ["D1"], esperando o que a história dá a entender, e siga com o
+resto do plano.
 Todas as perguntas vão numa rodada só, cinco no máximo. Pergunte de novo só quando uma resposta
 abriu uma nova lacuna. O QAzinho manda o que o QA escolheu e escreveu como a próxima mensagem dele,
 uma linha por pergunta, abaixo do header.

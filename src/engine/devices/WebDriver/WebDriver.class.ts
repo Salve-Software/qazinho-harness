@@ -1,5 +1,6 @@
 import type { IWebAccess, IWebDriver, IWebScreen, WebDownload } from './types';
 import type {
+  DeviceInput,
   DialogAnswer,
   IDeviceImage,
   IDeviceScreen,
@@ -23,7 +24,7 @@ import { readFile, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { chromium } from 'playwright-core';
-import { describeMeasure } from '@/engine/devices/library';
+import { describeMeasure, pointOf } from '@/engine/devices/library';
 import { withinLimit } from '@/engine/library/withinLimit';
 import {
   CHROME_DISABLED_FEATURES,
@@ -241,6 +242,53 @@ export class WebDriver implements IDeviceDriver {
    * A parte visível da página, reduzida, como o agente a lê: capturada inteira e
    * encolhida, já que o Chrome a desenhando pequena some com bordas de 1px.
    */
+  /**
+   * Um gesto do QA na página que o agente vê, em frações da janela: o clique, a roda, o
+   * arrasto, o texto e as teclas, como uma pessoa os faria.
+   */
+  public async touch(input: DeviceInput): Promise<void> {
+    const page = this.page;
+
+    if (!page) throw new Error('The browser is not open.');
+
+    if (input.kind === 'type') {
+      await page.keyboard.type(input.text);
+
+      return;
+    }
+
+    if (input.kind === 'key') {
+      await (input.key === 'Back'
+        ? page.goBack().then(() => undefined)
+        : page.keyboard.press(input.key));
+
+      return;
+    }
+
+    const size = this.viewport;
+    const at = pointOf({ x: input.x, y: input.y, size });
+
+    if (input.kind === 'tap') {
+      await page.mouse.click(at.x, at.y);
+
+      return;
+    }
+
+    await page.mouse.move(at.x, at.y);
+
+    if (input.kind === 'scroll') {
+      await page.mouse.wheel(input.dx * size.width, input.dy * size.height);
+
+      return;
+    }
+
+    const to = pointOf({ x: input.toX, y: input.toY, size });
+
+    await page.mouse.down();
+    await page.mouse.move(to.x, to.y, { steps: WEB_DRIVER.dragSteps });
+    await page.mouse.up();
+  }
+
   public async glance(): Promise<IDeviceImage | null> {
     const cdp = await this.session();
 
@@ -867,6 +915,23 @@ export class WebDriver implements IDeviceDriver {
     if (originOf(url) !== null) this.onAddress?.(url);
   }
 
+  /** Acha o alvo de uma ação, procurando de novo enquanto a página ainda o traz. */
+  private async findSoon(props: {
+    page: Page;
+    target: string;
+    kind: 'click' | 'fill';
+  }): Promise<Locator | null> {
+    const until = Date.now() + WEB_DRIVER.findWaitMs;
+
+    for (;;) {
+      const locator = await findLocator(props);
+
+      if (locator !== null || Date.now() >= until) return locator;
+
+      await props.page.waitForTimeout(WEB_DRIVER.findPollMs);
+    }
+  }
+
   private async openAnew(props: { isCleared: boolean }): Promise<void> {
     const context = this.context;
 
@@ -943,7 +1008,7 @@ export class WebDriver implements IDeviceDriver {
       return;
     }
 
-    const locator = await findLocator({
+    const locator = await this.findSoon({
       page,
       target: action.target,
       kind: action.kind === 'fill' || action.kind === 'upload' ? 'fill' : 'click',

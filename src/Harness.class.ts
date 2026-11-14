@@ -1,20 +1,26 @@
 import type { IAttachedFiles, ICorpusFile } from '@/context/types';
 import type {
   IAppSnapshot,
+  IChangeBrief,
+  IChangeRead,
   IChatAnswer,
   IChatReference,
   ICodeCopy,
+  IConfluencePage,
   IDesignLink,
   IFlatStep,
-  IConfluencePage,
   IImportSource,
   IJiraStoryCopy,
   IKnownBug,
   IMemoryBrief,
-  KeepEvent,
+  IPlanDoubt,
+  ISkillDraft,
+  ISkillDraftAnswer,
   ITargetUnderTest,
+  ITeamSkill,
   IVariableBrief,
   IViewport,
+  KeepEvent,
   Language,
   MemoryOp,
 } from '@/contract';
@@ -44,11 +50,15 @@ import {
   chatMessageOf,
   describeApp,
   describeAttachments,
+  describeCalledSkill,
   describeBuild,
+  describeChange,
   describeCase,
+  describePrep,
   describeChatMemories,
   describeCode,
   describeDesign,
+  describeDoubts,
   describeExploration,
   describeImport,
   describeKeep,
@@ -63,24 +73,30 @@ import {
   describeScreen,
   describeSender,
   describeSize,
+  describeSkills,
   describeStory,
+  describeUnnamedProject,
   fillSections,
   renderSections,
   sectionsFor,
 } from '@/context/library';
 import {
   readBuildAnswer,
+  readChangeRead,
   readChatAnswer,
   readKeepAnswer,
   readPullAnswer,
   readReviewAnswer,
+  readSkillDraft,
 } from '@/library';
 import {
   BUILD_SCHEMA,
   CHAT_SCHEMA,
   KEEP_SCHEMA,
+  CHANGE_READ_SCHEMA,
   PULL_SCHEMA,
   REVIEW_SCHEMA,
+  SKILL_SCHEMA,
 } from '@/schemas';
 import { BUILD_TOOLS, MCP_HOST, PERMISSION_TOOL, TOOL_GRANTS } from '@/tools/constants';
 import { designAccessOf, toolsOfRole } from '@/tools/library';
@@ -146,6 +162,9 @@ export class Harness {
     isFromAgent?: boolean;
     attachments?: IAttachedFiles | null;
     memories?: IMemoryBrief[];
+    skills?: ITeamSkill[];
+    doubts?: IPlanDoubt[];
+    isProjectUnnamed?: boolean;
   }): {
     systemPrompt: string;
     prompt: string;
@@ -155,7 +174,11 @@ export class Harness {
     design: IDesignAccess;
     readDirs: string[];
     permissionTool: string;
+    followed: string[];
   } {
+    const skills = props.skills ?? [];
+    const kept = describeSkills(skills);
+    const called = describeCalledSkill(skills);
     const news = changedSections({
       sections: [
         {
@@ -169,6 +192,7 @@ export class Harness {
           ],
         },
         describeKeptVariables(props.variables),
+        kept,
         describeChatMemories(props.memories ?? []),
         describeRuns(props.runs),
         describeLook(props.look),
@@ -184,6 +208,8 @@ export class Harness {
           story: props.story,
           wasTold: (props.told[STORY_SECTION.title] ?? '') !== '',
         }),
+        describeDoubts(props.doubts ?? []),
+        describeUnnamedProject(props.isProjectUnnamed === true),
         describePage(props.page),
         describeDesign({
           design: props.design,
@@ -198,6 +224,7 @@ export class Harness {
       prompt: chatMessageOf({
         sections: [
           ...news.changed,
+          called,
           describeReferences(props.references),
           describeAttachments(props.attachments ?? null),
           describeSender(props.isFromAgent === true),
@@ -217,8 +244,15 @@ export class Harness {
         ...((props.attachments?.files.length ?? 0) > 0 && props.attachments
           ? [props.attachments.root]
           : []),
+        ...skills.map(({ dir }) => dir),
       ],
       permissionTool: PERMISSION_TOOL.granted,
+      followed: skills
+        .filter(
+          ({ isCalled }) =>
+            isCalled || news.changed.some(({ title }) => title === kept.title),
+        )
+        .map(({ name }) => name),
     };
   }
 
@@ -361,6 +395,36 @@ export class Harness {
   }
 
   /**
+   * Uma leitura do que mudou numa fonte do plano por um agente sem ferramentas: o antes
+   * e o depois, os casos e as dúvidas.
+   */
+  public readChange(brief: IChangeBrief): {
+    systemPrompt: string;
+    prompt: string;
+    schema: string;
+  } {
+    return {
+      systemPrompt: this.contextFor({
+        target: { role: 'watcher' },
+        values: { language: LANGUAGE_NAMES[brief.language] },
+      }),
+      prompt: chatMessageOf({
+        sections: describeChange(brief),
+        text: 'What does this change do to the plan?',
+      }),
+      schema: CHANGE_READ_SCHEMA,
+    };
+  }
+
+  /** O que o leitor de uma mudança propôs, conferido contra o que leu; ou null. */
+  public readChangeAnswer(props: {
+    text: string;
+    brief: IChangeBrief;
+  }): IChangeRead | null {
+    return readChangeRead(props);
+  }
+
+  /**
    * Uma leitura de pull request por um agente sem ferramentas: o PR, as mudanças, a issue
    * que ele fecha e os planos.
    */
@@ -395,6 +459,57 @@ export class Harness {
    */
   public readReview(text: string): IReviewAnswer | null {
     return readReviewAnswer(text);
+  }
+
+  /**
+   * Uma mensagem a quem escreve uma skill com o QA: o corpus dele, os arquivos que o QA
+   * anexou, e a skill como está quando o QA a muda.
+   */
+  public writeSkill(props: {
+    text: string;
+    attachments: IAttachedFiles | null;
+    current: ISkillDraft | null;
+    language: Language;
+  }): { systemPrompt: string; prompt: string; schema: string; readDirs: string[] } {
+    const current = props.current;
+
+    return {
+      systemPrompt: this.contextFor({
+        target: { role: 'skill-writer' },
+        values: { language: LANGUAGE_NAMES[props.language] },
+      }),
+      prompt: chatMessageOf({
+        sections: [
+          {
+            title: 'The skill as it is now',
+            lines:
+              current === null
+                ? []
+                : [
+                    `name: ${current.name}`,
+                    `description: ${current.description}`,
+                    'body:',
+                    ...current.body
+                      .replace(/<\/?qazinho>/gi, '[qazinho]')
+                      .split('\n')
+                      .map((line) => `  ${line}`),
+                  ],
+          },
+          describeAttachments(props.attachments),
+        ],
+        text: props.text,
+      }),
+      schema: SKILL_SCHEMA,
+      readDirs:
+        props.attachments === null || props.attachments.files.length === 0
+          ? []
+          : [props.attachments.root],
+    };
+  }
+
+  /** O que quem escreve a skill respondeu; null quando não é uma resposta. */
+  public readSkill(text: string): ISkillDraftAnswer | null {
+    return readSkillDraft(text);
   }
 
   /** A resposta do build a partir do que o agente imprimiu. */
@@ -462,6 +577,7 @@ export class Harness {
     design: IDesignLink | null;
     plan?: IFlatStep[];
     memories?: IMemoryBrief[];
+    skills?: ITeamSkill[];
   }): string {
     return describeExploration(props);
   }
@@ -486,5 +602,19 @@ export class Harness {
     uploadsAreSamples?: boolean;
   }): string {
     return describeCase(props);
+  }
+
+  /**
+   * A mensagem que prepara um caso que o QA anda à mão: o agente leva o app às
+   * pré-condições e para onde o primeiro passo começa.
+   */
+  public prepare(props: {
+    steps: IFlatStep[];
+    screen: string;
+    language: Language;
+    variables: IVariableBrief[];
+    memories?: IMemoryBrief[];
+  }): string {
+    return describePrep(props);
   }
 }

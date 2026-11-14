@@ -1,6 +1,6 @@
 import type { IFrameRoot } from '@/engine/devices/WebDriver/types';
 import type { Locator, Page } from 'playwright-core';
-import { countedOf, ordinalOf, withoutRole } from '@/engine/devices/library';
+import { ordinalOf, placedOf, withoutRole } from '@/engine/devices/library';
 import { CONTROL_SELECTOR } from '@/engine/devices/WebDriver/constants';
 import { frameRootsOf } from './frameRootsOf';
 import { listControls } from './listControls';
@@ -43,7 +43,7 @@ const ROLE_OF_TAG: Partial<Record<string, AriaRole>> = {
 
 /**
  * Acha o que o agente nomeou, na página e depois em cada iframe, só onde uma pessoa
- * acertaria: o nome exato, o que o contém, um test id sem o `testid=`.
+ * acertaria: o nome no lugar dele, o nome exato, o que o contém, um test id.
  */
 export async function findLocator(props: {
   page: Page;
@@ -69,15 +69,50 @@ async function findIn(props: {
 
   if (testId !== null) return byTestId({ frame, testId });
 
+  const placed = await inPlace({ frame, target: props.target });
+
+  if (placed !== null) return placed;
+
   const found = await locate(props);
   const listed = withoutRole(props.target);
   const named =
     found ?? (listed === null ? null : await locate({ ...props, target: listed }));
-  const counted = countedOf(ordinalOf(listed ?? props.target).name);
-  const worded = named ?? (counted === null ? null : await onlyOne({ frame, counted }));
   const bare = props.target.trim();
 
-  return worded ?? (BARE_TEST_ID.test(bare) ? byTestId({ frame, testId: bare }) : null);
+  return named ?? (BARE_TEST_ID.test(bare) ? byTestId({ frame, testId: bare }) : null);
+}
+
+async function inPlace(props: {
+  frame: IFrameRoot;
+  target: string;
+}): Promise<Locator | null> {
+  const { name, nth } = ordinalOf(props.target.trim());
+  const placed = placedOf(name);
+
+  if (placed === null) return null;
+
+  const { root, scope } = props.frame;
+  const wanted = placed.name.toLowerCase();
+  const where = placed.place.toLowerCase();
+  const control = (await listControls(scope)).filter(
+    ({ label, place }) =>
+      label.toLowerCase() === wanted && place?.toLowerCase() === where,
+  )[nth];
+
+  if (control === undefined) return null;
+
+  const role = ROLE_OF_TAG[control.role];
+
+  if (role !== undefined && control.place !== null && control.placeTag !== null) {
+    const semantic = root
+      .locator(control.placeTag)
+      .filter({ hasText: control.place })
+      .getByRole(role, { name: control.label, exact: true });
+
+    if ((await semantic.count().catch(() => 0)) === 1) return semantic;
+  }
+
+  return root.locator(CONTROL_SELECTOR).nth(control.at);
 }
 
 async function byTestId(props: {
@@ -94,26 +129,6 @@ async function byTestId(props: {
     const shown = candidate.filter({ visible: true });
 
     if ((await shown.count().catch(() => 0)) > 0) return shown.first();
-  }
-
-  return null;
-}
-
-async function onlyOne(props: {
-  frame: IFrameRoot;
-  counted: RegExp;
-}): Promise<Locator | null> {
-  const { counted } = props;
-  const { root } = props.frame;
-
-  for (const candidate of [
-    root.getByRole('link', { name: counted }),
-    root.getByRole('button', { name: counted }),
-    root.getByText(counted),
-  ]) {
-    const shown = candidate.filter({ visible: true });
-
-    if ((await shown.count().catch(() => 0)) === 1) return shown;
   }
 
   return null;

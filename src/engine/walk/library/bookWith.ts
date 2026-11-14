@@ -2,7 +2,7 @@ import type { ICaseRecipe, IRecipeBook } from '@/contract';
 
 /**
  * O livro com as receitas novas, cada uma no lugar da que o caso dela tinha; um caso
- * gravado inteiro não guarda a gravação parcial, e uma parcial nunca cobre uma inteira.
+ * gravado inteiro não guarda a parcial, e uma parcial nunca cobre uma inteira.
  */
 export function bookWith(props: {
   book: IRecipeBook;
@@ -24,5 +24,11 @@ export function bookWith(props: {
     ...started,
   ];
 
-  return partial.length > 0 ? { cases, partial } : { cases };
+  const preps = props.book.preps ?? [];
+
+  return {
+    cases,
+    ...(partial.length > 0 ? { partial } : {}),
+    ...(preps.length > 0 ? { preps } : {}),
+  };
 }

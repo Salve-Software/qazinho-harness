@@ -1,12 +1,13 @@
 import type { IHarnessSection } from '@/context/types';
 import type { IJiraFile, IJiraStoryCopy } from '@/contract';
 import { STORY_SECTION } from '@/constants';
+import { criteriaOf } from './criteriaOf';
 
 const KILOBYTE = 1_024;
 
 /**
- * Uma story do Jira como o agente que planeja a lê: o que ela pede, como é aceita, o que
- * o time disse, a que ela se liga, e onde os arquivos foram baixados.
+ * Uma story do Jira como o agente que planeja a lê: o que pede, os critérios numerados, o
+ * que o time disse, se já chegou para teste, a que se liga, e onde estão os arquivos.
  */
 export function describeStory(props: {
   story: IJiraStoryCopy | null;
@@ -32,6 +33,7 @@ export function describeStory(props: {
   ]
     .filter((fact) => fact.length > 0)
     .join(', ');
+  const criteria = criteriaOf(story.acceptance);
   const description =
     story.description.length > STORY_SECTION.descriptionChars
       ? `${story.description.slice(0, STORY_SECTION.descriptionChars)}\n(the rest is cut)`
@@ -42,6 +44,7 @@ export function describeStory(props: {
     lines: [
       `${story.key} · ${story.summary}`,
       `${facts === '' ? '' : `${facts}. `}${story.url}`,
+      ...(copy.readiness === undefined ? [] : [STORY_SECTION.readiness[copy.readiness]]),
       ...(story.parent === '' ? [] : [`Part of ${story.parent}.`]),
       ...(story.labels.length === 0 ? [] : [`Labels: ${story.labels.join(', ')}.`]),
       ...(story.components.length === 0
@@ -50,10 +53,14 @@ export function describeStory(props: {
       ...(description === ''
         ? ['The story has no description.']
         : ['Description:', ...quoted(description)]),
-      ...story.acceptance.flatMap(({ field, text }) => [
-        `Acceptance criteria, from the field "${field}":`,
-        ...quoted(text),
-      ]),
+      ...(criteria.length === 0
+        ? []
+        : [
+            STORY_SECTION.criteria,
+            ...criteria.flatMap((text, index) =>
+              quoted(`C${String(index + 1)}. ${text}`),
+            ),
+          ]),
       ...(story.comments.length === 0
         ? []
         : [

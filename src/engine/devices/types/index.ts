@@ -1,5 +1,6 @@
 export type * from './IBox';
 export type * from './IDeviceDriver';
+export type * from './IDeviceFrame';
 export type * from './IElementMeasure';
 export type * from './IElementStyle';
 export type * from './IGaps';

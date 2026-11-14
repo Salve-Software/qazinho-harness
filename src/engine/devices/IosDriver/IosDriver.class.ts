@@ -1,12 +1,18 @@
 import type { IIosDriver } from './types';
 import type {
+  DeviceInput,
   IDeviceImage,
   IRunVideo,
   IScreenBox,
   IStepAction,
   IViewport,
 } from '@/contract';
-import type { IDeviceDriver, IShot, ShrinkImage } from '@/engine/devices/types';
+import type {
+  IDeviceDriver,
+  IDeviceFrame,
+  IShot,
+  ShrinkImage,
+} from '@/engine/devices/types';
 import type { ChildProcess } from 'node:child_process';
 import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
@@ -17,6 +23,7 @@ import { RUN_VIDEO_FILES } from '@/engine/devices/constants';
 import {
   describeMeasure,
   mp4FactsOf,
+  phoneFrameOf,
   phoneGlance,
   fractionBoxOf,
   phoneMeasureOf,
@@ -28,6 +35,7 @@ import {
   bundleOfPlist,
   describeIosScreen,
   findElement,
+  idbInputOf,
   parseBooted,
   parseElements,
   runTool,
@@ -44,6 +52,7 @@ export class IosDriver implements IDeviceDriver {
   private isOurs = false;
   private recording: { process: ChildProcess; file: string; startedAt: number } | null =
     null;
+  private size: { width: number; height: number } | null = null;
 
   public constructor(props: IIosDriver) {
     this.idb = props.idb;
@@ -168,6 +177,29 @@ export class IosDriver implements IDeviceDriver {
 
   public async describe(): Promise<string> {
     return describeIosScreen({ elements: await this.read(), app: this.bundle });
+  }
+
+  /** Um gesto do QA no simulador, nos pontos em que o idb toca. */
+  public async touch(input: DeviceInput): Promise<void> {
+    this.size ??= screenOf(await this.ui(['describe-all']).catch(() => ''));
+
+    if (this.size === null)
+      throw new Error('The simulator did not say how big its screen is.');
+
+    for (const args of idbInputOf({ input, size: this.size })) await this.ui(args);
+  }
+
+  /** A tela do simulador agora, como um quadro, para o QA vê-la enquanto a dirige. */
+  public async snapshot(): Promise<IDeviceFrame | null> {
+    const file = join(tmpdir(), `qazinho-frame-${randomUUID()}.png`);
+
+    try {
+      await this.simctl(['io', this.udid, 'screenshot', file]);
+
+      return phoneFrameOf({ image: await readFile(file), shrink: this.shrink });
+    } finally {
+      await rm(file, { force: true });
+    }
   }
 
   /**

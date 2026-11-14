@@ -114,10 +114,19 @@ export class PlanWalker {
     const recorded: ICaseRecipe[] = [];
     const filed: string[] = [];
 
-    for (const [position, steps] of casesOf(props.steps).entries()) {
+    let begun = 0;
+
+    for (const steps of casesOf(props.steps)) {
       if (this.isStopped) break;
 
-      if (position > 0) await this.driver.restart().catch(() => undefined);
+      if (steps[0]?.step.caseIsManual === true) {
+        this.leaveToQa(steps);
+        continue;
+      }
+
+      if (begun > 0) await this.driver.restart().catch(() => undefined);
+
+      begun += 1;
 
       if (this.isStopped) break;
 
@@ -600,6 +609,25 @@ export class PlanWalker {
     }
 
     return false;
+  }
+
+  /** Deixa um caso à mão para o QA: todo passo dele fica de fora, com o porquê. */
+  private leaveToQa(steps: IIndexedStep[]): void {
+    const at = Date.now();
+
+    for (const { step, index } of steps)
+      this.onEvent({
+        kind: 'step',
+        outcome: unwalkedOutcome({
+          step,
+          index,
+          workspaceId: this.scope,
+          verdict: 'skipped',
+          why: UNWALKED.manual,
+          reason: 'manual',
+          at,
+        }),
+      });
   }
 
   /**

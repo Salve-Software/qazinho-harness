@@ -30,4 +30,17 @@ export const IOS = {
     tab: '43',
     home: '227',
   } as Record<string, string>,
+  inputKeys: {
+    Enter: '40',
+    Escape: '41',
+    Backspace: '42',
+    Tab: '43',
+    Home: '74',
+    Delete: '76',
+    End: '77',
+    ArrowRight: '79',
+    ArrowLeft: '80',
+    ArrowDown: '81',
+    ArrowUp: '82',
+  } as Partial<Record<string, string>>,
 } as const;

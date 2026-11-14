@@ -22,8 +22,14 @@ export function readChatAnswer(text: string): IChatAnswer | null {
   const questions =
     CHAT_ANSWER.shape.questions.safeParse(withoutNullVariables(field('questions')))
       .data ?? [];
+  const written = CHAT_ANSWER.shape.plan.unwrap();
   const plan =
-    CHAT_ANSWER.shape.plan.safeParse(withoutNullIds(field('plan'))).data ?? null;
+    written
+      .extend({ strategy: written.shape.strategy.optional() })
+      .safeParse(withoutNullIds(field('plan'))).data ?? null;
+  const projectName = CHAT_ANSWER.shape.projectName
+    .safeParse(field('projectName'))
+    .data?.trim();
 
   return {
     reply: reply.trim(),
@@ -37,6 +43,7 @@ export function readChatAnswer(text: string): IChatAnswer | null {
       isMultiSelect: multiSelect,
     })),
     plan: plan !== null && plan.cases.length > 0 ? plan : null,
+    ...(projectName === undefined || projectName === '' ? {} : { projectName }),
   };
 }
 
@@ -80,12 +87,21 @@ function withoutNullIds(plan: unknown): unknown {
 
   return {
     ...(plan as Record<string, unknown>),
+    ...(fieldOf({ value: plan, key: 'strategy' }) === null
+      ? { strategy: undefined }
+      : {}),
     cases: cases.map((one: unknown) => {
       const steps = fieldOf({ value: one, key: 'steps' });
 
       return {
         ...(one as Record<string, unknown>),
         ...(fieldOf({ value: one, key: 'id' }) === null ? { id: undefined } : {}),
+        ...(Array.isArray(fieldOf({ value: one, key: 'sources' }))
+          ? {}
+          : { sources: [] }),
+        ...(fieldOf({ value: one, key: 'blockedBy' }) === null
+          ? { blockedBy: undefined }
+          : {}),
         ...(Array.isArray(steps)
           ? {
               steps: steps.map((step: unknown) =>

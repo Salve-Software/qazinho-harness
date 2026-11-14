@@ -225,39 +225,22 @@ describe('findLocator', () => {
   });
 
   /**
-   * Gravado como "Carrinho4" com quatro itens, o link do carrinho se chama "Carrinho0" num
-   * navegador limpo, e a gravação nunca se repetia.
+   * "Carrinho4" é o carrinho com quatro itens: outro número na tela quer dizer que o app
+   * está diferente, e a busca não pode fingir que é o mesmo controle.
    */
-  it('finds a control whose counter changed, when only one has that name', async () => {
+  it('does NOT take another number for the one the target names', async () => {
     const page = fakePage({
       getByRole: (_: string, options?: { name?: string | RegExp }) =>
-        fakeLocator({
-          name: options?.name instanceof RegExp ? 'role:counted' : 'role',
-          count: options?.name instanceof RegExp ? 1 : 0,
-        }),
-      getByLabel: () => fakeLocator({ name: 'label', count: 0 }),
-      getByPlaceholder: () => fakeLocator({ name: 'placeholder', count: 0 }),
-      getByText: () => fakeLocator({ name: 'text', count: 0 }),
-      locator: () => fakeLocator({ name: 'css', count: 0 }),
-    });
-
-    expect(
-      locatorName(await findLocator({ page, target: 'Carrinho4', kind: 'click' })),
-    ).toBe('role:counted');
-  });
-
-  it('does NOT guess between several controls whose counter changed', async () => {
-    const page = fakePage({
-      getByRole: (_: string, options?: { name?: string | RegExp }) =>
-        fakeLocator({ name: 'role', count: options?.name instanceof RegExp ? 2 : 0 }),
+        fakeLocator({ name: 'role', count: options?.name instanceof RegExp ? 1 : 0 }),
       getByLabel: () => fakeLocator({ name: 'label', count: 0 }),
       getByPlaceholder: () => fakeLocator({ name: 'placeholder', count: 0 }),
       getByText: (name: string | RegExp) =>
-        fakeLocator({ name: 'text', count: name instanceof RegExp ? 2 : 0 }),
+        fakeLocator({ name: 'text', count: name instanceof RegExp ? 1 : 0 }),
+      getByTestId: () => fakeLocator({ name: 'testid', count: 0 }),
       locator: () => fakeLocator({ name: 'css', count: 0 }),
     });
 
-    expect(await findLocator({ page, target: 'Passo 2', kind: 'click' })).toBeNull();
+    expect(await findLocator({ page, target: 'Carrinho4', kind: 'click' })).toBeNull();
   });
 
   it('falls back to the usual search when the list has no such number', async () => {

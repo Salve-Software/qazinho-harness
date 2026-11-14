@@ -1,5 +1,7 @@
+import type { IDeviceFrame } from './IDeviceFrame';
 import type { IShot } from './IShot';
 import type {
+  DeviceInput,
   IDeviceImage,
   INetworkEntry,
   IRunVideo,
@@ -10,7 +12,7 @@ import type {
 
 /**
  * O que uma run precisa de um dispositivo, navegador ou celular; um navegador também diz
- * os locators e as requisições.
+ * os locators e as requisições, e um celular manda a tela quando o QA o dirige.
  */
 export interface IDeviceDriver {
   open: () => Promise<void>;
@@ -36,4 +38,6 @@ export interface IDeviceDriver {
   network?: () => INetworkEntry[];
   apiCalls?: (since: number) => INetworkEntry[];
   responseBody?: (id: number) => Promise<string | null>;
+  touch?: (input: DeviceInput) => Promise<void>;
+  snapshot?: () => Promise<IDeviceFrame | null>;
 }

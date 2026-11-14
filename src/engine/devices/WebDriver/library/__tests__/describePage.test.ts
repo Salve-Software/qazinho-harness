@@ -7,6 +7,7 @@ function pageShowing(props: {
   text: string;
   controls: string[];
   testIds?: (string | null)[];
+  places?: (string | null)[];
 }) {
   return fakePage({
     url: () => 'https://shop.test/cart',
@@ -17,7 +18,16 @@ function pageShowing(props: {
         props.controls.map((line, at) => {
           const [role = '', label = ''] = line.split(': ');
 
-          return { role, label, testId: props.testIds?.[at] ?? null, at };
+          const place = props.places?.[at] ?? null;
+
+          return {
+            role,
+            label,
+            testId: props.testIds?.[at] ?? null,
+            place,
+            placeTag: place === null ? null : 'article',
+            at,
+          };
         }),
       ),
   });
@@ -49,6 +59,34 @@ describe('describePage', () => {
     });
 
     expect(await describePage(page)).toContain('a: Entrar #1\nbutton: Entrar #2');
+  });
+
+  /**
+   * Um "#1" mudava de dono quando o botão do primeiro produto virava "Adicionado ✓": o
+   * agente nomeia cada um pelo cartão em que está, e a gravação continua no mesmo botão.
+   */
+  it('names controls that read alike by the place each sits in', async () => {
+    const page = pageShowing({
+      text: 'Produtos',
+      controls: ['button: Adicionar ao carrinho', 'button: Adicionar ao carrinho'],
+      places: ['Camiseta Básica', 'Moletom Canguru'],
+    });
+
+    expect(await describePage(page)).toContain(
+      'button: Adicionar ao carrinho · Camiseta Básica\nbutton: Adicionar ao carrinho · Moletom Canguru',
+    );
+  });
+
+  it('still numbers the ones their place does not tell apart', async () => {
+    const page = pageShowing({
+      text: 'Produtos',
+      controls: ['button: Comprar', 'button: Comprar'],
+      places: ['Oferta', 'Oferta'],
+    });
+
+    expect(await describePage(page)).toContain(
+      'button: Comprar · Oferta #1\nbutton: Comprar · Oferta #2',
+    );
   });
 
   it('a page longer than the limit is cut, so one screen never eats the context', async () => {

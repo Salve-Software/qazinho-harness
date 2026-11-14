@@ -53,7 +53,7 @@ describe('readChatAnswer', () => {
       }),
     );
 
-    expect(answer?.plan?.cases).toEqual([CASE]);
+    expect(answer?.plan?.cases).toEqual([{ ...CASE, sources: [] }]);
   });
 
   it('keeps the id of a case the agent kept, so its runs and bugs stay with it', () => {
@@ -105,6 +105,49 @@ describe('readChatAnswer', () => {
     ]);
   });
 
+  /**
+   * O schema pede de onde vem o esperado em todo caso, mas um caso que veio sem a lista,
+   * ou com o null do Codex, não pode derrubar o plano inteiro.
+   */
+  it('keeps where each case came from, and reads a case with no list as from nowhere', () => {
+    const answer = readChatAnswer(
+      JSON.stringify({
+        reply: 'Two cases from the story.',
+        plan: {
+          summary: 'Two cases.',
+          cases: [{ ...CASE, sources: ['C1', 'qa'] }, { ...CASE, sources: null }, CASE],
+        },
+      }),
+    );
+
+    expect(answer?.plan?.cases.map(({ sources }) => sources)).toEqual([
+      ['C1', 'qa'],
+      [],
+      [],
+    ]);
+  });
+
+  it('keeps the strategy of a plan, and reads a plan the agent wrote without one', () => {
+    const strategy = {
+      covers: 'Coupons at checkout',
+      leavesOut: 'The admin',
+      where: 'Staging, web',
+      data: 'A valid and an expired coupon',
+      risks: 'Stacking',
+    };
+    const planOf = (extra: Record<string, unknown>) =>
+      readChatAnswer(
+        JSON.stringify({
+          reply: 'One case.',
+          plan: { summary: 'One case.', cases: [CASE], ...extra },
+        }),
+      )?.plan;
+
+    expect(planOf({ strategy })?.strategy).toEqual(strategy);
+    expect(planOf({})?.cases).toHaveLength(1);
+    expect(planOf({ strategy: null })?.strategy).toBeUndefined();
+  });
+
   it('reads the questions the agent puts to the QA', () => {
     const answer = readChatAnswer(
       JSON.stringify({ reply: 'Two things first.', questions: [QUESTION] }),
@@ -143,7 +186,7 @@ describe('readChatAnswer', () => {
     );
 
     expect(answer?.questions).toEqual([]);
-    expect(answer?.plan?.cases).toEqual([CASE]);
+    expect(answer?.plan?.cases).toEqual([{ ...CASE, sources: [] }]);
   });
 
   it('reads the nulls Codex sends for what it left out', () => {
@@ -206,5 +249,18 @@ describe('readChatAnswer', () => {
 
       expect(question?.options).toEqual(ACCOUNT.options);
     });
+  });
+
+  it('keeps the app’s name the agent read, trimmed, and nothing for an empty one', () => {
+    expect(
+      readChatAnswer(JSON.stringify({ reply: 'Ok.', projectName: '  Loja Online ' }))
+        ?.projectName,
+    ).toBe('Loja Online');
+    expect(
+      readChatAnswer(JSON.stringify({ reply: 'Ok.', projectName: ' ' })),
+    ).not.toHaveProperty('projectName');
+    expect(
+      readChatAnswer(JSON.stringify({ reply: 'Ok.', projectName: 'x'.repeat(61) })),
+    ).not.toHaveProperty('projectName');
   });
 });

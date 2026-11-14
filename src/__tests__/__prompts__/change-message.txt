@@ -1,0 +1,14 @@
+<qazinho>
+## What changed
+The story SHOP-878, edited 2026-11-11 18:40. https://shop.atlassian.net/browse/SHOP-878
+Before:
+  C3. Bloquear depois de 3 tentativas erradas
+After:
+  C3. Bloquear depois de 5 tentativas erradas
+
+## The plan
+Case TC-04 "Cupom inválido bloqueia" (P1), from C3
+  1. Errar o cupom 3 vezes → Tente de novo mais tarde
+</qazinho>
+
+What does this change do to the plan?
