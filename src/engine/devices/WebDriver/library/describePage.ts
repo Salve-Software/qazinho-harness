@@ -5,8 +5,8 @@ import { frameRootsOf } from './frameRootsOf';
 import { listControls } from './listControls';
 
 /**
- * O que o agente pode ver: o que uma pessoa veria, não o markup, com os controles que
- * dizem o mesmo numerados, e o que cada iframe mostra na seção dele.
+ * O que o agente pode ver: o que uma pessoa veria, com os controles que dizem o mesmo
+ * nomeados pelo lugar ou numerados, e o que cada iframe mostra na seção dele.
  */
 export async function describePage(page: Page): Promise<string> {
   const [, ...frames] = await frameRootsOf(page);
@@ -36,9 +36,11 @@ async function partOf(scope: Page | Frame): Promise<string[]> {
     .slice(0, WEB_DRIVER.pageTextLimit);
 
   const listed = (await listControls(scope)).slice(0, WEB_DRIVER.elementLimit);
-  const controls = listed.map(({ role, label, testId }) =>
-    testId === null ? `${role}: ${label}` : `${role}: ${label} [testid=${testId}]`,
-  );
+  const controls = listed.map(({ role, label, testId, place }) => {
+    const named = place === null ? `${role}: ${label}` : `${role}: ${label} · ${place}`;
+
+    return testId === null ? named : `${named} [testid=${testId}]`;
+  });
 
   return [
     'TEXT:',
