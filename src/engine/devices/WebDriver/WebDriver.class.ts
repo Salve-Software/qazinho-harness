@@ -915,6 +915,23 @@ export class WebDriver implements IDeviceDriver {
     if (originOf(url) !== null) this.onAddress?.(url);
   }
 
+  /** Acha o alvo de uma ação, procurando de novo enquanto a página ainda o traz. */
+  private async findSoon(props: {
+    page: Page;
+    target: string;
+    kind: 'click' | 'fill';
+  }): Promise<Locator | null> {
+    const until = Date.now() + WEB_DRIVER.findWaitMs;
+
+    for (;;) {
+      const locator = await findLocator(props);
+
+      if (locator !== null || Date.now() >= until) return locator;
+
+      await props.page.waitForTimeout(WEB_DRIVER.findPollMs);
+    }
+  }
+
   private async openAnew(props: { isCleared: boolean }): Promise<void> {
     const context = this.context;
 
@@ -991,7 +1008,7 @@ export class WebDriver implements IDeviceDriver {
       return;
     }
 
-    const locator = await findLocator({
+    const locator = await this.findSoon({
       page,
       target: action.target,
       kind: action.kind === 'fill' || action.kind === 'upload' ? 'fill' : 'click',
