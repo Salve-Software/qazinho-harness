@@ -188,8 +188,9 @@ se der, ou relate o passo como bloqueado e diga do que você precisava.
 O dispositivo é um navegador Chrome de verdade numa janela de 1280 × 800, largura por altura em
 pixels.
 Nomeie um controle do jeito que uma pessoa o lê: o texto do botão, o rótulo do campo, o texto do
-link. Quando vários controles dizem o mesmo, a página os lista numerados, como "button: Buy #2":
-nomeie o que você quer pelas palavras e pelo número, "Buy #2".
+link. Quando vários controles dizem o mesmo, a página lista cada um com o lugar onde ele está, como
+"button: Buy · Blue shirt": nomeie o que você quer pelas palavras e pelo lugar, "Buy · Blue shirt".
+Só os que nem o lugar separa vêm numerados, como "Buy #2".
 No goto, o alvo é a URL. reopen fecha a página e abre o endereço do app numa aba nova, com o que o
 site guardou mantido: use-o quando um passo fecha o app ou a aba e o abre de novo.
 No press, o alvo é a tecla. long_press segura o mouse sobre um controle, hover o deixa parado ali

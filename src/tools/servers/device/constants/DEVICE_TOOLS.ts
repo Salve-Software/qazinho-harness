@@ -63,7 +63,7 @@ export const DEVICE_TOOLS = [
   {
     name: 'click',
     description:
-      'Click or tap a control, named the way a person reads it: the button label, the link text, the row text. When several read alike, look numbers them: name the one you mean, like "Buy #2".',
+      'Click or tap a control, named the way a person reads it: the button label, the link text, the row text. When several read alike, look tells them apart by their place, like "Buy · Blue shirt", or by a number, like "Buy #2": name the one you mean the way look lists it.',
     input: z.object({
       target: textNamed({
         message: '"click" needs a target: say what the control or URL is.',
@@ -86,7 +86,7 @@ export const DEVICE_TOOLS = [
   {
     name: 'fill',
     description:
-      'Type into a field, named by its label, placeholder or hint. When several read alike, look numbers them: name the one you mean, like "Email #2".',
+      'Type into a field, named by its label, placeholder or hint. When several read alike, look tells them apart by their place, like "Email · Billing", or by a number, like "Email #2": name the one you mean the way look lists it.',
     input: z.object({
       target: textNamed({
         message: '"fill" needs a target: say what the control or URL is.',
