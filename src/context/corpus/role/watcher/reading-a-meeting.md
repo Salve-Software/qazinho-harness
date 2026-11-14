@@ -15,5 +15,7 @@ do "depois": não há um "antes", e o que conta é o que a reunião decidiu.
 - Uma decisão da reunião vale sobre o que a história ou o plano diziam antes: a reunião existe para
   mudar isso, e a história costuma ser atualizada depois. Proponha a troca citando a decisão. Só
   vira pergunta em "doubts" o que a própria reunião deixou em conflito ou sem fechar.
+- Uma decisão que responde uma dúvida da seção "Doubts on the story" vai em "answered", com as
+  palavras de quem decidiu, e o caso que esperava por ela entra em "changes".
 - "summary": quantas decisões mexem no plano, e o que ficou de fora, como "3 decisões mexem no
   plano; 2 discussões e 1 hipótese ficaram de fora".
