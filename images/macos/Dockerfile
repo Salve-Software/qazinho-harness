@@ -1,16 +1,16 @@
-FROM node:22-bookworm AS build
+FROM --platform=$BUILDPLATFORM node:22-bookworm AS build
 WORKDIR /src
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build
 
-FROM node:22-bookworm AS deps
+FROM --platform=$BUILDPLATFORM node:22-bookworm AS deps
 WORKDIR /opt/qazinho
 COPY images/runner/package.json ./
 RUN npm install --omit=dev --ignore-scripts
 
-FROM node:22-bookworm AS node
+FROM --platform=$BUILDPLATFORM node:22-bookworm AS node
 ARG NODE_VERSION=22.20.0
 RUN curl -fsSL https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-darwin-arm64.tar.gz \
       | tar -xz -C /opt \

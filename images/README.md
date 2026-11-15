@@ -13,7 +13,7 @@ repositório testa:
 
 ```sh
 docker buildx build --platform linux/amd64 -f images/linux/Dockerfile -t nscr.io/<workspace>/qazinho-runner-linux:<version> --push .
-docker buildx build --platform linux/amd64 -f images/macos/Dockerfile -t nscr.io/<workspace>/qazinho-runner-macos:<version> --push .
+docker buildx build --platform darwin/arm64 --provenance=false -f images/macos/Dockerfile -t nscr.io/<workspace>/qazinho-runner-macos:<version> --push .
 ```
 
 A API as lê como `CI_RUNNER_IMAGE_LINUX` e `CI_RUNNER_IMAGE_MACOS`. O `images/runner/` fixa o que
@@ -22,6 +22,9 @@ suba-as junto com as do harness.
 
 - **O Android** roda o emulador em KVM: a API inicia o contêiner de um job de Android privilegiado,
   com virtualização aninhada, e a imagem nomeia o AVD em `QAZINHO_AVD`.
-- **O iOS** precisa do idb no Mac (o `idb_companion` do Homebrew e o cliente `fb-idb`), achado no
-  `PATH` ou em `QAZINHO_IDB`; o runner diz o que falta quando não está lá.
+- **O iOS** roda como aplicativo num Mac, então a imagem é `darwin/arm64`: uma `linux/amd64` deixa a
+  máquina parada em `PENDING`, sem erro. A imagem macOS 26 da Namespace já traz o Xcode, os
+  simuladores, o Homebrew e o Python, mas não o idb: o `qazinho-runner` instala o `idb_companion`
+  pelo Homebrew e o cliente `fb-idb` num virtualenv quando faltam, em uns 10 segundos, e o aponta em
+  `QAZINHO_IDB`.
 - **Um navegador é gravado** pelo ffmpeg da imagem; uma máquina sem ele anda sem gravar.

@@ -1,4 +1,20 @@
 #!/bin/sh
 here="$(cd "$(dirname "$0")" && pwd)"
 export QAZINHO_WORK_DIR="${QAZINHO_WORK_DIR:-${TMPDIR:-/tmp}/qazinho}"
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_ENV_HINTS=1
+
+if ! command -v idb_companion >/dev/null 2>&1; then
+  brew install facebook/fb/idb-companion >/dev/null 2>&1 \
+    || echo "qazinho-runner: idb_companion could not be installed" >&2
+fi
+
+if [ -z "$QAZINHO_IDB" ] && ! command -v idb >/dev/null 2>&1; then
+  mkdir -p "$QAZINHO_WORK_DIR" \
+    && python3 -m venv "$QAZINHO_WORK_DIR/idb" \
+    && "$QAZINHO_WORK_DIR/idb/bin/pip" install -q fb-idb >/dev/null 2>&1 \
+    && export QAZINHO_IDB="$QAZINHO_WORK_DIR/idb/bin/idb" \
+    || echo "qazinho-runner: the idb client could not be installed" >&2
+fi
+
 exec "$here/node/bin/node" "$here/dist/runner.js"
