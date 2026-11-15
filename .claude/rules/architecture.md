@@ -139,6 +139,10 @@ host que só pergunta ao agente (a API) nunca carregue o Playwright.
     ferramentas do dispositivo (`IAttachDevice`), para que o que chegar ao modelo ande do mesmo
     jeito.
   - Um `${NAME}` é digitado com o seu valor e lido de volta como o seu nome (`variablePort`).
+  - Numa run web, um caso que começa logado (`caseSignedInAs`) abre dentro da conta pelo
+    `SessionKeeper`: o primeiro entra pela gravação do login ou pelo agente, num turno com a
+    mensagem do `Harness.signIn`, e os seguintes recebem a sessão do Chrome numa aba limpa. A
+    gravação do caso guarda o login no primeiro passo (`signIn`).
   - Sem agente, ou quando a run gastou tudo o que podia no modelo, um caso que nenhuma gravação
     cobre é pulado e diz por quê. Uma pergunta ao QA termina o caso como pulado, já que ninguém
     responde.
