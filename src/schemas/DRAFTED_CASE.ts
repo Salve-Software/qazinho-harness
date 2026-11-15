@@ -11,6 +11,12 @@ export const DRAFTED_CASE = z.object({
   priority: z.enum(['P1', 'P2', 'P3']),
   goal: z.string(),
   preconditions: z.string(),
+  signedInAs: z
+    .string()
+    .describe(
+      'The variable that names the account this case starts signed in with, such as LOGIN_EMAIL: the run signs in once per account and starts each case already inside, so keep the sign-in in the preconditions but never as a step. Leave it out when the case signs in, signs up or signs out itself, or uses the app signed out.',
+    )
+    .optional(),
   steps: z.array(
     z.object({
       action: z

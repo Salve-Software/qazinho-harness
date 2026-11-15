@@ -246,6 +246,10 @@
                 "preconditions": {
                   "type": "string"
                 },
+                "signedInAs": {
+                  "type": "string",
+                  "description": "The variable that names the account this case starts signed in with, such as LOGIN_EMAIL: the run signs in once per account and starts each case already inside, so keep the sign-in in the preconditions but never as a step. Leave it out when the case signs in, signs up or signs out itself, or uses the app signed out."
+                },
                 "steps": {
                   "type": "array",
                   "items": {
@@ -329,6 +333,10 @@
                 },
                 "preconditions": {
                   "type": "string"
+                },
+                "signedInAs": {
+                  "type": "string",
+                  "description": "The variable that names the account this case starts signed in with, such as LOGIN_EMAIL: the run signs in once per account and starts each case already inside, so keep the sign-in in the preconditions but never as a step. Leave it out when the case signs in, signs up or signs out itself, or uses the app signed out."
                 },
                 "steps": {
                   "type": "array",

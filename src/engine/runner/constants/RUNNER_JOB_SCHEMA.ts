@@ -56,6 +56,7 @@ export const RUNNER_JOB_SCHEMA = z.object({
           priority: z.string(),
           goal: z.string(),
           preconditions: z.string(),
+          signedInAs: z.string().optional(),
           isManual: z.boolean().optional(),
           steps: z.array(
             z.object({

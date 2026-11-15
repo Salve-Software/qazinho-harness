@@ -44,6 +44,7 @@ export type * from './IReviewSighting';
 export type * from './IRunFinding';
 export type * from './IRunVideo';
 export type * from './IScreenBox';
+export type * from './ISignInRecipe';
 export type * from './ISkillDraft';
 export type * from './ISkillDraftAnswer';
 export type * from './ISourceChange';

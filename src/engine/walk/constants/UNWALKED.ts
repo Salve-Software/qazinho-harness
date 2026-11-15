@@ -8,6 +8,7 @@ export const UNWALKED = {
   noValue: 'Skipped: this case types a variable this run has no value for:',
   noData:
     'Blocked: the environment does not hold the data this recording expects, so check the test data.',
+  signIn: 'Blocked: the run could not sign in with the account this case starts in:',
   manual: 'Not walked here: the QA walks this case by hand.',
   ended: 'Not marked: the QA ended the case before this step.',
 } as const;

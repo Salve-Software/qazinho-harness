@@ -1,6 +1,6 @@
 /**
- * Um caso que o agente rascunhou: o caso que ele muda, de onde vem o esperado, as dúvidas
- * que o seguram, e o nó do Figma de cada passo.
+ * Um caso que o agente rascunhou: o caso que ele muda, a conta em que começa logado, de
+ * onde vem o esperado, as dúvidas que o seguram, e o nó do Figma de cada passo.
  */
 export interface IDraftedCase {
   id?: string | undefined;
@@ -8,6 +8,7 @@ export interface IDraftedCase {
   priority: 'P1' | 'P2' | 'P3';
   goal: string;
   preconditions: string;
+  signedInAs?: string | undefined;
   steps: { action: string; expected: string; frame?: string | undefined }[];
   sources?: string[] | undefined;
   blockedBy?: string[] | undefined;
