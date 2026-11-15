@@ -1,5 +1,6 @@
 import type { IDeviceFrame } from './IDeviceFrame';
 import type { IShot } from './IShot';
+import type { IWebSession } from './IWebSession';
 import type {
   DeviceInput,
   IDeviceImage,
@@ -12,11 +13,11 @@ import type {
 
 /**
  * O que uma run precisa de um dispositivo, navegador ou celular; um navegador também diz
- * os locators e as requisições, e um celular manda a tela quando o QA o dirige.
+ * os locators, as requisições e a sessão, e um celular manda a tela ao QA que o dirige.
  */
 export interface IDeviceDriver {
   open: () => Promise<void>;
-  restart: () => Promise<void>;
+  restart: (session?: IWebSession) => Promise<void>;
   act: (action: IStepAction) => Promise<void>;
   describe: () => Promise<string>;
   inspect: (target: string) => Promise<string>;
@@ -40,4 +41,5 @@ export interface IDeviceDriver {
   responseBody?: (id: number) => Promise<string | null>;
   touch?: (input: DeviceInput) => Promise<void>;
   snapshot?: () => Promise<IDeviceFrame | null>;
+  sessionState?: () => Promise<IWebSession | null>;
 }

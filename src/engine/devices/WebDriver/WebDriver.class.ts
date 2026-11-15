@@ -13,6 +13,7 @@ import type {
 import type {
   IDeviceDriver,
   IShot,
+  IWebSession,
   IWindowPlace,
   ShrinkImage,
 } from '@/engine/devices/types';
@@ -99,6 +100,7 @@ export class WebDriver implements IDeviceDriver {
   private dialogAnswer: DialogAnswer = 'ok';
   private promptText: string | null = null;
   private isClosing = false;
+  private isSeeding = false;
 
   public constructor(props: IWebDriver) {
     this.url = props.url;
@@ -143,11 +145,16 @@ export class WebDriver implements IDeviceDriver {
   }
 
   /**
-   * Começa o app do zero para quem nunca o abriu: nenhum cookie, nada guardado, uma aba
-   * nova no endereço dele.
+   * Começa o app do zero numa aba nova no endereço dele: nada guardado, ou só a sessão de
+   * uma conta em que um caso anterior entrou.
    */
-  public async restart(): Promise<void> {
-    await this.openAnew({ isCleared: true });
+  public async restart(session?: IWebSession): Promise<void> {
+    await this.openAnew({ isCleared: true, session });
+  }
+
+  /** Os cookies e o localStorage do app agora, para o caso seguinte começar na conta. */
+  public async sessionState(): Promise<IWebSession | null> {
+    return (await this.context?.storageState().catch(() => null)) ?? null;
   }
 
   /**
@@ -844,6 +851,7 @@ export class WebDriver implements IDeviceDriver {
     const url = request.url();
 
     if (
+      this.isSeeding ||
       !/^https?:/i.test(url) ||
       url.startsWith(FILE_VIEWER.origin) ||
       this.entries.length >= WEB_DRIVER.networkLimit
@@ -997,7 +1005,10 @@ export class WebDriver implements IDeviceDriver {
     }
   }
 
-  private async openAnew(props: { isCleared: boolean }): Promise<void> {
+  private async openAnew(props: {
+    isCleared: boolean;
+    session?: IWebSession | undefined;
+  }): Promise<void> {
     const context = this.context;
 
     if (!context) throw new Error('The browser is not open.');
@@ -1038,11 +1049,54 @@ export class WebDriver implements IDeviceDriver {
           .catch(() => undefined);
     }
 
+    if (props.session !== undefined) await this.seed({ page, session: props.session });
+
     await this.fit();
     await this.castAll();
     this.tellScreens();
     await openApp({ page, url: this.url });
     await this.measure();
+  }
+
+  /**
+   * Põe numa aba limpa a sessão de uma conta: os cookies no contexto, e o localStorage de
+   * cada site por uma página vazia dele, sem o app rodar.
+   */
+  private async seed(props: { page: Page; session: IWebSession }): Promise<void> {
+    const { page, session } = props;
+
+    this.isSeeding = true;
+
+    try {
+      await this.context?.addCookies(session.cookies).catch(() => undefined);
+
+      for (const { origin, localStorage } of session.origins) {
+        if (localStorage.length === 0) continue;
+
+        const pattern = `${origin}/**`;
+
+        await page.route(pattern, (route) =>
+          route.fulfill({ status: 200, contentType: 'text/html', body: '' }),
+        );
+        await page
+          .goto(`${origin}/`, { timeout: WEB_DRIVER.gotoTimeoutMs })
+          .then(() =>
+            page.evaluate((items) => {
+              const store = (
+                globalThis as unknown as {
+                  localStorage: { setItem: (name: string, value: string) => void };
+                }
+              ).localStorage;
+
+              for (const { name, value } of items) store.setItem(name, value);
+            }, localStorage),
+          )
+          .catch(() => undefined);
+        await page.unroute(pattern).catch(() => undefined);
+      }
+    } finally {
+      this.isSeeding = false;
+    }
   }
 
   private async perform(props: { page: Page; action: IStepAction }): Promise<void> {
