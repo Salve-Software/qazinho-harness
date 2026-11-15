@@ -8,3 +8,4 @@ export type * from './IWalkEnd';
 export type * from './WalkEvent';
 export type * from './WalkMode';
 export type * from './IReplayDivergence';
+export type * from './ISessionKeeper';

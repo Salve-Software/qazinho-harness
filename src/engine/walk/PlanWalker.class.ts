@@ -11,6 +11,7 @@ import type {
 import type {
   ICaseRecipe,
   IFlatStep,
+  ISignInRecipe,
   IKnownBug,
   IMemoryBrief,
   IStepAsked,
@@ -49,12 +50,15 @@ import {
   recipeOf,
   recordedAction,
   replayedOutcome,
+  signedInAsOf,
   stepCarryOn,
   unwalkedOutcome,
   readFileRef,
   runnerUploadPathOf,
   variablePort,
+  withSignIn,
 } from './library';
+import { SessionKeeper } from './SessionKeeper.class';
 
 /**
  * Anda os casos de um plano num dispositivo, cada um no app aberto do zero: pela gravação
@@ -81,6 +85,8 @@ export class PlanWalker {
   private isStopped = false;
   private isCapped = false;
   private divergedAt: IReplayDivergence | null = null;
+  private keeper: SessionKeeper | null = null;
+  private account: string | null = null;
 
   public constructor(props: IPlanWalker) {
     this.scope = props.scope;
@@ -113,6 +119,22 @@ export class PlanWalker {
   }): Promise<IWalkEnd> {
     const recorded: ICaseRecipe[] = [];
     const filed: string[] = [];
+    const agent = this.agent;
+
+    this.keeper =
+      this.target.kind === 'web'
+        ? new SessionKeeper({
+            driver: this.driver,
+            port: this.port(),
+            book: props.book,
+            appUrl: this.target.value,
+            signIn: (account) =>
+              props.mode === 'recorded' || agent === null || this.isCapped
+                ? Promise.resolve(null)
+                : this.signInTurn({ agent, account }),
+            isStopped: () => this.isStopped,
+          })
+        : null;
 
     let begun = 0;
 
@@ -123,12 +145,6 @@ export class PlanWalker {
         this.leaveToQa(steps);
         continue;
       }
-
-      if (begun > 0) await this.driver.restart().catch(() => undefined);
-
-      begun += 1;
-
-      if (this.isStopped) break;
 
       const missing = missingValuesOf({
         steps: steps.map(({ step }) => step),
@@ -141,6 +157,27 @@ export class PlanWalker {
           verdict: 'skipped',
           reason: 'noValue',
           why: `${UNWALKED.noValue} ${missing.map((name) => `\${${name}}`).join(', ')}`,
+        });
+        continue;
+      }
+
+      this.account = signedInAsOf({
+        steps: steps.map(({ step }) => step),
+        targetKind: this.target.kind,
+      });
+
+      const isStarted = await this.startCase(begun === 0);
+
+      begun += 1;
+
+      if (this.isStopped) break;
+
+      if (!isStarted) {
+        this.unwalked({
+          pending: [...steps],
+          verdict: 'blocked',
+          reason: 'signIn',
+          why: `${UNWALKED.signIn} \${${this.account ?? ''}}`,
         });
         continue;
       }
@@ -165,7 +202,15 @@ export class PlanWalker {
         continue;
       }
 
-      if (replayed === 'diverged') await this.driver.restart().catch(() => undefined);
+      if (replayed === 'diverged' && !(await this.startCase(false))) {
+        this.unwalked({
+          pending: [...steps],
+          verdict: 'blocked',
+          reason: 'signIn',
+          why: `${UNWALKED.signIn} \${${this.account ?? ''}}`,
+        });
+        continue;
+      }
 
       if (this.isStopped) break;
 
@@ -321,7 +366,16 @@ export class PlanWalker {
           at,
         });
 
-        if (recipe !== null) props.recorded.push(recipe);
+        if (recipe !== null)
+          props.recorded.push(
+            withSignIn({
+              recipe,
+              signIn:
+                this.account === null
+                  ? null
+                  : (this.keeper?.signInOf(this.account) ?? null),
+            }),
+          );
 
         return endCase('Filed. That was the last step of this case.');
       }
@@ -458,6 +512,7 @@ export class PlanWalker {
         variables: this.values.map(({ name, description }) => ({ name, description })),
         design: null,
         told: this.answers.filter(({ caseId }) => caseId === first?.step.caseId),
+        signedInAs: this.account,
       }),
       device: { workspaceId: this.scope, driver: port, onReport, onFinding, onAsk },
       allowedTools: this.harness.toolsFor('runner').allowedTools,
@@ -493,6 +548,123 @@ export class PlanWalker {
     this.unwalked({ pending, verdict: 'blocked', reason: 'unreported' });
 
     return { kind: 'walked' };
+  }
+
+  /**
+   * Abre o app para o caso de agora: do zero, ou já dentro da conta em que ele começa;
+   * false quando a run não conseguiu entrar nela.
+   */
+  private async startCase(isFresh: boolean): Promise<boolean> {
+    if (this.account === null || this.keeper === null) {
+      if (!isFresh) await this.driver.restart().catch(() => undefined);
+
+      return true;
+    }
+
+    return this.keeper.start({ account: this.account, isFresh });
+  }
+
+  /**
+   * Um turno do agente que só entra numa conta, gravado para os casos que começam nela;
+   * null quando ele não entrou, ou precisou de alguém que nesta run não responde.
+   */
+  private async signInTurn(props: {
+    agent: ICaseAgent;
+    account: string;
+  }): Promise<ISignInRecipe | null> {
+    const { agent, account } = props;
+    const device = this.port();
+    const actions: IStepAction[] = [];
+    let signed: ISignInRecipe | null = null;
+    let over: () => void = () => undefined;
+    const isOver = new Promise<null>((resolve) => {
+      over = () => {
+        resolve(null);
+      };
+    });
+    const endTurn = (said: string) => {
+      over();
+      setImmediate(() => {
+        agent.cancel(this.scope);
+      });
+
+      return said;
+    };
+    const port: IDevicePort = {
+      describe: () => device.describe(),
+      inspect: (target) => device.inspect(target),
+      failedCalls: () => device.failedCalls(),
+      calls: (ask) => device.calls(ask),
+      glance: () => device.glance(),
+      act: async (action) => {
+        await device.act(action);
+        actions.push(
+          recordedAction({
+            appUrl: this.target.value,
+            action,
+            found: this.driver.resolution?.() ?? null,
+            values: this.values,
+          }),
+        );
+      },
+    };
+    const onReport = async (report: IStepReport): Promise<string> => {
+      if (report.verdict !== 'passed') return endTurn('Noted. End your turn now.');
+
+      const screen = await device.describe().catch(() => '');
+      const proof = provableProof({ proof: report.proof, screen, values: this.values });
+
+      if (proof.trim().length > 0) signed = { account, actions, proof };
+
+      return endTurn('Signed in. End your turn now.');
+    };
+    const screen = await device.describe().catch(() => '');
+
+    if (this.isStopped) return null;
+
+    const turn = agent.walk({
+      scope: this.scope,
+      systemPrompt: this.harness.run({
+        target: this.target,
+        viewport: this.viewport,
+        language: this.language,
+      }),
+      prompt: this.harness.signIn({
+        account,
+        screen,
+        language: this.language,
+        variables: this.values.map(({ name, description }) => ({ name, description })),
+        memories: this.memories,
+      }),
+      device: {
+        workspaceId: this.scope,
+        driver: port,
+        onReport,
+        onFinding: () => Promise.resolve('Not now: only sign in.'),
+        onAsk: () =>
+          Promise.resolve(
+            endTurn(
+              'No one answers in this run, so the sign-in stops here: end your turn.',
+            ),
+          ),
+      },
+      allowedTools: this.harness.toolsFor('runner').allowedTools,
+    });
+
+    const raced = await Promise.race([turn, isOver]);
+    const ended =
+      raced ??
+      (await Promise.race([
+        turn,
+        new Promise<null>((wake) => setTimeout(() => wake(null), RUN_WALK.costsWaitMs)),
+      ]));
+
+    if (ended?.costUsd !== null && ended?.costUsd !== undefined)
+      this.onEvent({ kind: 'cost', costUsd: ended.costUsd });
+
+    if (raced?.kind === 'capped') this.isCapped = true;
+
+    return signed;
   }
 
   /**
@@ -533,7 +705,7 @@ export class PlanWalker {
 
     if (cause !== 'flaky') return first;
 
-    await this.driver.restart().catch(() => undefined);
+    if (!(await this.startCase(false))) return first;
 
     return this.isStopped ? 'stopped' : this.replayCase(props);
   }

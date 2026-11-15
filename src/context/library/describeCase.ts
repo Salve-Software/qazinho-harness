@@ -12,8 +12,8 @@ import { describeMemories } from './describeMemories';
 import { describeVariables } from './describeVariables';
 
 /**
- * A mensagem que começa um caso: os passos e frames, o idioma, as variáveis, o que já se
- * aprendeu do app, as respostas dadas e os bugs abertos.
+ * A mensagem que começa um caso: a conta em que ele já começa, os passos e frames, o
+ * idioma, as variáveis, o que se aprendeu do app, as respostas dadas e os bugs abertos.
  */
 export function describeCase(props: {
   steps: IFlatStep[];
@@ -29,6 +29,7 @@ export function describeCase(props: {
   heardMemories?: string[];
   uploads?: { name: string; path: string }[];
   uploadsAreSamples?: boolean;
+  signedInAs?: string | null;
 }): string {
   const { steps, screen, language, filed, known, variables, design } = props;
   const told = props.told ?? [];
@@ -48,6 +49,13 @@ export function describeCase(props: {
       : first.casePreconditions.length > 0
         ? [`Preconditions: ${first.casePreconditions}`]
         : []),
+    ...(props.isUnderWay !== true &&
+    props.signedInAs !== undefined &&
+    props.signedInAs !== null
+      ? [
+          `You start signed in as \${${props.signedInAs}}: the run already did that part of the preconditions, so do not sign in again. If the app asks you to sign in anyway, sign in with \${${props.signedInAs}} once and say so in "note".`,
+        ]
+      : []),
     ...(framed
       ? [
           `Figma design: ${design.url} (fileKey ${design.fileKey}). Hold each step that names a frame to it.`,

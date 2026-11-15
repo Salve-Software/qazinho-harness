@@ -55,6 +55,7 @@ import {
   describeChange,
   describeCase,
   describePrep,
+  describeSignIn,
   describeChatMemories,
   describeCode,
   describeDesign,
@@ -600,6 +601,7 @@ export class Harness {
     heardMemories?: string[];
     uploads?: { name: string; path: string }[];
     uploadsAreSamples?: boolean;
+    signedInAs?: string | null;
   }): string {
     return describeCase(props);
   }
@@ -616,5 +618,19 @@ export class Harness {
     memories?: IMemoryBrief[];
   }): string {
     return describePrep(props);
+  }
+
+  /**
+   * A mensagem que entra numa conta antes dos casos web que começam nela: só entrar, e
+   * parar onde o app mostra que entrou.
+   */
+  public signIn(props: {
+    account: string;
+    screen: string;
+    language: Language;
+    variables: IVariableBrief[];
+    memories?: IMemoryBrief[];
+  }): string {
+    return describeSignIn(props);
   }
 }
