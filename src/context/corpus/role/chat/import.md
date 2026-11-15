@@ -20,7 +20,9 @@ deles. Leia a pasta antes de perguntar qualquer coisa.
   começo do título do caso. Junte num caso só os testes que são um fluxo só, e separe os que
   testam coisas diferentes.
 - O que o teste monta antes de andar (login, dados, `beforeEach`, `launchApp`, `clearState`) vira
-  as pré-condições do caso, não um passo.
+  as pré-condições do caso, não um passo. Um teste que começa com a sessão de uma conta
+  (`storageState`, `cy.session`, um login no `beforeEach`) nomeia a variável dela em
+  "signedInAs".
 - Um login, uma senha, um token ou uma chave que o teste lê do ambiente ou escreve no arquivo é
   uma variável do projeto: o passo diz `${NAME}`, e você pergunta ao QA pela janela de valores,
   nunca em palavras. Copie o nome da variável do `.env.example` ou do código, e nunca um valor.
