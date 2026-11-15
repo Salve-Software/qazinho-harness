@@ -7,7 +7,7 @@ export const IOS = {
   maxBufferBytes: 64 * 1024 * 1024,
   settleMs: 1_200,
   watchMs: 2_000,
-  openChecks: 6,
+  openChecks: 15,
   swipeSec: 0.35,
   longPressSec: 1,
   dragSec: 1.5,

@@ -436,9 +436,21 @@ export class IosDriver implements IDeviceDriver {
 
   private async expectOpen(): Promise<void> {
     let isHome = false;
+    let unread: unknown = null;
 
     for (let tries = 0; tries < IOS.openChecks; tries += 1) {
-      const elements = await this.read();
+      const elements = await this.read().then(
+        (read) => {
+          unread = null;
+
+          return read;
+        },
+        (reason: unknown) => {
+          unread = reason;
+
+          return [];
+        },
+      );
 
       isHome = elements.some(({ isLaunchIcon }) => isLaunchIcon);
 
@@ -451,6 +463,8 @@ export class IosDriver implements IDeviceDriver {
       throw new Error(
         'The app closed right after it opened: the simulator shows its home screen.',
       );
+
+    if (unread instanceof Error) throw unread;
   }
 
   private async installFresh(): Promise<void> {
