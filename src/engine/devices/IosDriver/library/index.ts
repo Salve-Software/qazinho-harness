@@ -8,3 +8,4 @@ export * from './parseElements';
 export * from './parseSimulators';
 export * from './runTool';
 export * from './screenOf';
+export * from './simulatorAppsOf';

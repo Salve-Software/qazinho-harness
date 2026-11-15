@@ -5,4 +5,5 @@ export type * from './IElementMeasure';
 export type * from './IElementStyle';
 export type * from './IGaps';
 export type * from './IShot';
+export type * from './IWindowPlace';
 export type * from './ShrinkImage';

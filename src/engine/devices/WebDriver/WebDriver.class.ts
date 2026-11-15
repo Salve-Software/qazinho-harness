@@ -1,10 +1,4 @@
-import type {
-  IWebAccess,
-  IWebDriver,
-  IWebScreen,
-  IWindowPlace,
-  WebDownload,
-} from './types';
+import type { IWebAccess, IWebDriver, IWebScreen, WebDownload } from './types';
 import type {
   DeviceInput,
   DialogAnswer,
@@ -16,7 +10,12 @@ import type {
   IStepAction,
   IViewport,
 } from '@/contract';
-import type { IDeviceDriver, IShot, ShrinkImage } from '@/engine/devices/types';
+import type {
+  IDeviceDriver,
+  IShot,
+  IWindowPlace,
+  ShrinkImage,
+} from '@/engine/devices/types';
 import type {
   BrowserContext,
   CDPSession,

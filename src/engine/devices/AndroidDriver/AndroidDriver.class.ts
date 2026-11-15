@@ -11,9 +11,11 @@ import type {
   IDeviceDriver,
   IDeviceFrame,
   IShot,
+  IWindowPlace,
   ShrinkImage,
 } from '@/engine/devices/types';
-import { readdir, stat, writeFile } from 'node:fs/promises';
+import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
+import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { RUN_VIDEO_FILES } from '@/engine/devices/constants';
 import {
@@ -30,6 +32,7 @@ import { ANDROID } from './constants';
 import {
   adbInputOf,
   adbTextsOf,
+  avdFolderOf,
   bootArgs,
   densityOf,
   describeScreen,
@@ -44,6 +47,7 @@ import {
   runAdb,
   runAdbRaw,
   screenSizeOf,
+  withWindowAt,
 } from './library';
 
 /** Dirige um emulador Android pelo adb. O QA vê o celular trabalhar. */
@@ -58,12 +62,17 @@ export class AndroidDriver implements IDeviceDriver {
   private recording: { file: string; startedAt: number } | null = null;
   private density: number | null = null;
   private size: { width: number; height: number } | null = null;
+  private readonly place: IWindowPlace | null;
+  private readonly onClosed: (() => void) | null;
+  private watching: ReturnType<typeof setInterval> | null = null;
 
   public constructor(props: IAndroidDriver) {
     this.sdkRoot = props.sdkRoot;
     this.avd = props.avd;
     this.apk = props.apk;
     this.shrink = props.shrink ?? null;
+    this.place = props.window ?? null;
+    this.onClosed = props.onClosed ?? null;
   }
 
   public async open(): Promise<void> {
@@ -71,6 +80,7 @@ export class AndroidDriver implements IDeviceDriver {
     this.app = await this.install();
 
     await this.launchFresh();
+    this.watch();
   }
 
   /** Começa o app do zero com os dados limpos, como no dia em que foi instalado. */
@@ -341,6 +351,10 @@ export class AndroidDriver implements IDeviceDriver {
    * olhada nunca o achar meio desligado.
    */
   public async close(): Promise<void> {
+    if (this.watching !== null) clearInterval(this.watching);
+
+    this.watching = null;
+
     if (this.isOurs && this.serial.length > 0) {
       await this.adb(['emu', 'kill']).catch(() => '');
       await this.gone();
@@ -364,9 +378,10 @@ export class AndroidDriver implements IDeviceDriver {
   private async boot(): Promise<string> {
     const emulator = join(this.sdkRoot, 'emulator', 'emulator');
 
+    await this.placeWindow();
     spawnCommand({
       command: emulator,
-      args: bootArgs(this.avd),
+      args: bootArgs({ avd: this.avd, isWindowed: this.place !== null }),
       options: {
         detached: true,
         stdio: 'ignore',
@@ -491,6 +506,40 @@ export class AndroidDriver implements IDeviceDriver {
 
       await new Promise((wake) => setTimeout(wake, ANDROID.waitMs));
     }
+  }
+
+  private async placeWindow(): Promise<void> {
+    if (this.place === null) return;
+
+    const home = process.env.ANDROID_AVD_HOME ?? join(homedir(), '.android', 'avd');
+    const named = await readFile(join(home, `${this.avd}.ini`), 'utf8').catch(() => '');
+    const folder = avdFolderOf(named) ?? join(home, `${this.avd}.avd`);
+    const file = join(folder, 'emulator-user.ini');
+    const ini = await readFile(file, 'utf8').catch(() => '');
+    const { x, y, width } = this.place;
+
+    await writeFile(
+      file,
+      withWindowAt({
+        ini,
+        x: x + Math.max(0, (width - ANDROID.windowWidth) / 2),
+        y: y + ANDROID.windowTop,
+      }),
+    ).catch(() => undefined);
+  }
+
+  private watch(): void {
+    if (this.place === null || this.watching !== null) return;
+
+    this.watching = setInterval(() => {
+      void this.running().then((serials) => {
+        if (this.watching === null || serials.includes(this.serial)) return;
+
+        clearInterval(this.watching);
+        this.watching = null;
+        this.onClosed?.();
+      });
+    }, ANDROID.watchMs);
   }
 
   private async running(): Promise<string[]> {

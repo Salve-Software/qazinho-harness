@@ -1,7 +1,13 @@
 /**
- * As flags do emulador numa run: o AVD do QA sem janela própria, já que o QAzinho mostra
- * a tela no painel do dispositivo, e sem animação de boot nem som.
+ * As flags do emulador numa run: o AVD do QA sem animação de boot nem som, e sem janela
+ * própria, menos quando o QA anda o caso nela.
  */
-export function bootArgs(avd: string): string[] {
-  return ['-avd', avd, '-no-window', '-no-boot-anim', '-no-audio'];
+export function bootArgs(props: { avd: string; isWindowed: boolean }): string[] {
+  return [
+    '-avd',
+    props.avd,
+    ...(props.isWindowed ? [] : ['-no-window']),
+    '-no-boot-anim',
+    '-no-audio',
+  ];
 }

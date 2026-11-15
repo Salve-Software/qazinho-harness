@@ -1,5 +1,6 @@
 export * from './adbInputOf';
 export * from './adbTextsOf';
+export * from './avdFolderOf';
 export * from './bootArgs';
 export * from './boxOfBounds';
 export * from './centreOf';
@@ -20,3 +21,4 @@ export * from './parseViewHierarchy';
 export * from './runAdb';
 export * from './runAdbRaw';
 export * from './screenSizeOf';
+export * from './withWindowAt';

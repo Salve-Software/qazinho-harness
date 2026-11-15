@@ -1,7 +1,6 @@
 import type { IWebAccess } from './IWebAccess';
-import type { IWindowPlace } from './IWindowPlace';
 import type { IDeviceScreen, IViewport } from '@/contract';
-import type { ShrinkImage } from '@/engine/devices/types';
+import type { IWindowPlace, ShrinkImage } from '@/engine/devices/types';
 
 /**
  * O Chrome num perfil que o driver controla, sem janela, ou numa janela em `window` que

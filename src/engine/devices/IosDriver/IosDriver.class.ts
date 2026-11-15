@@ -11,12 +11,13 @@ import type {
   IDeviceDriver,
   IDeviceFrame,
   IShot,
+  IWindowPlace,
   ShrinkImage,
 } from '@/engine/devices/types';
 import type { ChildProcess } from 'node:child_process';
 import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { readFile, rm, writeFile } from 'node:fs/promises';
+import { access, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { RUN_VIDEO_FILES } from '@/engine/devices/constants';
@@ -40,6 +41,7 @@ import {
   parseElements,
   runTool,
   screenOf,
+  simulatorAppsOf,
 } from './library';
 
 /** Dirige um simulador iOS. O simctl liga e instala; só o idb toca a tela. */
@@ -53,12 +55,19 @@ export class IosDriver implements IDeviceDriver {
   private recording: { process: ChildProcess; file: string; startedAt: number } | null =
     null;
   private size: { width: number; height: number } | null = null;
+  private readonly place: IWindowPlace | null;
+  private readonly onClosed: (() => void) | null;
+  private isSimulatorOurs = false;
+  private simulatorApp: string | null = null;
+  private watching: ReturnType<typeof setInterval> | null = null;
 
   public constructor(props: IIosDriver) {
     this.idb = props.idb;
     this.udid = props.udid;
     this.app = props.app;
     this.shrink = props.shrink ?? null;
+    this.place = props.window ?? null;
+    this.onClosed = props.onClosed ?? null;
   }
 
   public async open(): Promise<void> {
@@ -73,6 +82,7 @@ export class IosDriver implements IDeviceDriver {
 
     await this.installFresh();
     await this.expectOpen();
+    await this.showWindow();
   }
 
   /**
@@ -357,6 +367,18 @@ export class IosDriver implements IDeviceDriver {
   }
 
   public async close(): Promise<void> {
+    if (this.watching !== null) clearInterval(this.watching);
+
+    this.watching = null;
+
+    if (this.isSimulatorOurs && this.simulatorApp !== null)
+      await runTool({
+        command: 'osascript',
+        args: ['-e', `quit app "${this.simulatorApp}"`],
+      }).catch(() => '');
+
+    this.isSimulatorOurs = false;
+
     if (this.isOurs) await this.simctl(['shutdown', this.udid]).catch(() => '');
 
     this.isOurs = false;
@@ -465,6 +487,50 @@ export class IosDriver implements IDeviceDriver {
 
   private async ui(args: string[]): Promise<string> {
     return runTool({ command: this.idb, args: ['ui', ...args, '--udid', this.udid] });
+  }
+
+  private async showWindow(): Promise<void> {
+    if (this.place === null) return;
+
+    const developer = (await runTool({ command: 'xcode-select', args: ['-p'] })).trim();
+    const found = await Promise.all(
+      simulatorAppsOf(developer).map(async (app) =>
+        (await access(app.path).then(
+          () => true,
+          () => false,
+        ))
+          ? app
+          : null,
+      ),
+    );
+    const app = found.find((one) => one !== null);
+
+    if (app === undefined) return;
+
+    this.simulatorApp = app.process;
+    this.isSimulatorOurs = !(await this.isSimulatorOpen());
+    await runTool({
+      command: 'open',
+      args: ['-a', app.path, '--args', '-CurrentDeviceUDID', this.udid],
+    });
+    this.watching = setInterval(() => {
+      void this.isSimulatorOpen().then((isOpen) => {
+        if (this.watching === null || isOpen) return;
+
+        clearInterval(this.watching);
+        this.watching = null;
+        this.onClosed?.();
+      });
+    }, IOS.watchMs);
+  }
+
+  private isSimulatorOpen(): Promise<boolean> {
+    if (this.simulatorApp === null) return Promise.resolve(false);
+
+    return runTool({ command: 'pgrep', args: ['-x', this.simulatorApp] }).then(
+      () => true,
+      () => false,
+    );
   }
 
   private async simctl(args: string[]): Promise<string> {
