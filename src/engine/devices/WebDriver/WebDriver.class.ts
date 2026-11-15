@@ -1,4 +1,10 @@
-import type { IWebAccess, IWebDriver, IWebScreen, WebDownload } from './types';
+import type {
+  IWebAccess,
+  IWebDriver,
+  IWebScreen,
+  IWindowPlace,
+  WebDownload,
+} from './types';
 import type {
   DeviceInput,
   DialogAnswer,
@@ -67,6 +73,8 @@ export class WebDriver implements IDeviceDriver {
   private readonly access: IWebAccess;
   private readonly onAddress: ((url: string) => void) | null;
   private readonly onScreens: ((screens: IDeviceScreen[]) => void) | null;
+  private readonly place: IWindowPlace | null;
+  private readonly onClosed: (() => void) | null;
   private readonly origins = new Set<string>();
   private readonly dialogs: string[] = [];
   private readonly requests = new Map<Request, INetworkEntry>();
@@ -91,6 +99,7 @@ export class WebDriver implements IDeviceDriver {
   private isFocused = false;
   private dialogAnswer: DialogAnswer = 'ok';
   private promptText: string | null = null;
+  private isClosing = false;
 
   public constructor(props: IWebDriver) {
     this.url = props.url;
@@ -104,6 +113,8 @@ export class WebDriver implements IDeviceDriver {
     this.access = props.access ?? { headers: {}, credentials: null };
     this.onAddress = props.onAddress ?? null;
     this.onScreens = props.onScreens ?? null;
+    this.place = props.window ?? null;
+    this.onClosed = props.onClosed ?? null;
   }
 
   /**
@@ -113,25 +124,23 @@ export class WebDriver implements IDeviceDriver {
   public async open(): Promise<void> {
     await rm(this.profileDir, { recursive: true, force: true, maxRetries: 5 });
     await writeChromePrefs(this.profileDir);
-    this.context = await chromium.launchPersistentContext(this.profileDir, {
-      channel: 'chrome',
-      headless: true,
-      viewport: { ...this.viewport },
-      deviceScaleFactor: this.pixelRatio,
-      args: [
-        `--force-device-scale-factor=${String(this.pixelRatio)}`,
-        `--disable-features=${CHROME_DISABLED_FEATURES.join(',')}`,
-      ],
-      ...this.loginOptions(),
+    this.isClosing = false;
+    this.context = await chromium.launchPersistentContext(
+      this.profileDir,
+      this.launchOptions(),
+    );
+    this.context.on('close', () => {
+      if (!this.isClosing) this.onClosed?.();
     });
     await this.wire(this.context);
     this.page = this.context.pages()[0] ?? (await this.context.newPage());
     this.follow(this.page);
     this.addScreen({ page: this.page, account: 1, opener: null });
 
-    await this.page.setViewportSize(this.viewport);
+    await this.sizePage(this.page);
     await this.fit();
     await openApp({ page: this.page, url: this.url });
+    await this.measure();
   }
 
   /**
@@ -294,6 +303,8 @@ export class WebDriver implements IDeviceDriver {
 
     if (!cdp || !this.page) return null;
 
+    await this.measure();
+
     const [x, y] = await this.page.evaluate<[number, number]>(
       '[window.scrollX, window.scrollY]',
     );
@@ -416,6 +427,8 @@ export class WebDriver implements IDeviceDriver {
 
     const locator = await findLocator({ page: this.page, target, kind: 'click' });
 
+    await this.measure();
+
     return locator === null ? null : screenBoxOf({ locator, screen: this.viewport });
   }
 
@@ -479,6 +492,8 @@ export class WebDriver implements IDeviceDriver {
    * combinam.
    */
   public async resize(viewport: IViewport): Promise<void> {
+    if (this.place !== null) return;
+
     this.viewport = viewport;
 
     if (!this.page) return;
@@ -491,6 +506,8 @@ export class WebDriver implements IDeviceDriver {
   }
 
   public async close(): Promise<void> {
+    this.isClosing = true;
+
     const open = this.screens;
 
     this.screens = [];
@@ -611,7 +628,7 @@ export class WebDriver implements IDeviceDriver {
     this.page = page;
     this.tellAddress(page);
     await page.waitForLoadState('domcontentloaded').catch(() => undefined);
-    await page.setViewportSize(this.viewport).catch(() => undefined);
+    await this.sizePage(page);
     await this.fit();
     await this.castAll();
     await this.stillAll();
@@ -634,7 +651,7 @@ export class WebDriver implements IDeviceDriver {
         account: isAnother ? this.accounts.length + 1 : current.account,
         opener: null,
       });
-      await page.setViewportSize(this.viewport);
+      await this.sizePage(page);
       await this.show(page);
       await openApp({ page, url: action.value === '' ? this.url : action.value });
       this.tellScreens();
@@ -685,7 +702,7 @@ export class WebDriver implements IDeviceDriver {
     const page = await current.page.context().newPage();
 
     this.addScreen({ page, account: current.account, opener: current.page });
-    await page.setViewportSize(this.viewport);
+    await this.sizePage(page);
     await this.show(page);
 
     try {
@@ -724,8 +741,9 @@ export class WebDriver implements IDeviceDriver {
     if (!browser) throw new Error('The browser is not open.');
 
     const context = await browser.newContext({
-      viewport: { ...this.viewport },
-      deviceScaleFactor: this.pixelRatio,
+      ...(this.place === null
+        ? { viewport: { ...this.viewport }, deviceScaleFactor: this.pixelRatio }
+        : { viewport: null }),
       ...this.loginOptions(),
     });
 
@@ -733,6 +751,50 @@ export class WebDriver implements IDeviceDriver {
     this.accounts.push(context);
 
     return context;
+  }
+
+  private launchOptions(): Parameters<typeof chromium.launchPersistentContext>[1] {
+    const disabled = `--disable-features=${CHROME_DISABLED_FEATURES.join(',')}`;
+
+    if (this.place === null)
+      return {
+        channel: 'chrome',
+        headless: true,
+        viewport: { ...this.viewport },
+        deviceScaleFactor: this.pixelRatio,
+        args: [`--force-device-scale-factor=${String(this.pixelRatio)}`, disabled],
+        ...this.loginOptions(),
+      };
+
+    const { x, y, width, height } = this.place;
+
+    return {
+      channel: 'chrome',
+      headless: false,
+      viewport: null,
+      ignoreDefaultArgs: ['--enable-automation'],
+      args: [
+        `--window-position=${String(x)},${String(y)}`,
+        `--window-size=${String(width)},${String(height)}`,
+        disabled,
+      ],
+      ...this.loginOptions(),
+    };
+  }
+
+  private async sizePage(page: Page): Promise<void> {
+    if (this.place === null)
+      await page.setViewportSize(this.viewport).catch(() => undefined);
+  }
+
+  private async measure(): Promise<void> {
+    if (this.place === null || !this.page) return;
+
+    const size = await this.page
+      .evaluate<IViewport>('({ width: window.innerWidth, height: window.innerHeight })')
+      .catch(() => null);
+
+    if (size !== null && size.width > 0 && size.height > 0) this.viewport = size;
   }
 
   private loginOptions(): {
@@ -859,6 +921,10 @@ export class WebDriver implements IDeviceDriver {
    * OK a menos que a ação mande cancelar, e anota os downloads.
    */
   private follow(page: Page): void {
+    page.on('close', () => {
+      if (this.place !== null && !this.isClosing && this.context?.pages().length === 0)
+        this.onClosed?.();
+    });
     page.on('framenavigated', (frame) => {
       const origin = originOf(frame.url());
 
@@ -958,7 +1024,7 @@ export class WebDriver implements IDeviceDriver {
 
     this.page = page;
     this.addScreen({ page, account: 1, opener: null });
-    await page.setViewportSize(this.viewport);
+    await this.sizePage(page);
 
     if (props.isCleared) {
       this.downloads = [];
@@ -977,6 +1043,7 @@ export class WebDriver implements IDeviceDriver {
     await this.castAll();
     this.tellScreens();
     await openApp({ page, url: this.url });
+    await this.measure();
   }
 
   private async perform(props: { page: Page; action: IStepAction }): Promise<void> {
@@ -1159,6 +1226,9 @@ export class WebDriver implements IDeviceDriver {
   }): Promise<void> {
     const { page, direction } = props;
     const until = props.until.trim();
+
+    await this.measure();
+
     const { width, height } = this.viewport;
     const reach = WEB_DRIVER.scrollShare;
     const [dx, dy] =
@@ -1245,6 +1315,8 @@ export class WebDriver implements IDeviceDriver {
    * nada abaixo dela.
    */
   private async fit(): Promise<void> {
+    if (this.place !== null) return;
+
     const cdp = await this.session();
 
     if (!cdp) return;

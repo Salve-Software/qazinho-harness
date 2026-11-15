@@ -1,10 +1,11 @@
 import type { IWebAccess } from './IWebAccess';
+import type { IWindowPlace } from './IWindowPlace';
 import type { IDeviceScreen, IViewport } from '@/contract';
 import type { ShrinkImage } from '@/engine/devices/types';
 
 /**
- * O Chrome num perfil que o driver controla; `shrink` reduz o que o agente vê; `access`
- * abre um app protegido; `onAddress` e `onScreens` ouvem o que o QA vê.
+ * O Chrome num perfil que o driver controla, sem janela, ou numa janela em `window` que
+ * o QA usa; `onClosed` ouve o QA fechá-la.
  */
 export interface IWebDriver {
   url: string;
@@ -15,4 +16,6 @@ export interface IWebDriver {
   access?: IWebAccess;
   onAddress?: (url: string) => void;
   onScreens?: (screens: IDeviceScreen[]) => void;
+  window?: IWindowPlace;
+  onClosed?: () => void;
 }
