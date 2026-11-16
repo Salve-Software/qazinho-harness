@@ -10,6 +10,7 @@ import {
   callOutsideTool,
   OUTSIDE_SERVER,
   outsideAddressOf,
+  outsideCallerOf,
   registerOutsideTools,
 } from '@/tools/servers/outside';
 
@@ -103,7 +104,12 @@ export class OutsideHost {
       { instructions: OUTSIDE_SERVER.instructions },
     );
 
-    registerOutsideTools({ mcp, call: (call) => callOutsideTool({ perform, call }) });
+    const caller = outsideCallerOf(request.headers['user-agent']);
+
+    registerOutsideTools({
+      mcp,
+      call: (call) => callOutsideTool({ perform, call, caller }),
+    });
 
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: undefined,

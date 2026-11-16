@@ -64,6 +64,7 @@ export type * from './Language';
 export type * from './MemoryOp';
 export type * from './MemoryScope';
 export type * from './MemoryTarget';
+export type * from './OutsideCaller';
 export type * from './OutsideToolCall';
 export type * from './ReviewVerdict';
 export type * from './Severity';

@@ -1,6 +1,7 @@
-import type { OutsideToolCall } from '@/contract';
+import type { OutsideCaller, OutsideToolCall } from '@/contract';
 
-/** Quem executa uma chamada de um agente de fora: o app, e o que ele responde. */
+/** Quem executa a chamada de um agente de fora, sabendo qual chamou, e o que responde. */
 export type OutsidePerform = (
   call: OutsideToolCall,
+  caller: OutsideCaller,
 ) => Promise<{ text: string; isError: boolean }>;
