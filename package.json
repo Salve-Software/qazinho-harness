@@ -1,5 +1,5 @@
 {
-  "name": "@salve-software/qazinho-harness",
+  "name": "@ploomes/qazinho-harness",
   "version": "0.1.0",
   "private": true,
   "description": "QAzinho's agent harness and run engine.",

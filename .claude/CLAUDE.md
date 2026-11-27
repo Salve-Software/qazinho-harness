@@ -23,7 +23,7 @@ prompt, um JSON Schema, as ferramentas que um papel pode chamar, uma config de M
    propósito.
 3. **Todo formato que o agente preenche é um schema zod**: uma resposta, ou os argumentos de uma
    ferramenta. O mesmo schema vira o JSON Schema que o agente lê e lê de volta o que ele mandou.
-4. **O contrato continua puro.** `@salve-software/qazinho-harness/contract` guarda os tipos e as
+4. **O contrato continua puro.** `@ploomes/qazinho-harness/contract` guarda os tipos e as
    constantes simples que o outro lado de um host compartilha (a página do desktop o importa):
    nada de Node, zod ou MCP ali dentro.
 5. **Um segredo nunca chega ao agente.** Ele lê `${NAME}`; o host digita o valor.
@@ -34,7 +34,7 @@ prompt, um JSON Schema, as ferramentas que um papel pode chamar, uma config de M
 ## Como um host o recebe
 
 Um submódulo git em `packages/qazinho-harness`, como dependência
-`"@salve-software/qazinho-harness": "file:packages/qazinho-harness"`, construído uma vez pelo
+`"@ploomes/qazinho-harness": "file:packages/qazinho-harness"`, construído uma vez pelo
 script `harness:build` do host (`npm --prefix packages/qazinho-harness ci && … run build`), do
 jeito que o Rotuz-server recebe o motor dele. O host importa o `dist/` construído, nunca o fonte:
 os dois repositórios apontam `@/` para o próprio `src/`.

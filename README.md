@@ -4,8 +4,8 @@ O harness de QA que o QAzinho monta em volta de um agente: o que o agente ouve, 
 ele recebe e o formato em que responde. O app desktop e a API do QAzinho Pro rodam ele.
 
 ```ts
-import { Harness, McpHost } from '@salve-software/qazinho-harness';
-import type { AppToolCall } from '@salve-software/qazinho-harness/contract';
+import { Harness, McpHost } from '@ploomes/qazinho-harness';
+import type { AppToolCall } from '@ploomes/qazinho-harness/contract';
 
 const harness = new Harness();
 const chat = harness.chat({ … });
@@ -25,7 +25,7 @@ git submodule add https://github.com/Salve-Software/qazinho-harness.git packages
     "harness:build": "npm --prefix packages/qazinho-harness ci && npm --prefix packages/qazinho-harness run build"
   },
   "devDependencies": {
-    "@salve-software/qazinho-harness": "file:packages/qazinho-harness"
+    "@ploomes/qazinho-harness": "file:packages/qazinho-harness"
   }
 }
 ```
