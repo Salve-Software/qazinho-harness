@@ -16,7 +16,7 @@ const chat = harness.chat({ … });
 Adicione como submódulo git e dependência `file:`, e construa antes do build do host:
 
 ```bash
-git submodule add https://github.com/Salve-Software/qazinho-harness.git packages/qazinho-harness
+git submodule add https://github.com/Ploomes/qazinho-harness.git packages/qazinho-harness
 ```
 
 ```json
@@ -46,4 +46,4 @@ Leia o [CONTRIBUTING.md](CONTRIBUTING.md) e o `.claude/rules/` antes de abrir um
 
 ## Licença
 
-Proprietária. © 2026 Salve Software. Todos os direitos reservados. Veja a [LICENSE](LICENSE).
+Proprietária. © 2026 Ploomes. Todos os direitos reservados. Veja a [LICENSE](LICENSE).

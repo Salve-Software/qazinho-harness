@@ -4,11 +4,11 @@
   "private": true,
   "description": "QAzinho's agent harness and run engine.",
   "license": "UNLICENSED",
-  "author": "Salve Software",
+  "author": "Ploomes",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Salve-Software/qazinho-harness.git"
+    "url": "git+https://github.com/Ploomes/qazinho-harness.git"
   },
   "engines": {
     "node": ">=22.12"
