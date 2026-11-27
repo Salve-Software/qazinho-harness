@@ -29,5 +29,5 @@ ele faz.
   dele: a run espera a resposta num card no chat do plano.
 - Um caso que passou é andado de novo sem o agente, pelo que a run gravou; o menu ao lado do botão
   de run roda tudo com o agente em vez disso.
-- Configurações, Sobre, abre o log do app, ou copia o diagnóstico para mandar à Salve Software
+- Configurações, Sobre, abre o log do app, ou copia o diagnóstico para mandar à Ploomes
   quando algo dá errado.
